@@ -1,0 +1,20 @@
+.center{
+    text-align: center;
+}
+
+ul#horizontal-list li {
+    font-size: 20px;
+	display: inline;
+}
+.name {
+    text-align: center;
+    font-size: 50px;
+    color: rgb(89, 130, 213);
+    font-family: 'Pacifico', cursive;
+  }
+
+.description{
+    text-align: center;
+    font-size: 20px;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+}
