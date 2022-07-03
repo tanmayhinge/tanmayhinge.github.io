@@ -43,26 +43,7 @@
 html {
   scroll-behavior: smooth;
 }
-.scrolldown{
-    left: 50%;
-    transform: translateY(0%) rotate(45deg);
-    
-                  opacity: 0;
-  }
-  @keyframes scrolldown {
-              0%{
-                  transform: translateY(20%) rotate(45deg);
-                  opacity: 0.7;
-              }
-              50%{
-                  transform: translateY(0%) rotate(45deg);
-                  opacity: 0.2;
-              }
-              100%{
-                  transform: translateY(20%) rotate(45deg);
-                  opacity: 0.7;
-              }
-          }
+
 body {
   margin: var(--header-height) 0 0 0;
   font-family: var(--body-font);
@@ -131,6 +112,14 @@ a {
   align-items: center;
 }
 
+.resume-button{
+    cursor: pointer;
+    padding: 10px;
+    margin: auto;
+    margin-top: 70px;
+    display: block;
+}
+
 .nav__img {
   width: 32px;
   border-radius: 50%;
@@ -139,6 +128,7 @@ a {
 .nav__logo {
   color: var(--title-color);
   font-weight: 600;
+  font-size: 30px;
 }
 
 @media screen and (max-width: 767px) {
