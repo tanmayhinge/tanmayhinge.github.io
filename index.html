@@ -1,91 +1,153 @@
 <!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tanmay Hinge</title>
-    <!-- CSS only -->
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0-beta1/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-0evHe/X+R7YkIZDRvuzKMRqM+OrBnVFBL6DOitfPri4tjfHxaWutUpFmBp4vmVor" crossorigin="anonymous">
-    <link rel="stylesheet" href="style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
-</head>
-<body>
-    <div class="name">
-        Tanmay Hinge
-    </div>
-    <br>
-    <div class="description">
-        <p>
-            Master's in Computer Science Student at <br>
-            <a href="http://www.google.com/search?q=California+State+University+Chico" target="_blank" style="color: red;">California State University, Chico</a>
-            <br>
-            {Graduating May 2024}
-        </p>
-    </div>
-    <div class="description">
-        <p>
-            I am looking for Summer 2023 internships in the USA.
-        </p>
-    </div>
-    <div class="center" id="menu-outer">
-        <div class="table">
-          <ul id="horizontal-list">
-            <li><a href="#">Resume</a></li>
-            <li><a href="#">GitHub</a></li>
-            <li><a href="#">CodeChef</a></li>
-            <li><a href="#">LinkedIn</a></li>
-          </ul>
-        </div>
-      </div>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <hr>
-    <h1 class="center" style="font-size:40px ;">Projects</h1>
-    <div class="row" style="margin: 20px;">
-        <div class="col-sm-6" style="margin-top: 5px;">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">honeyscript</h5>
-              <p class="card-text">2021</p>
-              <p class="card-text">a minimal programming language with its own CFG</p>
-              <a href="#" class="btn btn-primary">Source Code</a>
-            </div>
-          </div>
-        </div>
-        <div class="col-sm-6" style="margin-top: 5px;">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">DataStructures and Algorithms</h5>
-              <p class="card-text">2021-present</p>
-              <p class="card-text">Code that I have written for competitive programming and some ds/algo implementations.</p>
-              <a href="#" class="btn btn-primary">Source Code</a>
-            </div>
-          </div>
-        </div>
-      </div>
+        <!--=============== BOXICONS ===============-->
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/boxicons@latest/css/boxicons.min.css">
 
-      <div class="row" style="margin: 20px;">
-        <div class="col-sm-6" style="margin-top: 5px;">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Cafe-API</h5>
-              <p class="card-text">2021</p>
-              <p class="card-text">Basic API for a cafe to create user profiles, orders etc.</p>
-              <a href="#" class="btn btn-primary">Source Code</a>
-            </div>
-          </div>
-        </div>
-        <!-- <div class="col-sm-6" style="margin-top: 5px;">
-          <div class="card">
-            <div class="card-body">
-              <h5 class="card-title">Special title treatment</h5>
-              <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
-              <a href="#" class="btn btn-primary">Go somewhere</a>
-            </div>
-          </div>
-        </div> -->
-      </div>
-</body>
+
+        <!--=============== CSS ===============-->
+        <link rel="stylesheet" href="styles.css">
+
+        <title>Tanmay Hinge</title>
+    </head>
+    <body>
+        <!--=============== HEADER ===============-->
+        <header class="header" id="header">
+            <nav class="nav container">
+                <a href="#" class="nav__logo">Tanmay Hinge</a>
+
+                <div class="nav__menu" id="nav-menu">
+                    <ul class="nav__list">
+                        
+                        <li class="nav__item">
+                            <a href="#about" class="nav__link">
+                                <i class='bx bx-user nav__icon'></i>
+                                <span class="nav__name">About</span>
+                            </a>
+                        </li>
+
+                        <li class="nav__item">
+                            <a href="#projects" class="nav__link">
+                                <i class='bx bxs-badge nav__icon'></i>
+                                <span class="nav__name">Projects</span>
+                            </a>
+                        </li>
+
+                        <li class="nav__item">
+                            <a href="resume.html" class="nav__link">
+                                <i class='bx bxs-file-pdf nav__icon'></i>
+                                <span class="nav__name">Resume</span>
+                            </a>
+                        </li>
+
+                        <li class="nav__item">
+                            <a href="contact.html" class="nav__link">
+                                <i class='bx bxs-envelope nav__icon'></i>
+                                <span class="nav__name">Contact Me</span>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </nav>
+        </header>
+
+        <main>
+
+            <!--=============== ABOUT ===============-->
+            <section class="container section section__height" id="about">
+                <h2 class="section__title">About</h2>
+                <img class="center-img" src="https://via.placeholder.com/150" alt="" style="width: 300px;">
+                <p class="about-text">
+                    Master's in Computer Science Student at <br>
+                    California State University, Chico <br>
+                    {Graduating May 2024}
+                    <br> <br>
+                    I am looking for Summer 2023 internships in the USA.
+                </p>
+            </section>
+            <Div class="scrolldown" style="width: 2em; height: 2em; background-color: transparent; z-index: 80; 
+            bottom: 25px; position: absolute; border-width: 0 0.25em 0.25em 0; border-style: solid; border-color: rgb(0, 0, 0); animation: scrolldown 1.2s ease-in-out infinite 0.15s;"></Div>
+            <Div class="scrolldown" style="width: 2em; height: 2em; background-color: transparent; z-index: 80; 
+            bottom: 40px; position: absolute; border-width: 0 0.25em 0.25em 0; border-style: solid; border-color: rgb(0, 0, 0); animation: scrolldown 1.2s ease-in-out infinite;"></Div>
+            <!--=============== PROJECTS ===============-->
+            <section class="container section section__height" id="projects">
+                <h2 class="section__title">Projects</h2>
+                <div class="main">
+                    <ul class="cards">
+
+                      <li class="cards_item">
+                        <div class="card">
+                          <div class="card_image"><img src="https://picsum.photos/500/300/?image=11"></div>
+                          <div class="card_content">
+                            <h2 class="card_title">Card Grid Layout</h2>
+                            <p class="card_text">Demo of pixel perfect pure CSS simple responsive card grid layout</p>
+                            <button class="btn card_btn">Read More</button>
+                          </div>
+                        </div>
+                      </li>
+                      <li class="cards_item">
+                        <div class="card">
+                          <div class="card_image"><img src="https://picsum.photos/500/300/?image=14"></div>
+                          <div class="card_content">
+                            <h2 class="card_title">Card Grid Layout</h2>
+                            <p class="card_text">Demo of pixel perfect pure CSS simple responsive card grid layout</p>
+                            <button class="btn card_btn">Read More</button>
+                          </div>
+                        </div>
+                      </li>
+                      <li class="cards_item">
+                        <div class="card">
+                          <div class="card_image"><img src="https://picsum.photos/500/300/?image=17"></div>
+                          <div class="card_content">
+                            <h2 class="card_title">Card Grid Layout</h2>
+                            <p class="card_text">Demo of pixel perfect pure CSS simple responsive card grid layout</p>
+                            <button class="btn card_btn">Read More</button>
+                          </div>
+                        </div>
+                      </li>
+                      <li class="cards_item">
+                        <div class="card">
+                          <div class="card_image"><img src="https://picsum.photos/500/300/?image=2"></div>
+                          <div class="card_content">
+                            <h2 class="card_title">Card Grid Layout</h2>
+                            <p class="card_text">Demo of pixel perfect pure CSS simple responsive card grid layout</p>
+                            <button class="btn card_btn">Read More</button>
+                            <button class="btn card_btn">Read More</button>
+                          </div>
+                        </div>
+                      </li>
+                      <li class="cards_item">
+                        <div class="card">
+                          <div class="card_image"><img src="https://picsum.photos/500/300/?image=2"></div>
+                          <div class="card_content">
+                            <h2 class="card_title">Card Grid Layout</h2>
+                            <p class="card_text">Demo of pixel perfect pure CSS simple responsive card grid layout</p>
+                            <button class="btn card_btn">Read More</button>
+                            <button class="btn card_btn">Read More</button>
+                          </div>
+                        </div>
+                      </li>
+                      <li class="cards_item">
+                        <div class="card">
+                          <div class="card_image"><img src="https://picsum.photos/500/300/?image=2"></div>
+                          <div class="card_content">
+                            <h2 class="card_title">Card Grid Layout</h2>
+                            <p class="card_text">Demo of pixel perfect pure CSS simple responsive card grid layout</p>
+                            <button class="btn card_btn">Read More</button>
+                            <button class="btn card_btn">Read More</button>
+                          </div>
+                        </div>
+                      </li>
+                    </ul>
+                  </div>
+            </section>
+        </main>
+        
+
+        <!--=============== MAIN JS ===============-->
+        <script src="assets/js/main.js"></script>
+    </body>
 </html>
