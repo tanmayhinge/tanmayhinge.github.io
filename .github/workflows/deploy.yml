@@ -21,7 +21,7 @@ jobs:
         run: npm install
 
       - name: Build
-        run: npm run export
+        run: npm run build  # this now auto-generates 'out/' due to output: 'export'
 
       - name: Deploy
         uses: JamesIves/github-pages-deploy-action@v4
