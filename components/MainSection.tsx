@@ -56,7 +56,7 @@ export default function MainSection() {
 
         {/* Hero Section */}
         <div className="mb-16 sm:mb-32 ml-0 relative">
-          <div className="text-sm mb-4 px-3 py-1 rounded">(HELLO, I'M TANMAY HINGE)</div>
+          <div className="text-sm mb-4 px-3 py-1 rounded">Hey!</div>
           <h1 className="text-4xl sm:text-6xl md:text-8xl font-bold mb-6 sm:mb-8 text-orange-500 text-shadow-lg">
             CREATIVE <span className="font-serif italic font-normal">software</span>
             <br className="hidden sm:block" /> DEVELOPER
