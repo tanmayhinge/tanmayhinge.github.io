@@ -6,9 +6,8 @@ import Navbar from "@/components/Navbar"
 const inter = Inter({ subsets: ["latin"] })
 
 export const metadata = {
-  title: "Tanmay Hinge - Luxury Web Designs",
-  description: "Portfolio of Tanmay Hinge, specializing in luxury web design and development",
-    generator: 'v0.dev'
+  title: "Tanmay Hinge - Creative Software Developer",
+  description: "I design and build immersive digital experiences using design and code. 3D, 2D, Apps, Web, Games, VR"
 }
 
 export default function RootLayout({

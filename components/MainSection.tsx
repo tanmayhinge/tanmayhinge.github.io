@@ -63,8 +63,8 @@ export default function MainSection() {
           </h1>
           <div className="flex flex-col sm:flex-row justify-between items-start gap-6 sm:gap-0">
             <p className="max-w-md text-white p-4">
-              Transforming ideas into powerful digital solutions. Specializing in web design, development, and branding
-              for businesses that demand excellence.
+            I don’t just write code — I sculpt experiences.
+
             </p>
           </div>
         </div>
