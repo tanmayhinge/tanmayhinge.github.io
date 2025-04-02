@@ -1,0 +1,68 @@
+1:"$Sreact.fragment"
+2:I[9216,["177","static/chunks/app/layout-168d39bbfb9ba418.js"],"default"]
+3:I[7555,[],""]
+4:I[1295,[],""]
+5:I[3063,["63","static/chunks/63-f877b627d047c555.js","953","static/chunks/app/blog/%5Bslug%5D/page-3b577f17583b54d9.js"],"Image"]
+7:I[9665,[],"OutletBoundary"]
+a:I[9665,[],"ViewportBoundary"]
+c:I[9665,[],"MetadataBoundary"]
+e:I[6614,[],""]
+:HL["/_next/static/media/a34f9d1faa5f3315-s.p.woff2","font",{"crossOrigin":"","type":"font/woff2"}]
+:HL["/_next/static/css/035578991000798e.css","style"]
+6:Tf55,
+      <p>One of the most challenging and rewarding projects I've worked on was developing a delivery application for Farmacias Especializadas FESA, a renowned pharmaceutical chain in Mexico. This project involved creating a technological solution to optimize the logistics of delivering medications, both between branches and directly to end customers.</p>
+
+      <h2>Project Objective</h2>
+      <p>The application was specifically designed for the company's delivery personnel. Its main function was to move stock between pharmacies and deliver medications to customers who placed orders through the call center. Once an order was received, the backend calculated the best delivery route, and this information was sent to and consumed by the mobile application.</p>
+
+      <figure>
+        <img src="https://hebbkx1anhila5yf.public.blob.vercel-storage.com/fesa-N4ChbTd8kgRmw4s62eW64l1KHdB8cK.webp" alt="FESA Project" />
+        <figcaption>Farmacias Especializadas FESA logo, representing the brand for which the delivery app was developed</figcaption>
+      </figure>
+
+      <h2>My Role and Responsibilities</h2>
+      <p>I was the Android developer responsible for the project, participating from its inception to its release on the Play Store. My responsibilities included:</p>
+      <ul>
+        <li><strong>Graphic Interface Design:</strong> Creating wireframes and prototypes using Whimsical.</li>
+        <li><strong>Full App Development:</strong> Utilizing technologies such as Jetpack Compose, Kotlin, Retrofit, Room, Flow, and Google Maps and Roads APIs.</li>
+        <li><strong>Implementation of Key Features:</strong>
+          <ul>
+            <li>Displaying optimized routes for delivery personnel.</li>
+            <li>Integration with GPS for real-time tracking.</li>
+            <li>Sending notifications and tracking orders.</li>
+          </ul>
+        </li>
+        <li><strong>Test Management:</strong> Using Firebase Distribution to distribute APKs among testers and managing simulations in Android Studio to verify app behavior in various locations.</li>
+        <li><strong>Field Testing:</strong> Conducting physical tests with delivery drivers on motorcycles to validate the app's accuracy and usability.</li>
+      </ul>
+
+      <h2>Technologies Used</h2>
+      <p>The project leveraged a robust and modern tech stack, including:</p>
+      <ul>
+        <li>Jetpack Compose for intuitive and efficient UI design.</li>
+        <li>Kotlin as the primary programming language.</li>
+        <li>Retrofit for backend communication.</li>
+        <li>Room and Flow for local data management.</li>
+        <li>Google Maps, Routes, and GPS APIs for geolocation and route calculation.</li>
+        <li>Firebase Distribution for managing test versions.</li>
+      </ul>
+
+      <h2>Team and Duration</h2>
+      <p>The team consisted of:</p>
+      <ul>
+        <li>Two backend developers.</li>
+        <li>One frontend developer.</li>
+        <li>Myself, as the Android developer.</li>
+      </ul>
+      <p>The project lasted six months, following a defined schedule and constant collaboration between development areas.</p>
+
+      <h2>Challenges and Learnings</h2>
+      <p>The biggest challenge was ensuring the application worked correctly under real-world conditions. This involved fine-tuning route calculations and optimizing data and battery usage — crucial factors for delivery personnel on the move. Additionally, I learned a lot about the importance of field testing and the value of a well-coordinated team.</p>
+
+      <h2>Final Outcome</h2>
+      <p>The application was successfully published on the Play Store and is currently used by Farmacias Especializadas FESA delivery personnel to improve medication delivery efficiency. This project not only allowed me to solidify my technical skills but also gave me the satisfaction of creating a product that directly impacts people's lives.</p>
+    0:{"P":null,"b":"TVVZzxERSinOjNJwP3Ocr","p":"","c":["","blog","farmacias-especializadas"],"i":false,"f":[[["",{"children":["blog",{"children":[["slug","farmacias-especializadas","d"],{"children":["__PAGE__",{}]}]}]},"$undefined","$undefined",true],["",["$","$1","c",{"children":[[["$","link","0",{"rel":"stylesheet","href":"/_next/static/css/035578991000798e.css","precedence":"next","crossOrigin":"$undefined","nonce":"$undefined"}]],["$","html",null,{"lang":"en","children":["$","body",null,{"className":"__className_d65c78","children":[["$","$L2",null,{}],["$","$L3",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L4",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":[[["$","title",null,{"children":"404: This page could not be found."}],["$","div",null,{"style":{"fontFamily":"system-ui,\"Segoe UI\",Roboto,Helvetica,Arial,sans-serif,\"Apple Color Emoji\",\"Segoe UI Emoji\"","height":"100vh","textAlign":"center","display":"flex","flexDirection":"column","alignItems":"center","justifyContent":"center"},"children":["$","div",null,{"children":[["$","style",null,{"dangerouslySetInnerHTML":{"__html":"body{color:#000;background:#fff;margin:0}.next-error-h1{border-right:1px solid rgba(0,0,0,.3)}@media (prefers-color-scheme:dark){body{color:#fff;background:#000}.next-error-h1{border-right:1px solid rgba(255,255,255,.3)}}"}}],["$","h1",null,{"className":"next-error-h1","style":{"display":"inline-block","margin":"0 20px 0 0","padding":"0 23px 0 0","fontSize":24,"fontWeight":500,"verticalAlign":"top","lineHeight":"49px"},"children":404}],["$","div",null,{"style":{"display":"inline-block"},"children":["$","h2",null,{"style":{"fontSize":14,"fontWeight":400,"lineHeight":"49px","margin":0},"children":"This page could not be found."}]}]]}]}]],[]],"forbidden":"$undefined","unauthorized":"$undefined"}]]}]}]]}],{"children":["blog",["$","$1","c",{"children":[null,["$","$L3",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L4",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":[["slug","farmacias-especializadas","d"],["$","$1","c",{"children":[null,["$","$L3",null,{"parallelRouterKey":"children","error":"$undefined","errorStyles":"$undefined","errorScripts":"$undefined","template":["$","$L4",null,{}],"templateStyles":"$undefined","templateScripts":"$undefined","notFound":"$undefined","forbidden":"$undefined","unauthorized":"$undefined"}]]}],{"children":["__PAGE__",["$","$1","c",{"children":[["$","div",null,{"className":"container mx-auto px-4 py-8","children":["$","div",null,{"ref":"$undefined","className":"rounded-lg border bg-card text-card-foreground shadow-sm max-w-4xl mx-auto","children":[["$","div",null,{"ref":"$undefined","className":"flex flex-col space-y-1.5 p-6","children":["$","div",null,{"ref":"$undefined","className":"tracking-tight text-3xl font-bold","children":"Farmacias Especializadas (FESA): Revolutionizing Medicine Delivery in Mexico"}]}],["$","div",null,{"ref":"$undefined","className":"p-6 pt-0","children":[["$","div",null,{"className":"relative w-full h-64 mb-6","children":["$","$L5",null,{"src":"https://hebbkx1anhila5yf.public.blob.vercel-storage.com/fesa-N4ChbTd8kgRmw4s62eW64l1KHdB8cK.webp","alt":"Farmacias Especializadas (FESA): Revolutionizing Medicine Delivery in Mexico","fill":true,"className":"object-cover rounded-lg"}]}],["$","div",null,{"className":"prose dark:prose-invert max-w-none","dangerouslySetInnerHTML":{"__html":"$6"}}]]}]]}]}],"$undefined",null,["$","$L7",null,{"children":["$L8","$L9",null]}]]}],{},null,false]},null,false]},null,false]},null,false],["$","$1","h",{"children":[null,["$","$1","CXWkpeixBLEPEl7AxjZ1j",{"children":[["$","$La",null,{"children":"$Lb"}],["$","meta",null,{"name":"next-size-adjust","content":""}]]}],["$","$Lc",null,{"children":"$Ld"}]]}],false]],"m":"$undefined","G":["$e","$undefined"],"s":false,"S":true}
+b:[["$","meta","0",{"charSet":"utf-8"}],["$","meta","1",{"name":"viewport","content":"width=device-width, initial-scale=1"}]]
+8:null
+9:null
+d:[["$","title","0",{"children":"Tanmay Hinge - Luxury Web Designs"}],["$","meta","1",{"name":"description","content":"Portfolio of Tanmay Hinge, specializing in luxury web design and development"}],["$","meta","2",{"name":"generator","content":"v0.dev"}]]
