@@ -43,10 +43,12 @@ body {
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
     height: 100vh;
     width: 100%;
-    text-align: center;
+    max-width: 800px;
+    margin: 0 auto;
+    padding-left: 2rem;
 }
 
 .intro {
@@ -58,7 +60,6 @@ body {
 
 .work-section {
     margin-bottom: 2rem;
-    text-align: left;
 }
 
 .work-title {
@@ -97,8 +98,12 @@ body {
     .social-links a {
         font-size: 0.85rem;
     }
+
+    .container {
+        padding-left: 1rem;
+    }
+
     .intro {
         font-size: 1.25rem;
-        padding: 0 1rem;
     }
 }
