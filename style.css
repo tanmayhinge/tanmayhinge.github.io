@@ -109,7 +109,7 @@ body {
     background: rgba(255, 255, 255, 0.03);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 12px;
-    overflow: hidden;
+    padding: 1.5rem;
     transition: all 0.3s ease;
 }
 
@@ -117,30 +117,6 @@ body {
     transform: translateY(-5px);
     border-color: rgba(255, 107, 53, 0.5);
     box-shadow: 0 10px 30px rgba(255, 107, 53, 0.2);
-}
-
-.project-image {
-    width: 100%;
-    height: 200px;
-    background: rgba(255, 255, 255, 0.05);
-    overflow: hidden;
-}
-
-.project-image img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    opacity: 0.7;
-    transition: opacity 0.3s ease, transform 0.3s ease;
-}
-
-.project-card:hover .project-image img {
-    opacity: 1;
-    transform: scale(1.05);
-}
-
-.project-content {
-    padding: 1.5rem;
 }
 
 .project-title {
@@ -202,10 +178,6 @@ body {
 
     .section-title {
         font-size: 1.5rem;
-    }
-
-    .project-image {
-        height: 180px;
     }
 }
 
