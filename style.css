@@ -33,6 +33,37 @@ body {
     margin-bottom: 2rem;
 }
 
+.work-section {
+    margin-bottom: 2rem;
+    text-align: left;
+}
+
+.work-title {
+    font-size: 1rem;
+    font-weight: 600;
+    color: #000;
+    margin-bottom: 0.75rem;
+}
+
+.work-links {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    padding-left: 1.5rem;
+}
+
+.work-links a {
+    color: #000;
+    text-decoration: none;
+    font-size: 0.95rem;
+    font-weight: 400;
+    transition: opacity 0.3s ease;
+}
+
+.work-links a:hover {
+    opacity: 0.7;
+}
+
 .links {
     display: flex;
     gap: 2rem;
