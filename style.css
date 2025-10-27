@@ -68,7 +68,12 @@ body {
     color: #000;
     margin-bottom: 0.75rem;
 }
-
+.desc{
+    font-size: 1rem;
+    font-weight: 200;
+    color: #ffffff;
+    margin-bottom: 0.75rem;
+}
 .work-links {
     display: flex;
     flex-direction: column;
