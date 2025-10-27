@@ -16,17 +16,16 @@ body {
     background-color: #D97757;
     position: relative;
 }
-
 .social-links {
     position: fixed;
     top: 2rem;
     right: 2rem;
     display: flex;
     flex-direction: column;
+    align-items: flex-end; /* ensures right alignment inside */
     gap: 0.75rem;
     z-index: 10;
 }
-
 .social-links a {
     color: #000;
     text-decoration: none;
