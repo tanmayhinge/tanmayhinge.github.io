@@ -1,40 +1,205 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tanmay Hinge</title>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Tanmay Hinge</title>
+  <meta name="description" content="Computer Science Researcher" />
+
+  <!-- Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet" />
+
+  <style>
+    /* Base reset */
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html, body {
+      height: 100%;
+    }
+
+    body {
+      min-height: 100%;
+      font-family: 'Montserrat', sans-serif;
+      background-color: #D97757;
+      color: #000;
+      line-height: 1.4;
+    }
+
+    /* Main content container */
+    .container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      width: 100%;
+      max-width: 800px;
+      margin: 0 auto;
+      padding: 2rem 2rem 4rem; /* bottom padding to ensure no overlap */
+    }
+
+    .intro {
+      font-size: 1.5rem;
+      font-weight: 600;
+      margin: 0.5rem 0 1rem;
+    }
+
+    .desc {
+      font-size: 1rem;
+      font-weight: 200;
+      color: #fff;
+      margin-bottom: 0.75rem;
+    }
+
+    .work-section {
+      margin-top: 1.5rem;
+    }
+
+    .work-title {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.75rem;
+      color: #000;
+    }
+
+    .work-links {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      padding-left: 1.25rem;
+    }
+
+    .work-links a {
+      color: #000;
+      text-decoration: none;
+      font-size: 0.95rem;
+      font-weight: 400;
+      transition: opacity 0.2s ease, color 0.2s ease;
+    }
+
+    .work-links a:hover {
+      color: #fff;
+    }
+
+    .profile {
+      width: 200px;
+      max-width: 60vw;
+      margin-bottom: 20px;
+      border-radius: 12px;
+      display: block;
+    }
+
+    /* Bottom-right link list */
+    .social-links {
+      position: fixed;
+      right: 1rem;
+      bottom: 1rem;
+      z-index: 100;
+    }
+
+    .link-list {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      flex-wrap: wrap;
+    }
+
+    .link-list a {
+      color: #000;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.92rem;
+      transition: color 0.2s ease;
+    }
+
+    .link-list a:hover {
+      color: #fff;
+    }
+
+    .link-list a:not(:last-child)::after {
+      content: " |";
+      margin-left: 0.5rem;
+      color: #000;
+      opacity: 0.6;
+    }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .container {
+        padding: 1.25rem 1rem 4rem;
+      }
+      .intro {
+        font-size: 1.25rem;
+      }
+      .desc {
+        font-size: 0.95rem;
+      }
+      .work-links a {
+        font-size: 0.9rem;
+      }
+      .link-list a {
+        font-size: 0.85rem;
+      }
+    }
+
+    @media (max-width: 400px) {
+      .link-list {
+        justify-content: flex-end;
+        gap: 0.35rem;
+      }
+      .link-list a {
+        font-size: 0.8rem;
+      }
+      .link-list a:not(:last-child)::after {
+        margin-left: 0.35rem;
+      }
+    }
+  </style>
 </head>
+
 <body>
-    <div class="social-links">
-        <a href="cv_tanmay.pdf" target="_blank" rel="noopener noreferrer">CV</a>
-        <a href="https://www.linkedin.com/in/tanmayhinge/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-        <a href="https://youtube.com/@tanmayhinge" target="_blank" rel="noopener noreferrer">YouTube</a>
+  <div class="container">
+    <img src="/public/profile.jpeg" alt="Portrait of Tanmay Hinge" class="profile" />
+    <p class="intro">Hi, my name is Tanmay Hinge</p>
+    <h2 class="desc">📌 Minnesota, USA</h2>
+    <h2 class="desc">
+      I work as a Full-Time Computer Science Instructor at a Community College.<br />
+      My work revolves around human-centered AI, human-robot interaction and vision-language-action interfaces.
+    </h2>
+    <h2 class="desc">Ph.D in Computer Science Applicant.</h2>
 
-        <p>hingetanmay@gmail.com</p>
-
+    <div class="work-section">
+      <h2 class="work-title">Work</h2>
+      <div class="work-links">
+        <a href="https://github.com/tanmayhinge" target="_blank" rel="noopener noreferrer">
+          <u>screenflow</u> - ios app
+        </a>
+        <a href="https://github.com/tanmayhinge" target="_blank" rel="noopener noreferrer">
+          <u>honeyscript</u> - lightweight, javascript-inspired experimental programming language designed for research and academic exploration.
+        </a>
+        <a href="https://github.com/tanmayhinge" target="_blank" rel="noopener noreferrer">
+          <u>xcrypt</u> - a decentralized, client-side encrypted password manager
+        </a>
+        <a href="https://github.com/tanmayhinge" target="_blank" rel="noopener noreferrer">
+          <u>dialorg.ai</u> - Ai startup focused on building RAG systems for city councils and universities.
+        </a>
+      </div>
     </div>
+  </div>
 
-    <div class="container">
-        <img src="/public/profile.jpeg" style="width: 200px; margin-bottom: 20px; border-radius: 12px;">
-        <p class="intro">Hi, my name is Tanmay Hinge</p>
-        <h2 class="desc">📌 Minnesota, USA</h2>
-        <h2 class="desc">I work as a Full-Time Computer Science Instructor at a Community College.<br> My work revolves around human-centered AI, grounded NLP for RAG and vision-language-action interfaces.<br></h2>
-        <h2 class="desc">I am working towards getting my Ph.D in Computer Science</h2>
-
-        <div class="work-section">
-            <h2 class="work-title">Work</h2>
-            <div class="work-links">
-                <a href="https://github.com/tanmayhinge" target="_blank" rel="noopener noreferrer"><u>screenflow</u> - ios app</a>
-                <a href="https://github.com/tanmayhinge" target="_blank" rel="noopener noreferrer"><u>honeyscript</u> - lightweight, javascript-inspired experimental programming language designed for research and academic exploration.</a>
-                <a href="https://github.com/tanmayhinge" target="_blank" rel="noopener noreferrer"><u>xcrypt</u> - a decentralized, client-side encrypted password manager</a>
-                <a href="https://github.com/tanmayhinge" target="_blank" rel="noopener noreferrer"><u>dialorg.ai</u> - Ai startup focused on building RAG systems for city councils and universities.</a>
-            </div>
-        </div>
-    </div>
+  <div class="social-links" aria-label="External links">
+    <nav class="link-list">
+      <a href="cv_tanmay.pdf" target="_blank" rel="noopener noreferrer">CV</a>
+      <a href="https://www.linkedin.com/in/tanmayhinge/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      <a href="https://youtube.com/@tanmayhinge" target="_blank" rel="noopener noreferrer">YouTube</a>
+      <a href="mailto:hingetanmay@gmail.com">Email</a>
+    </nav>
+  </div>
 </body>
 </html>
