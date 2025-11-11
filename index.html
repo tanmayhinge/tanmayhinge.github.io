@@ -29,6 +29,7 @@
       background-color: #D97757;
       color: #000;
       line-height: 1.4;
+      padding-top: 4rem;
     }
 
     /* Main content container */
@@ -95,17 +96,23 @@
       display: block;
     }
 
-    /* Bottom-right link list */
+    /* Top navigation bar */
     .social-links {
       position: fixed;
-      right: 1rem;
-      bottom: 1rem;
+      top: 0;
+      left: 0;
+      right: 0;
+      background-color: rgba(217, 119, 87, 0.95);
+      backdrop-filter: blur(10px);
       z-index: 100;
+      padding: 1rem 0;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
     }
 
     .link-list {
       display: flex;
       align-items: center;
+      justify-content: center;
       gap: 0.5rem;
       flex-wrap: wrap;
     }
@@ -150,7 +157,7 @@
 
     @media (max-width: 400px) {
       .link-list {
-        justify-content: flex-end;
+        justify-content: center;
         gap: 0.35rem;
       }
       .link-list a {
@@ -310,13 +317,23 @@
 </head>
 
 <body>
+  <!-- Top navigation bar -->
+  <div class="social-links" aria-label="External links">
+    <nav class="link-list">
+      <a href="cv_tanmay.pdf" target="_blank" rel="noopener noreferrer">CV</a>
+      <a href="https://www.linkedin.com/in/tanmayhinge/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+      <a href="https://youtube.com/@tanmayhinge" target="_blank" rel="noopener noreferrer">YouTube</a>
+      <a href="mailto:hingetanmay@gmail.com">Email</a>
+    </nav>
+  </div>
+
   <div class="container">
     <img src="/public/profile.jpeg" alt="Portrait of Tanmay Hinge" class="profile" />
     <p class="intro">Hi, my name is Tanmay Hinge</p>
     <h2 class="desc">📌 Minnesota, USA</h2>
     <h2 class="desc">
       My work revolves around human-centered AI, human-robot interaction and vision-language-action interfaces.<br/>
-      Also, I work as a Full-Time Computer Science Instructor at a Community College in Minnesota.<br />
+      Also, I work as a Full-Time Computer Science Instructor at a Community and Technical College in Minnesota.<br />
     </h2>
     <h2 class="desc">Ph.D in Computer Science Applicant.</h2>
 
@@ -401,15 +418,6 @@
       <img id="lightbox-img" src="" alt="Full size photo">
       <p class="lightbox-caption" id="lightbox-caption"></p>
     </div>
-  </div>
-
-  <div class="social-links" aria-label="External links">
-    <nav class="link-list">
-      <a href="cv_tanmay.pdf" target="_blank" rel="noopener noreferrer">CV</a>
-      <a href="https://www.linkedin.com/in/tanmayhinge/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-      <a href="https://youtube.com/@tanmayhinge" target="_blank" rel="noopener noreferrer">YouTube</a>
-      <a href="mailto:hingetanmay@gmail.com">Email</a>
-    </nav>
   </div>
 
   <script>
