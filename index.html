@@ -6,451 +6,88 @@
   <title>Tanmay Hinge</title>
   <meta name="description" content="Computer Science Researcher" />
 
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" href="/circle_favicon.png">
+  <link rel="apple-touch-icon" href="/circle_favicon.png">
+
   <!-- Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet" />
 
-  <style>
-    /* Base reset */
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    html, body {
-      height: 100%;
-    }
-
-    body {
-      min-height: 100%;
-      font-family: 'Montserrat', sans-serif;
-      background-color: #D97757;
-      color: #000;
-      line-height: 1.4;
-      padding-top: 4rem;
-    }
-
-    /* Main content container */
-    .container {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: flex-start;
-      min-height: 100vh;
-      width: 100%;
-      max-width: 800px;
-      margin: 0 auto;
-      padding: 2rem 2rem 4rem; /* bottom padding to ensure no overlap */
-    }
-
-    .intro {
-      font-size: 1.5rem;
-      font-weight: 600;
-      margin: 0.5rem 0 1rem;
-    }
-
-    .desc {
-      font-size: 1rem;
-      font-weight: 200;
-      color: #fff;
-      margin-bottom: 0.75rem;
-    }
-
-    .work-section {
-      margin-top: 1.5rem;
-    }
-
-    .work-title {
-      font-size: 1rem;
-      font-weight: 600;
-      margin-bottom: 0.75rem;
-      color: #000;
-    }
-
-    .work-links {
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      padding-left: 1.25rem;
-    }
-
-    .work-links a {
-      color: #000;
-      text-decoration: none;
-      font-size: 0.95rem;
-      font-weight: 400;
-      transition: opacity 0.2s ease, color 0.2s ease;
-    }
-
-    .work-links a:hover {
-      color: #fff;
-    }
-
-    .profile {
-      width: 200px;
-      max-width: 60vw;
-      margin-bottom: 20px;
-      border-radius: 12px;
-      display: block;
-    }
-
-    /* Top navigation bar */
-    .social-links {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      background-color: rgba(217, 119, 87, 0.95);
-      backdrop-filter: blur(10px);
-      z-index: 100;
-      padding: 1rem 0;
-      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    .link-list {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.5rem;
-      flex-wrap: wrap;
-    }
-
-    .link-list a {
-      color: #000;
-      text-decoration: none;
-      font-weight: 500;
-      font-size: 0.92rem;
-      transition: color 0.2s ease;
-    }
-
-    .link-list a:hover {
-      color: #fff;
-    }
-
-    .link-list a:not(:last-child)::after {
-      content: " |";
-      margin-left: 0.5rem;
-      color: #000;
-      opacity: 0.6;
-    }
-
-    /* Responsive */
-    @media (max-width: 768px) {
-      .container {
-        padding: 1.25rem 1rem 4rem;
-      }
-      .intro {
-        font-size: 1.25rem;
-      }
-      .desc {
-        font-size: 0.95rem;
-      }
-      .work-links a {
-        font-size: 0.9rem;
-      }
-      .link-list a {
-        font-size: 0.85rem;
-      }
-    }
-
-    @media (max-width: 400px) {
-      .link-list {
-        justify-content: center;
-        gap: 0.35rem;
-      }
-      .link-list a {
-        font-size: 0.8rem;
-      }
-      .link-list a:not(:last-child)::after {
-        margin-left: 0.35rem;
-      }
-    }
-
-    /* Gallery Section */
-    .gallery-section {
-      width: 100%;
-      max-width: 800px;
-      margin: 3rem auto 0;
-      padding: 0 2rem 6rem;
-    }
-
-    .gallery-title {
-      font-size: 1rem;
-      font-weight: 600;
-      margin-bottom: 1.5rem;
-      color: #000;
-    }
-
-    .photo-gallery {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-      gap: 1rem;
-      width: 100%;
-    }
-
-    .photo-item {
-      position: relative;
-      overflow: hidden;
-      border-radius: 8px;
-    }
-
-    .photo-gallery img {
-      width: 100%;
-      height: 200px;
-      object-fit: cover;
-      border-radius: 8px;
-      cursor: pointer;
-      transition: transform 0.3s ease, box-shadow 0.3s ease;
-      display: block;
-    }
-
-    .photo-item:hover img {
-      transform: scale(1.05);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-    }
-
-    .photo-caption-overlay {
-      position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
-      background: rgba(0, 0, 0, 0.8);
-      color: #fff;
-      padding: 0.75rem;
-      font-size: 0.875rem;
-      transform: translateY(100%);
-      transition: transform 0.3s ease;
-      border-radius: 0 0 8px 8px;
-    }
-
-    .photo-item:hover .photo-caption-overlay {
-      transform: translateY(0);
-    }
-
-    /* Lightbox for full-size image viewing */
-    .lightbox {
-      display: none;
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background-color: rgba(0, 0, 0, 0.9);
-      z-index: 1000;
-      justify-content: center;
-      align-items: center;
-    }
-
-    .lightbox.active {
-      display: flex;
-    }
-
-    .lightbox-content {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      max-width: 90%;
-      max-height: 90%;
-    }
-
-    .lightbox img {
-      max-width: 100%;
-      max-height: 80vh;
-      object-fit: contain;
-      border-radius: 8px;
-    }
-
-    .lightbox-caption {
-      color: #fff;
-      font-size: 1rem;
-      margin-top: 1rem;
-      text-align: center;
-      max-width: 600px;
-      line-height: 1.5;
-    }
-
-    .lightbox-close {
-      position: absolute;
-      top: 2rem;
-      right: 2rem;
-      color: #fff;
-      font-size: 2rem;
-      cursor: pointer;
-      background: none;
-      border: none;
-      padding: 0.5rem;
-      line-height: 1;
-    }
-
-    .lightbox-close:hover {
-      opacity: 0.7;
-    }
-
-    @media (max-width: 768px) {
-      .gallery-section {
-        padding: 0 1rem 6rem;
-      }
-
-      .photo-gallery {
-        grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-        gap: 0.75rem;
-      }
-
-      .photo-gallery img {
-        height: 150px;
-      }
-    }
-
-    @media (max-width: 400px) {
-      .photo-gallery {
-        grid-template-columns: repeat(2, 1fr);
-        gap: 0.5rem;
-      }
-
-      .photo-gallery img {
-        height: 120px;
-      }
-    }
-  </style>
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="styles.css" />
 </head>
 
 <body>
-  <!-- Top navigation bar -->
-  <div class="social-links" aria-label="External links">
-    <nav class="link-list">
-      <a href="cv_tanmay.pdf" target="_blank" rel="noopener noreferrer">CV</a>
-      <a href="https://www.linkedin.com/in/tanmayhinge/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
-      <a href="https://youtube.com/@tanmayhinge" target="_blank" rel="noopener noreferrer">YouTube</a>
-      <a href="mailto:hingetanmay@gmail.com">Email</a>
-    </nav>
-  </div>
-
   <div class="container">
-    <img src="/public/profile.jpg" alt="Portrait of Tanmay Hinge" class="profile" />
-    <p class="intro">Hi, my name is Tanmay Hinge</p>
-    <h2 class="desc">📌 Minnesota, USA</h2>
-    <h2 class="desc">
-      My work revolves around human-centered AI, human-robot interaction and vision-language-action interfaces.<br/>
-      Also, I work as a Full-Time Computer Science Instructor at a Community and Technical College in Minnesota.<br />
-    </h2>
-    <h2 class="desc">Ph.D in Computer Science Applicant.</h2>
-
-    <div class="work-section">
-      <h2 class="work-title">Work</h2>
-      <div class="work-links">
-        <a href="https://github.com/tanmayhinge" target="_blank" rel="noopener noreferrer">
-          <u>screenflow</u> - ios app
-        </a>
-        <a href="https://github.com/tanmayhinge" target="_blank" rel="noopener noreferrer">
-          <u>honeyscript</u> - lightweight, javascript-inspired experimental programming language designed for research and academic exploration.
-        </a>
-        <a href="https://github.com/tanmayhinge" target="_blank" rel="noopener noreferrer">
-          <u>xcrypt</u> - a decentralized, client-side encrypted password manager
-        </a>
-        <a href="https://github.com/tanmayhinge" target="_blank" rel="noopener noreferrer">
-          <u>dialorg.ai LLC</u> - An Ai startup I founded that is focused on building RAG powered conversational Ai for city councils and universities.
-        </a>
+    <!-- Header -->
+    <header class="header">
+      <div class="profile-section">
+        <img src="/public/profile.jpg" alt="Tanmay Hinge" class="profile" />
+        <div class="header-text">
+          <h1>Tanmay Hinge</h1>
+          <p class="location">Minnesota, USA</p>
+        </div>
       </div>
-    </div>
 
+      <p class="bio">
+        My work revolves around human-centered AI, human-robot interaction and vision-language-action interfaces.
+      </p>
 
-    <div class="work-section">
-      <h2 class="work-title">Teaching</h2>
-      <div class="work-links">
-        <u>-</u>
-        <u>-</u>
-        <u>-</u>
+      <nav class="nav-links">
+        <a href="/">Home</a>
+        <a href="/reading.html">Reading</a>
+        <a href="https://www.linkedin.com/in/tanmayhinge/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+        <a href="https://youtube.com/@tanmayhinge" target="_blank" rel="noopener noreferrer">YouTube</a>
+        <a href="mailto:hingetanmay@gmail.com">Email</a>
+        <a href="/gallery.html">Gallery</a>
+      </nav>
+    </header>
+
+    <!-- Work Section -->
+    <section class="section">
+      <h2 class="section-title">Work</h2>
+      <div class="project-list">
+        <div class="project-card">
+          <a href="https://screenflow.app/" target="_blank" rel="noopener noreferrer">
+            <div class="project-name">screenflow</div>
+            <div class="project-description">iOS app</div>
+          </a>
+        </div>
+
+        <div class="project-card">
+          <a href="https://github.com/tanmayhinge" target="_blank" rel="noopener noreferrer">
+            <div class="project-name">honeyscript</div>
+            <div class="project-description">Lightweight, experimental programming language designed for research.</div>
+          </a>
+        </div>
+
+        <div class="project-card">
+          <a href="https://github.com/tanmayhinge" target="_blank" rel="noopener noreferrer">
+            <div class="project-name">xcrypt</div>
+            <div class="project-description">A decentralized, client-side encrypted password manager</div>
+          </a>
+        </div>
+
+        <div class="project-card">
+          <a href="https://tanmayhinge.com/" target="_blank" rel="noopener noreferrer">
+            <div class="project-name">dialorg.ai LLC</div>
+            <div class="project-description">An AI startup I founded that is focused on building RAG powered conversational AI for city councils and universities.</div>
+          </a>
+        </div>
       </div>
-    </div>
+    </section>
+
+    <!-- Teaching Section -->
+    <section class="section">
+      <h2 class="section-title">Teaching</h2>
+      <div class="teaching-list">
+        <p>I have designed and professionally taught courses on below topics to 500+ students.<br/><br/> </p>
+        <p>Algorithms and Datastructures, Computer Security, Advanced Computer Security, Computer Architecture, Intro to Computer Science, C++, Python, Java, Web Fundamentals, Game Development, etc.</p>
+      </div>
+    </section>
   </div>
-
-  <!-- Photo Gallery Section -->
-  <div class="gallery-section">
-    <h2 class="gallery-title">Gallery</h2>
-    <div class="photo-gallery">
-      <div class="photo-item">
-        <img src="photos/1.JPG" alt="Photo 1" data-caption="Me, as a child. Thank You to my parents for a fun childhood!" onclick="openLightbox(this.src, this.dataset.caption)">
-        <div class="photo-caption-overlay">Me, as a child. Thank You to my parents for a fun childhood!</div>
-      </div>
-      <div class="photo-item">
-        <img src="photos/2.jpeg" alt="Photo 2" data-caption="17 year old me" onclick="openLightbox(this.src, this.dataset.caption)">
-        <div class="photo-caption-overlay">17 year old me</div>
-      </div>
-      <div class="photo-item">
-        <img src="photos/3.jpg" alt="Photo 3" data-caption="24 year old me" onclick="openLightbox(this.src, this.dataset.caption)">
-        <div class="photo-caption-overlay">24 year old me</div>
-      </div>
-      <div class="photo-item">
-        <img src="photos/4.jpeg" alt="Photo 4" data-caption="Bought my first motorcycle. A Triumph Tiger 660 Sport" onclick="openLightbox(this.src, this.dataset.caption)">
-        <div class="photo-caption-overlay">Bought my first motorcycle. A Triumph Tiger 660 Sport</div>
-      </div>
-      <div class="photo-item">
-        <img src="photos/5.jpeg" alt="Photo 5" data-caption="Motorcycling on some country roads in rural Wisconsin and Minnesota." onclick="openLightbox(this.src, this.dataset.caption)">
-        <div class="photo-caption-overlay">Motorcycling on some country roads in rural Wisconsin and Minnesota.</div>
-      </div>
-      <div class="photo-item">
-        <img src="photos/6.jpeg" alt="Photo 6" data-caption="Arthur Morgan(me) and Sadie Adler(https://ritikaradhakrishnan.github.io/)" onclick="openLightbox(this.src, this.dataset.caption)">
-        <div class="photo-caption-overlay">Halloween 2025 - Arthur Morgan(me) and Sadie Adler(https://ritikaradhakrishnan.github.io/)</div>
-      </div>
-      <div class="photo-item">
-        <img src="photos/7.jpeg" alt="Photo 7" data-caption="Graduated from Chico State (Masters in Computer Science)" onclick="openLightbox(this.src, this.dataset.caption)">
-        <div class="photo-caption-overlay">Graduated from Chico State (Masters in Computer Science)</div>
-      </div>
-      <div class="photo-item">
-        <img src="photos/8.jpeg" alt="Photo 8" data-caption="Halloween 2023 - Breaking Bad" onclick="openLightbox(this.src, this.dataset.caption)">
-        <div class="photo-caption-overlay">Halloween 2023 - Breaking Bad</div>
-      </div>
-      <div class="photo-item">
-        <img src="photos/9.jpeg" alt="Photo 9" data-caption="At a Pumpkin farm in Durham, CA" onclick="openLightbox(this.src, this.dataset.caption)">
-        <div class="photo-caption-overlay">At a Pumpkin farm in Durham, CA</div>
-      </div>
-      <div class="photo-item">
-        <img src="photos/535DD434-9EC0-4824-B300-ABAE2614A46A_1_105_c.jpeg" alt="Photo 10" data-caption="At Lassen Volcanic National Park." onclick="openLightbox(this.src, this.dataset.caption)">
-        <div class="photo-caption-overlay">At Lassen Volcanic National Park.</div>
-      </div>
-      <div class="photo-item">
-        <img src="photos/96C8DA16-8910-4C47-9238-CCE12C9B3CDA_1_201_a.jpeg" alt="Photo 11" data-caption="Playing GTA San Andreas, Runescape and NFS in my summer vacations." onclick="openLightbox(this.src, this.dataset.caption)">
-        <div class="photo-caption-overlay">Playing GTA San Andreas, Runescape and NFS in my summer vacations.</div>
-      </div>
-      <div class="photo-item">
-        <img src="photos/C61ABDF2-94EE-4F3E-82D2-13D2DD9530CE_1_105_c.jpeg" alt="Photo 12" data-caption="13 year old me, cosplaying Narendra Modi." onclick="openLightbox(this.src, this.dataset.caption)">
-        <div class="photo-caption-overlay">13 year old me, cosplaying Narendra Modi.</div>
-      </div>
-    </div>
-  </div>
-
-  <!-- Lightbox for full-size viewing -->
-  <div class="lightbox" id="lightbox" onclick="closeLightbox()">
-    <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
-    <div class="lightbox-content">
-      <img id="lightbox-img" src="" alt="Full size photo">
-      <p class="lightbox-caption" id="lightbox-caption"></p>
-    </div>
-  </div>
-
-  <script>
-    function openLightbox(src, caption) {
-      const lightbox = document.getElementById('lightbox');
-      const lightboxImg = document.getElementById('lightbox-img');
-      const lightboxCaption = document.getElementById('lightbox-caption');
-      lightboxImg.src = src;
-      lightboxCaption.textContent = caption || '';
-      lightbox.classList.add('active');
-    }
-
-    function closeLightbox() {
-      const lightbox = document.getElementById('lightbox');
-      lightbox.classList.remove('active');
-    }
-
-    // Close lightbox on ESC key
-    document.addEventListener('keydown', function(e) {
-      if (e.key === 'Escape') {
-        closeLightbox();
-      }
-    });
-  </script>
 </body>
 </html>
