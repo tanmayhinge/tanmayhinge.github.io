@@ -76,7 +76,7 @@ body {
 }
 
 .nav-links a {
-  color: #695543;
+  color: #d6b614;
   text-decoration: none;
   font-size: 0.95rem;
   transition: color 0.2s ease;
@@ -102,34 +102,31 @@ body {
 .project-list {
   display: flex;
   flex-direction: column;
-  gap: 1.25rem;
+  gap: 0.75rem;
 }
 
 .project-card {
-  background-color: #141414;
-  border: 1px solid #262626;
-  border-radius: 12px;
-  padding: 1.25rem;
-  transition: all 0.2s ease;
-}
-
-.project-card:hover {
-  background-color: #1a1a1a;
-  border-color: #404040;
-  transform: translateY(-2px);
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  gap: 1rem;
+  align-items: baseline;
+  padding: 0.5rem 0;
 }
 
 .project-card a {
   text-decoration: none;
-  color: inherit;
-  display: block;
+  color: #d6b614;
+  font-size: 1rem;
+  font-weight: 500;
+  transition: color 0.2s ease;
 }
 
-.project-name {
-  font-size: 1rem;
-  font-weight: 600;
+.project-card a:hover {
   color: #fff;
-  margin-bottom: 0.5rem;
+}
+
+.line-separator {
+  display: none;
 }
 
 .project-description {
@@ -140,16 +137,54 @@ body {
 
 /* Teaching Section */
 .teaching-list {
-  background-color: #141414;
-  border: 1px solid #262626;
+  background-color: transparent;
+  border: none;
   border-radius: 12px;
-  padding: 1.25rem;
+  padding: 0;
 }
 
 .teaching-list p {
   font-size: 0.95rem;
   color: #d4d4d4;
   line-height: 1.6;
+  text-align: justify;
+}
+
+/* Now Page */
+.now-content {
+  background-color: transparent;
+}
+
+.now-content p {
+  font-size: 0.95rem;
+  color: #d4d4d4;
+  line-height: 1.6;
+  margin-bottom: 1.5rem;
+}
+
+.now-content a {
+  color: #d6b614;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.now-content a:hover {
+  color: #fff;
+}
+
+.now-subtitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  margin-top: 2rem;
+  margin-bottom: 0.75rem;
+}
+
+.now-updated {
+  font-size: 0.85rem;
+  color: #a3a3a3;
+  margin-top: 2rem;
+  font-style: italic;
 }
 
 /* Gallery Section */
