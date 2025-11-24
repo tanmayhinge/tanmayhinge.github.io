@@ -187,6 +187,17 @@ body {
   font-style: italic;
 }
 
+/* Last Updated Footer */
+.last-updated {
+  font-size: 0.85rem;
+  color: #a3a3a3;
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid #3a3a3a;
+  text-align: center;
+  font-style: italic;
+}
+
 /* Gallery Section */
 .gallery-section {
   margin-top: 3rem;
