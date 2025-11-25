@@ -5,3 +5,4 @@ fetch('/header.html')
     document.getElementById('header-placeholder').innerHTML = data;
   })
   .catch(error => console.error('Error loading header:', error));
+
