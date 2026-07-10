@@ -28,3 +28,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+# internal planning docs (not for the public site)
+claude-code-website-brief.md
+tanmayhinge-site-rework.md
+tanmayhinge-website-content.md

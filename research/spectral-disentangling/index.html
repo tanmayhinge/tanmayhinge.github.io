@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Disentangling mixed spectra · Tanmay Hinge</title>
+  <meta name="description" content="Does masked-sequence pretraining learn physical structure from 1D mixed spectra, or does it learn the noise? A fine-tuning comparison came back close to null; linear probes on the same frozen encoder said the opposite." />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Disentangling mixed spectra" />
+  <meta property="og:description" content="The fine-tuning comparison came back close to null. The probes said the opposite." />
+  <meta property="og:url" content="https://tanmayhinge.com/research/spectral-disentangling/" />
+  <meta property="og:image" content="/og/spectral.png" />
+  <meta name="twitter:card" content="summary_large_image" />
+
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="192x192" href="/circle_favicon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/circle_favicon.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="/styles.css?v=11" />
+</head>
+
+<body>
+  <main class="container reading">
+    <a class="backlink" href="/">&larr; Home</a>
+
+    <div class="spectrum-band">
+      <svg class="spectrum" viewBox="0 0 1000 200" role="img" aria-label="A synthetic proton NMR spectrum with two masked spans reconstructed on load.">
+  <defs><clipPath id="masks"><rect x="564.0" y="0" width="49.2" height="200"/><rect x="849.3" y="0" width="39.4" height="200"/></clipPath></defs>
+  <line class="spec-axis" x1="8.0" y1="168.0" x2="992.0" y2="168.0"/>
+  <path id="spec-d" class="spec-trace" d="M8.00 167.99 L8.70 167.99 L9.41 167.99 L10.11 167.99 L10.81 167.99 L11.51 167.99 L12.22 167.99 L12.92 167.99 L13.62 167.99 L14.33 167.99 L15.03 167.99 L15.73 167.99 L16.43 167.99 L17.14 167.99 L17.84 167.99 L18.54 167.99 L19.25 167.99 L19.95 167.99 L20.65 167.99 L21.35 167.99 L22.06 167.99 L22.76 167.99 L23.46 167.99 L24.17 167.99 L24.87 167.99 L25.57 167.99 L26.27 167.99 L26.98 167.99 L27.68 167.99 L28.38 167.99 L29.09 167.99 L29.79 167.99 L30.49 167.99 L31.19 167.99 L31.90 167.99 L32.60 167.99 L33.30 167.99 L34.01 167.99 L34.71 167.99 L35.41 167.99 L36.11 167.99 L36.82 167.99 L37.52 167.99 L38.22 167.99 L38.93 167.99 L39.63 167.99 L40.33 167.99 L41.03 167.99 L41.74 167.99 L42.44 167.99 L43.14 167.99 L43.85 167.99 L44.55 167.99 L45.25 167.99 L45.95 167.99 L46.66 167.99 L47.36 167.99 L48.06 167.99 L48.77 167.99 L49.47 167.99 L50.17 167.99 L50.87 167.99 L51.58 167.99 L52.28 167.99 L52.98 167.99 L53.69 167.99 L54.39 167.99 L55.09 167.99 L55.79 167.99 L56.50 167.99 L57.20 167.99 L57.90 167.99 L58.61 167.99 L59.31 167.99 L60.01 167.99 L60.71 167.99 L61.42 167.99 L62.12 167.99 L62.82 167.99 L63.53 167.99 L64.23 167.99 L64.93 167.99 L65.63 167.99 L66.34 167.99 L67.04 167.98 L67.74 167.98 L68.45 167.98 L69.15 167.98 L69.85 167.98 L70.55 167.98 L71.26 167.98 L71.96 167.98 L72.66 167.98 L73.37 167.98 L74.07 167.98 L74.77 167.98 L75.47 167.98 L76.18 167.98 L76.88 167.98 L77.58 167.98 L78.29 167.98 L78.99 167.98 L79.69 167.98 L80.39 167.98 L81.10 167.98 L81.80 167.98 L82.50 167.98 L83.21 167.98 L83.91 167.98 L84.61 167.98 L85.31 167.98 L86.02 167.98 L86.72 167.98 L87.42 167.98 L88.13 167.98 L88.83 167.98 L89.53 167.98 L90.23 167.98 L90.94 167.98 L91.64 167.98 L92.34 167.98 L93.05 167.98 L93.75 167.98 L94.45 167.98 L95.15 167.98 L95.86 167.98 L96.56 167.98 L97.26 167.98 L97.97 167.98 L98.67 167.98 L99.37 167.98 L100.07 167.98 L100.78 167.98 L101.48 167.98 L102.18 167.98 L102.89 167.98 L103.59 167.98 L104.29 167.98 L104.99 167.98 L105.70 167.97 L106.40 167.97 L107.10 167.97 L107.81 167.97 L108.51 167.97 L109.21 167.97 L109.91 167.97 L110.62 167.97 L111.32 167.97 L112.02 167.97 L112.73 167.97 L113.43 167.97 L114.13 167.97 L114.83 167.97 L115.54 167.97 L116.24 167.97 L116.94 167.97 L117.65 167.97 L118.35 167.97 L119.05 167.97 L119.75 167.97 L120.46 167.97 L121.16 167.97 L121.86 167.97 L122.57 167.97 L123.27 167.97 L123.97 167.96 L124.67 167.96 L125.38 167.96 L126.08 167.96 L126.78 167.96 L127.49 167.96 L128.19 167.96 L128.89 167.96 L129.59 167.96 L130.30 167.96 L131.00 167.96 L131.70 167.96 L132.41 167.96 L133.11 167.96 L133.81 167.96 L134.51 167.96 L135.22 167.96 L135.92 167.95 L136.62 167.95 L137.33 167.95 L138.03 167.95 L138.73 167.95 L139.43 167.95 L140.14 167.95 L140.84 167.95 L141.54 167.95 L142.25 167.95 L142.95 167.95 L143.65 167.94 L144.35 167.94 L145.06 167.94 L145.76 167.94 L146.46 167.94 L147.17 167.94 L147.87 167.94 L148.57 167.94 L149.27 167.93 L149.98 167.93 L150.68 167.93 L151.38 167.93 L152.09 167.93 L152.79 167.93 L153.49 167.92 L154.19 167.92 L154.90 167.92 L155.60 167.92 L156.30 167.92 L157.01 167.91 L157.71 167.91 L158.41 167.91 L159.11 167.91 L159.82 167.90 L160.52 167.90 L161.22 167.90 L161.93 167.89 L162.63 167.89 L163.33 167.89 L164.03 167.88 L164.74 167.88 L165.44 167.88 L166.14 167.87 L166.85 167.87 L167.55 167.86 L168.25 167.86 L168.95 167.85 L169.66 167.85 L170.36 167.84 L171.06 167.83 L171.77 167.83 L172.47 167.82 L173.17 167.81 L173.87 167.80 L174.58 167.79 L175.28 167.78 L175.98 167.77 L176.69 167.76 L177.39 167.74 L178.09 167.73 L178.79 167.71 L179.50 167.69 L180.20 167.67 L180.90 167.65 L181.61 167.63 L182.31 167.60 L183.01 167.57 L183.71 167.53 L184.42 167.49 L185.12 167.45 L185.82 167.40 L186.53 167.34 L187.23 167.26 L187.93 167.18 L188.63 167.08 L189.34 166.96 L190.04 166.81 L190.74 166.62 L191.45 166.39 L192.15 166.08 L192.85 165.68 L193.55 165.13 L194.26 164.34 L194.96 163.17 L195.66 161.32 L196.37 158.12 L197.07 151.98 L197.77 138.81 L198.47 113.10 L199.18 102.66 L199.88 112.53 L200.58 102.65 L201.29 113.09 L201.99 138.80 L202.69 151.96 L203.39 158.09 L204.10 161.28 L204.80 163.13 L205.50 164.30 L206.21 165.08 L206.91 165.62 L207.61 166.02 L208.31 166.32 L209.02 166.55 L209.72 166.73 L210.42 166.87 L211.13 166.98 L211.83 167.08 L212.53 167.15 L213.23 167.21 L213.94 167.27 L214.64 167.31 L215.34 167.34 L216.05 167.37 L216.75 167.40 L217.45 167.41 L218.15 167.43 L218.86 167.44 L219.56 167.44 L220.26 167.45 L220.97 167.44 L221.67 167.44 L222.37 167.43 L223.07 167.42 L223.78 167.40 L224.48 167.38 L225.18 167.36 L225.89 167.33 L226.59 167.29 L227.29 167.24 L227.99 167.19 L228.70 167.13 L229.40 167.05 L230.10 166.96 L230.81 166.85 L231.51 166.72 L232.21 166.55 L232.91 166.34 L233.62 166.07 L234.32 165.72 L235.02 165.25 L235.73 164.60 L236.43 163.66 L237.13 162.22 L237.83 159.87 L238.54 155.60 L239.24 146.92 L239.94 129.70 L240.65 116.17 L241.35 109.78 L242.05 89.52 L242.75 101.71 L243.46 115.14 L244.16 122.00 L244.86 141.15 L245.57 152.87 L246.27 158.47 L246.97 161.42 L247.67 163.14 L248.38 164.25 L249.08 164.99 L249.78 165.53 L250.49 165.92 L251.19 166.21 L251.89 166.44 L252.59 166.62 L253.30 166.76 L254.00 166.88 L254.70 166.97 L255.41 167.04 L256.11 167.10 L256.81 167.15 L257.51 167.19 L258.22 167.22 L258.92 167.24 L259.62 167.26 L260.33 167.26 L261.03 167.26 L261.73 167.26 L262.43 167.24 L263.14 167.21 L263.84 167.18 L264.54 167.13 L265.25 167.07 L265.95 166.98 L266.65 166.88 L267.35 166.74 L268.06 166.56 L268.76 166.31 L269.46 165.98 L270.17 165.51 L270.87 164.83 L271.57 163.77 L272.27 162.05 L272.98 158.96 L273.68 152.77 L274.38 138.45 L275.09 104.17 L275.79 80.70 L276.49 120.99 L277.19 145.77 L277.90 155.85 L278.60 160.46 L279.30 162.89 L280.01 164.30 L280.71 165.19 L281.41 165.79 L282.11 166.20 L282.82 166.51 L283.52 166.73 L284.22 166.91 L284.93 167.04 L285.63 167.15 L286.33 167.24 L287.03 167.31 L287.74 167.37 L288.44 167.42 L289.14 167.46 L289.85 167.49 L290.55 167.52 L291.25 167.55 L291.95 167.57 L292.66 167.58 L293.36 167.60 L294.06 167.61 L294.77 167.62 L295.47 167.62 L296.17 167.63 L296.87 167.63 L297.58 167.63 L298.28 167.63 L298.98 167.62 L299.69 167.62 L300.39 167.61 L301.09 167.59 L301.79 167.58 L302.50 167.56 L303.20 167.54 L303.90 167.51 L304.61 167.48 L305.31 167.44 L306.01 167.39 L306.71 167.33 L307.42 167.25 L308.12 167.16 L308.82 167.05 L309.53 166.90 L310.23 166.71 L310.93 166.45 L311.63 166.10 L312.34 165.59 L313.04 164.84 L313.74 163.65 L314.45 161.59 L315.15 157.64 L315.85 149.14 L316.55 132.56 L317.26 125.82 L317.96 132.20 L318.66 125.83 L319.37 132.57 L320.07 149.15 L320.77 157.65 L321.47 161.61 L322.18 163.67 L322.88 164.87 L323.58 165.62 L324.29 166.13 L324.99 166.49 L325.69 166.75 L326.39 166.94 L327.10 167.10 L327.80 167.22 L328.50 167.31 L329.21 167.39 L329.91 167.46 L330.61 167.51 L331.31 167.56 L332.02 167.60 L332.72 167.63 L333.42 167.66 L334.13 167.69 L334.83 167.71 L335.53 167.73 L336.23 167.75 L336.94 167.76 L337.64 167.78 L338.34 167.79 L339.05 167.80 L339.75 167.81 L340.45 167.82 L341.15 167.83 L341.86 167.84 L342.56 167.84 L343.26 167.85 L343.97 167.86 L344.67 167.86 L345.37 167.87 L346.07 167.87 L346.78 167.88 L347.48 167.88 L348.18 167.89 L348.89 167.89 L349.59 167.89 L350.29 167.90 L350.99 167.90 L351.70 167.90 L352.40 167.91 L353.10 167.91 L353.81 167.91 L354.51 167.91 L355.21 167.92 L355.91 167.92 L356.62 167.92 L357.32 167.92 L358.02 167.92 L358.73 167.93 L359.43 167.93 L360.13 167.93 L360.83 167.93 L361.54 167.93 L362.24 167.93 L362.94 167.94 L363.65 167.94 L364.35 167.94 L365.05 167.94 L365.75 167.94 L366.46 167.94 L367.16 167.94 L367.86 167.94 L368.57 167.94 L369.27 167.95 L369.97 167.95 L370.67 167.95 L371.38 167.95 L372.08 167.95 L372.78 167.95 L373.49 167.95 L374.19 167.95 L374.89 167.95 L375.59 167.95 L376.30 167.95 L377.00 167.95 L377.70 167.95 L378.41 167.95 L379.11 167.96 L379.81 167.96 L380.51 167.96 L381.22 167.96 L381.92 167.96 L382.62 167.96 L383.33 167.96 L384.03 167.96 L384.73 167.96 L385.43 167.96 L386.14 167.96 L386.84 167.96 L387.54 167.96 L388.25 167.96 L388.95 167.96 L389.65 167.96 L390.35 167.96 L391.06 167.96 L391.76 167.96 L392.46 167.96 L393.17 167.96 L393.87 167.96 L394.57 167.96 L395.27 167.96 L395.98 167.97 L396.68 167.97 L397.38 167.97 L398.09 167.97 L398.79 167.97 L399.49 167.97 L400.19 167.97 L400.90 167.97 L401.60 167.97 L402.30 167.97 L403.01 167.97 L403.71 167.97 L404.41 167.97 L405.11 167.97 L405.82 167.97 L406.52 167.97 L407.22 167.97 L407.93 167.97 L408.63 167.97 L409.33 167.97 L410.03 167.97 L410.74 167.97 L411.44 167.97 L412.14 167.97 L412.85 167.97 L413.55 167.97 L414.25 167.97 L414.95 167.97 L415.66 167.97 L416.36 167.97 L417.06 167.97 L417.77 167.97 L418.47 167.97 L419.17 167.97 L419.87 167.97 L420.58 167.97 L421.28 167.97 L421.98 167.97 L422.69 167.97 L423.39 167.97 L424.09 167.97 L424.79 167.97 L425.50 167.97 L426.20 167.97 L426.90 167.97 L427.61 167.97 L428.31 167.97 L429.01 167.97 L429.71 167.97 L430.42 167.97 L431.12 167.97 L431.82 167.97 L432.53 167.97 L433.23 167.97 L433.93 167.97 L434.63 167.97 L435.34 167.97 L436.04 167.97 L436.74 167.97 L437.45 167.97 L438.15 167.97 L438.85 167.97 L439.55 167.97 L440.26 167.97 L440.96 167.97 L441.66 167.97 L442.37 167.97 L443.07 167.97 L443.77 167.97 L444.47 167.97 L445.18 167.97 L445.88 167.97 L446.58 167.97 L447.29 167.97 L447.99 167.97 L448.69 167.97 L449.39 167.97 L450.10 167.97 L450.80 167.97 L451.50 167.97 L452.21 167.97 L452.91 167.97 L453.61 167.97 L454.31 167.97 L455.02 167.97 L455.72 167.97 L456.42 167.97 L457.13 167.97 L457.83 167.97 L458.53 167.97 L459.23 167.97 L459.94 167.97 L460.64 167.97 L461.34 167.97 L462.05 167.97 L462.75 167.97 L463.45 167.97 L464.15 167.97 L464.86 167.97 L465.56 167.97 L466.26 167.97 L466.97 167.97 L467.67 167.97 L468.37 167.97 L469.07 167.97 L469.78 167.97 L470.48 167.97 L471.18 167.97 L471.89 167.97 L472.59 167.97 L473.29 167.97 L473.99 167.97 L474.70 167.97 L475.40 167.97 L476.10 167.97 L476.81 167.97 L477.51 167.97 L478.21 167.97 L478.91 167.97 L479.62 167.97 L480.32 167.97 L481.02 167.96 L481.73 167.96 L482.43 167.96 L483.13 167.96 L483.83 167.96 L484.54 167.96 L485.24 167.96 L485.94 167.96 L486.65 167.96 L487.35 167.96 L488.05 167.96 L488.75 167.96 L489.46 167.96 L490.16 167.96 L490.86 167.96 L491.57 167.96 L492.27 167.96 L492.97 167.96 L493.67 167.96 L494.38 167.96 L495.08 167.96 L495.78 167.96 L496.49 167.96 L497.19 167.96 L497.89 167.96 L498.59 167.96 L499.30 167.96 L500.00 167.96 L500.70 167.95 L501.41 167.95 L502.11 167.95 L502.81 167.95 L503.51 167.95 L504.22 167.95 L504.92 167.95 L505.62 167.95 L506.33 167.95 L507.03 167.95 L507.73 167.95 L508.43 167.95 L509.14 167.95 L509.84 167.95 L510.54 167.95 L511.25 167.95 L511.95 167.95 L512.65 167.94 L513.35 167.94 L514.06 167.94 L514.76 167.94 L515.46 167.94 L516.17 167.94 L516.87 167.94 L517.57 167.94 L518.27 167.94 L518.98 167.94 L519.68 167.94 L520.38 167.93 L521.09 167.93 L521.79 167.93 L522.49 167.93 L523.19 167.93 L523.90 167.93 L524.60 167.93 L525.30 167.93 L526.01 167.92 L526.71 167.92 L527.41 167.92 L528.11 167.92 L528.82 167.92 L529.52 167.92 L530.22 167.92 L530.93 167.91 L531.63 167.91 L532.33 167.91 L533.03 167.91 L533.74 167.91 L534.44 167.90 L535.14 167.90 L535.85 167.90 L536.55 167.90 L537.25 167.90 L537.95 167.89 L538.66 167.89 L539.36 167.89 L540.06 167.88 L540.77 167.88 L541.47 167.88 L542.17 167.88 L542.87 167.87 L543.58 167.87 L544.28 167.86 L544.98 167.86 L545.69 167.86 L546.39 167.85 L547.09 167.85 L547.79 167.84 L548.50 167.84 L549.20 167.83 L549.90 167.83 L550.61 167.82 L551.31 167.81 L552.01 167.81 L552.71 167.80 L553.42 167.79 L554.12 167.79 L554.82 167.78 L555.53 167.77 L556.23 167.76 L556.93 167.75 L557.63 167.74 L558.34 167.73 L559.04 167.71 L559.74 167.70 L560.45 167.69 L561.15 167.67 L561.85 167.65 L562.55 167.64 L563.26 167.62 L563.96 167.60 L564.66 167.57 L565.37 167.55 L566.07 167.52 L566.77 167.49 L567.47 167.45 L568.18 167.42 L568.88 167.38 L569.58 167.33 L570.29 167.28 L570.99 167.22 L571.69 167.15 L572.39 167.08 L573.10 166.99 L573.80 166.89 L574.50 166.78 L575.21 166.65 L575.91 166.49 L576.61 166.30 L577.31 166.08 L578.02 165.80 L578.72 165.46 L579.42 165.04 L580.13 164.49 L580.83 163.76 L581.53 162.77 L582.23 161.38 L582.94 159.30 L583.64 155.99 L584.34 150.23 L585.05 139.37 L585.75 121.23 L586.45 105.38 L587.15 82.53 L587.86 62.01 L588.56 67.99 L589.26 62.01 L589.97 82.53 L590.67 105.37 L591.37 121.22 L592.07 139.36 L592.78 150.22 L593.48 155.98 L594.18 159.29 L594.89 161.37 L595.59 162.76 L596.29 163.75 L596.99 164.47 L597.70 165.02 L598.40 165.45 L599.10 165.78 L599.81 166.06 L600.51 166.28 L601.21 166.47 L601.91 166.62 L602.62 166.75 L603.32 166.86 L604.02 166.96 L604.73 167.04 L605.43 167.12 L606.13 167.18 L606.83 167.24 L607.54 167.29 L608.24 167.33 L608.94 167.37 L609.65 167.40 L610.35 167.43 L611.05 167.46 L611.75 167.48 L612.46 167.50 L613.16 167.52 L613.86 167.53 L614.57 167.55 L615.27 167.56 L615.97 167.56 L616.67 167.57 L617.38 167.57 L618.08 167.57 L618.78 167.57 L619.49 167.57 L620.19 167.56 L620.89 167.55 L621.59 167.53 L622.30 167.51 L623.00 167.47 L623.70 167.43 L624.41 167.38 L625.11 167.31 L625.81 167.21 L626.51 167.08 L627.22 166.89 L627.92 166.63 L628.62 166.22 L629.33 165.57 L630.03 164.43 L630.73 162.26 L631.43 157.57 L632.14 147.15 L632.84 136.60 L633.54 147.16 L634.25 157.58 L634.95 162.28 L635.65 164.46 L636.35 165.60 L637.06 166.26 L637.76 166.68 L638.46 166.95 L639.17 167.15 L639.87 167.29 L640.57 167.39 L641.27 167.47 L641.98 167.53 L642.68 167.58 L643.38 167.63 L644.09 167.66 L644.79 167.69 L645.49 167.71 L646.19 167.73 L646.90 167.75 L647.60 167.77 L648.30 167.78 L649.01 167.79 L649.71 167.80 L650.41 167.81 L651.11 167.82 L651.82 167.83 L652.52 167.84 L653.22 167.84 L653.93 167.85 L654.63 167.85 L655.33 167.86 L656.03 167.86 L656.74 167.87 L657.44 167.87 L658.14 167.87 L658.85 167.88 L659.55 167.88 L660.25 167.88 L660.95 167.88 L661.66 167.89 L662.36 167.89 L663.06 167.89 L663.77 167.89 L664.47 167.89 L665.17 167.90 L665.87 167.90 L666.58 167.90 L667.28 167.90 L667.98 167.90 L668.69 167.90 L669.39 167.90 L670.09 167.90 L670.79 167.91 L671.50 167.91 L672.20 167.91 L672.90 167.91 L673.61 167.91 L674.31 167.91 L675.01 167.91 L675.71 167.91 L676.42 167.91 L677.12 167.91 L677.82 167.91 L678.53 167.91 L679.23 167.91 L679.93 167.91 L680.63 167.91 L681.34 167.91 L682.04 167.91 L682.74 167.91 L683.45 167.91 L684.15 167.91 L684.85 167.91 L685.55 167.91 L686.26 167.91 L686.96 167.91 L687.66 167.91 L688.37 167.91 L689.07 167.91 L689.77 167.91 L690.47 167.91 L691.18 167.91 L691.88 167.91 L692.58 167.91 L693.29 167.91 L693.99 167.91 L694.69 167.91 L695.39 167.91 L696.10 167.91 L696.80 167.90 L697.50 167.90 L698.21 167.90 L698.91 167.90 L699.61 167.90 L700.31 167.90 L701.02 167.90 L701.72 167.90 L702.42 167.90 L703.13 167.89 L703.83 167.89 L704.53 167.89 L705.23 167.89 L705.94 167.89 L706.64 167.89 L707.34 167.88 L708.05 167.88 L708.75 167.88 L709.45 167.88 L710.15 167.88 L710.86 167.87 L711.56 167.87 L712.26 167.87 L712.97 167.87 L713.67 167.86 L714.37 167.86 L715.07 167.86 L715.78 167.85 L716.48 167.85 L717.18 167.85 L717.89 167.84 L718.59 167.84 L719.29 167.83 L719.99 167.83 L720.70 167.82 L721.40 167.82 L722.10 167.81 L722.81 167.81 L723.51 167.80 L724.21 167.79 L724.91 167.79 L725.62 167.78 L726.32 167.77 L727.02 167.76 L727.73 167.75 L728.43 167.74 L729.13 167.73 L729.83 167.72 L730.54 167.70 L731.24 167.69 L731.94 167.67 L732.65 167.65 L733.35 167.63 L734.05 167.61 L734.75 167.59 L735.46 167.57 L736.16 167.54 L736.86 167.51 L737.57 167.47 L738.27 167.43 L738.97 167.39 L739.67 167.34 L740.38 167.28 L741.08 167.21 L741.78 167.14 L742.49 167.05 L743.19 166.94 L743.89 166.82 L744.59 166.67 L745.30 166.49 L746.00 166.27 L746.70 166.00 L747.41 165.65 L748.11 165.20 L748.81 164.59 L749.51 163.76 L750.22 162.56 L750.92 160.76 L751.62 157.85 L752.33 152.72 L753.03 142.83 L753.73 124.36 L754.43 106.39 L755.14 94.31 L755.84 79.44 L756.54 94.31 L757.25 106.39 L757.95 124.35 L758.65 142.83 L759.35 152.71 L760.06 157.83 L760.76 160.74 L761.46 162.54 L762.17 163.74 L762.87 164.57 L763.57 165.17 L764.27 165.62 L764.98 165.97 L765.68 166.24 L766.38 166.46 L767.09 166.63 L767.79 166.78 L768.49 166.90 L769.19 167.00 L769.90 167.08 L770.60 167.15 L771.30 167.22 L772.01 167.27 L772.71 167.31 L773.41 167.35 L774.11 167.39 L774.82 167.42 L775.52 167.44 L776.22 167.47 L776.93 167.49 L777.63 167.50 L778.33 167.51 L779.03 167.52 L779.74 167.53 L780.44 167.54 L781.14 167.54 L781.85 167.54 L782.55 167.54 L783.25 167.54 L783.95 167.53 L784.66 167.52 L785.36 167.51 L786.06 167.49 L786.77 167.47 L787.47 167.44 L788.17 167.41 L788.87 167.36 L789.58 167.31 L790.28 167.24 L790.98 167.16 L791.69 167.05 L792.39 166.91 L793.09 166.72 L793.79 166.47 L794.50 166.10 L795.20 165.56 L795.90 164.70 L796.61 163.24 L797.31 160.50 L798.01 154.68 L798.71 142.70 L799.42 134.49 L800.12 138.21 L800.82 134.49 L801.53 142.71 L802.23 154.68 L802.93 160.50 L803.63 163.25 L804.34 164.71 L805.04 165.57 L805.74 166.12 L806.45 166.48 L807.15 166.74 L807.85 166.93 L808.55 167.08 L809.26 167.19 L809.96 167.28 L810.66 167.34 L811.37 167.40 L812.07 167.45 L812.77 167.49 L813.47 167.52 L814.18 167.54 L814.88 167.57 L815.58 167.59 L816.29 167.60 L816.99 167.62 L817.69 167.63 L818.39 167.64 L819.10 167.65 L819.80 167.65 L820.50 167.66 L821.21 167.66 L821.91 167.67 L822.61 167.67 L823.31 167.67 L824.02 167.67 L824.72 167.67 L825.42 167.67 L826.13 167.67 L826.83 167.67 L827.53 167.66 L828.23 167.66 L828.94 167.66 L829.64 167.65 L830.34 167.65 L831.05 167.64 L831.75 167.63 L832.45 167.63 L833.15 167.62 L833.86 167.61 L834.56 167.60 L835.26 167.59 L835.97 167.58 L836.67 167.57 L837.37 167.56 L838.07 167.54 L838.78 167.53 L839.48 167.51 L840.18 167.49 L840.89 167.47 L841.59 167.45 L842.29 167.43 L842.99 167.40 L843.70 167.38 L844.40 167.35 L845.10 167.31 L845.81 167.28 L846.51 167.24 L847.21 167.20 L847.91 167.15 L848.62 167.10 L849.32 167.04 L850.02 166.98 L850.73 166.90 L851.43 166.82 L852.13 166.73 L852.83 166.63 L853.54 166.51 L854.24 166.38 L854.94 166.22 L855.65 166.04 L856.35 165.83 L857.05 165.57 L857.75 165.27 L858.46 164.91 L859.16 164.46 L859.86 163.90 L860.57 163.18 L861.27 162.26 L861.97 161.02 L862.67 159.32 L863.38 156.87 L864.08 153.18 L864.78 147.23 L865.49 136.84 L866.19 117.51 L866.89 85.41 L867.59 59.19 L868.30 38.39 L869.00 16.00 L869.70 38.38 L870.41 59.15 L871.11 85.36 L871.81 117.44 L872.51 136.75 L873.22 147.12 L873.92 153.05 L874.62 156.73 L875.33 159.15 L876.03 160.83 L876.73 162.04 L877.43 162.95 L878.14 163.63 L878.84 164.17 L879.54 164.59 L880.25 164.92 L880.95 165.19 L881.65 165.41 L882.35 165.58 L883.06 165.72 L883.76 165.82 L884.46 165.90 L885.17 165.96 L885.87 166.00 L886.57 166.01 L887.27 166.01 L887.98 165.99 L888.68 165.94 L889.38 165.87 L890.09 165.77 L890.79 165.65 L891.49 165.48 L892.19 165.27 L892.90 165.01 L893.60 164.68 L894.30 164.25 L895.01 163.69 L895.71 162.95 L896.41 161.96 L897.11 160.58 L897.82 158.59 L898.52 155.58 L899.22 150.70 L899.93 142.16 L900.63 126.26 L901.33 99.85 L902.03 78.27 L902.74 61.17 L903.44 42.74 L904.14 61.19 L904.85 78.32 L905.55 99.92 L906.25 126.35 L906.95 142.28 L907.66 150.83 L908.36 155.74 L909.06 158.78 L909.77 160.80 L910.47 162.20 L911.17 163.23 L911.87 163.99 L912.58 164.58 L913.28 165.04 L913.98 165.42 L914.69 165.72 L915.39 165.97 L916.09 166.18 L916.79 166.36 L917.50 166.51 L918.20 166.64 L918.90 166.75 L919.61 166.85 L920.31 166.94 L921.01 167.02 L921.71 167.08 L922.42 167.14 L923.12 167.20 L923.82 167.25 L924.53 167.29 L925.23 167.33 L925.93 167.37 L926.63 167.40 L927.34 167.43 L928.04 167.46 L928.74 167.49 L929.45 167.51 L930.15 167.54 L930.85 167.56 L931.55 167.58 L932.26 167.59 L932.96 167.61 L933.66 167.63 L934.37 167.64 L935.07 167.65 L935.77 167.67 L936.47 167.68 L937.18 167.69 L937.88 167.70 L938.58 167.71 L939.29 167.72 L939.99 167.73 L940.69 167.74 L941.39 167.75 L942.10 167.76 L942.80 167.76 L943.50 167.77 L944.21 167.78 L944.91 167.78 L945.61 167.79 L946.31 167.79 L947.02 167.80 L947.72 167.81 L948.42 167.81 L949.13 167.82 L949.83 167.82 L950.53 167.82 L951.23 167.83 L951.94 167.83 L952.64 167.84 L953.34 167.84 L954.05 167.84 L954.75 167.85 L955.45 167.85 L956.15 167.86 L956.86 167.86 L957.56 167.86 L958.26 167.86 L958.97 167.87 L959.67 167.87 L960.37 167.87 L961.07 167.88 L961.78 167.88 L962.48 167.88 L963.18 167.88 L963.89 167.88 L964.59 167.89 L965.29 167.89 L965.99 167.89 L966.70 167.89 L967.40 167.90 L968.10 167.90 L968.81 167.90 L969.51 167.90 L970.21 167.90 L970.91 167.90 L971.62 167.91 L972.32 167.91 L973.02 167.91 L973.73 167.91 L974.43 167.91 L975.13 167.91 L975.83 167.91 L976.54 167.92 L977.24 167.92 L977.94 167.92 L978.65 167.92 L979.35 167.92 L980.05 167.92 L980.75 167.92 L981.46 167.92 L982.16 167.93 L982.86 167.93 L983.57 167.93 L984.27 167.93 L984.97 167.93 L985.67 167.93 L986.38 167.93 L987.08 167.93 L987.78 167.93 L988.49 167.93 L989.19 167.94 L989.89 167.94 L990.59 167.94 L991.30 167.94 L992.00 167.94"/>
+  <use href="#spec-d" class="spec-recon" clip-path="url(#masks)"/>
+  <rect class="spec-cover" x="564.0" y="0" width="49.2" height="200"/><rect class="spec-cover" x="849.3" y="0" width="39.4" height="200"/>
+  <text class="spec-tick" x="204.8" y="192" text-anchor="middle">8</text><text class="spec-tick" x="401.6" y="192" text-anchor="middle">6</text><text class="spec-tick" x="598.4" y="192" text-anchor="middle">4</text><text class="spec-tick" x="795.2" y="192" text-anchor="middle">2</text><text class="spec-tick" x="992.0" y="192" text-anchor="middle">0</text>
+  <text class="spec-tick" x="992.0" y="192" text-anchor="end">ppm</text>
+</svg>
+    </div>
+
+    <p class="kicker">self-supervised learning · scientific data · 2026 · report</p>
+    <h1 class="ptitle">Disentangling mixed spectra</h1>
+    <p class="dek">Does masked-sequence pretraining learn physical structure, or does it learn the noise?</p>
+
+    <dl class="meta">
+      <dt>Code</dt><dd><a href="https://github.com/tanmayhinge/spectral-disentangling" target="_blank" rel="noopener noreferrer">github.com/tanmayhinge/spectral-disentangling</a></dd>
+      <dt>Report</dt><dd><a href="https://github.com/tanmayhinge/spectral-disentangling/blob/main/REPORT.md" target="_blank" rel="noopener noreferrer">REPORT.md</a></dd>
+      <dt>Status</dt><dd>robustness sweep in progress</dd>
+      <dt>Stack</dt><dd>Python, PyTorch</dd>
+    </dl>
+
+    <article class="report prose">
+
+      <h2 class="h-label">The question</h2>
+      <p>
+        Masked-sequence pretraining works, in the sense that it improves downstream performance across
+        a large number of domains. What it learns is much less clear. A model that reconstructs masked
+        regions of a spectrum could be recovering the physical process that produced the peaks, or it
+        could be exploiting local smoothness and periodicity that happen to correlate with the physics.
+      </p>
+      <p>
+        Downstream accuracy cannot tell the two apart. They come apart under probing.
+      </p>
+
+      <h2 class="h-label">Setup</h2>
+      <p>
+        Synthetic data is a limitation for deployment and an advantage for this question, because it
+        lets me ask what the encoder knows against a ground truth that is not itself estimated.
+      </p>
+      <p>
+        I built a frozen twelve-compound library with Lorentzian lineshapes and J-coupling multiplets
+        at Pascal-triangle intensity ratios. Mixtures of two to five components on a 2048-point ppm
+        grid, with additive noise, a rolling baseline, and peak jitter. Every mixture carries exact
+        ground truth for component identity, concentration, and the clean per-component signal. The
+        reconstruction identity <code>mixture = sum(clean components) + baseline + noise</code> is
+        verified to zero floating-point error on every sample.
+      </p>
+      <div class="placeholder"><b>Figure 1</b>One mixture drawn over its clean component signals. To be exported from <code>scripts/visualize_mixtures.py</code>.</div>
+
+      <h2 class="h-label">Method</h2>
+      <p>
+        A 544k-parameter patch transformer: 64 patches, 4 layers, 4 heads. Pretrained with
+        contiguous-span masking on 20,000 unlabelled spectra, disjoint from all labelled data. Held-out
+        reconstruction error fell from 0.0089 to 0.0038. The model reconstructs denoised peak structure
+        inside fully masked regions.
+      </p>
+      <div class="placeholder"><b>Figure 2</b>A masked span with the reconstruction overlaid on ground truth. To be exported from the pretraining run.</div>
+
+      <h2 class="h-label">Result</h2>
+      <p>
+        The fine-tuning comparison came back close to null. Across label budgets, a from-scratch
+        baseline catches up (Figure 4). Presence classification saturates.
+      </p>
+      <p>
+        Linear probes on the frozen encoders said the opposite. Concentration MAE was 0.150 for the
+        pretrained encoder, 0.239 for a random encoder, and 0.138 for an encoder trained directly on
+        labels. Roughly 0.14 macro-F1 gain on presence. The pretrained encoder never saw a label.
+      </p>
+
+      <div class="fig-two">
+        <figure class="fig">
+          <svg viewBox="0 0 340 210" role="img" aria-labelledby="f3t f3d">
+            <title id="f3t">Concentration MAE by encoder</title>
+            <desc id="f3d">Random 0.239, pretrained 0.150, label-trained 0.138; lower is better.</desc>
+            <line class="c-axis" x1="120" y1="22" x2="120" y2="175" />
+            <rect class="c-bar" x="120" y="32" width="182" height="30" rx="2" />
+            <text class="c-cat" x="112" y="51" text-anchor="end">random</text>
+            <text class="c-val" x="308" y="51">0.239</text>
+            <rect class="c-bar hl" x="120" y="86" width="114" height="30" rx="2" />
+            <text class="c-cat" x="112" y="105" text-anchor="end">pretrained</text>
+            <text class="c-val" x="240" y="105">0.150</text>
+            <rect class="c-bar" x="120" y="140" width="105" height="30" rx="2" />
+            <text class="c-cat" x="112" y="159" text-anchor="end">label-trained</text>
+            <text class="c-val" x="231" y="159">0.138</text>
+            <text class="c-axis-title" x="120" y="196">concentration MAE, lower is better</text>
+          </svg>
+          <figcaption>Fig 3. Probe reads structure out of the frozen encoder.</figcaption>
+        </figure>
+        <figure class="fig">
+          <svg viewBox="0 0 340 214" role="img" aria-labelledby="f4t f4d">
+            <title id="f4t">Fine-tuning macro-F1 vs. label budget</title>
+            <desc id="f4d">From-scratch and pretrained converge as labels increase.</desc>
+            <line class="c-grid" x1="45" y1="25"    x2="300" y2="25" />
+            <line class="c-grid" x1="45" y1="78.3"  x2="300" y2="78.3" />
+            <line class="c-grid" x1="45" y1="131.7" x2="300" y2="131.7" />
+            <line class="c-axis" x1="45" y1="185" x2="300" y2="185" />
+            <line class="c-axis" x1="45" y1="25"  x2="45"  y2="185" />
+            <text class="c-tick" x="40" y="28"  text-anchor="end">1.0</text>
+            <text class="c-tick" x="40" y="81"  text-anchor="end">0.8</text>
+            <text class="c-tick" x="40" y="135" text-anchor="end">0.6</text>
+            <text class="c-tick" x="40" y="188" text-anchor="end">0.4</text>
+            <text class="c-tick" x="45"  y="198" text-anchor="middle">10</text>
+            <text class="c-tick" x="109" y="198" text-anchor="middle">40</text>
+            <text class="c-tick" x="173" y="198" text-anchor="middle">160</text>
+            <text class="c-tick" x="237" y="198" text-anchor="middle">640</text>
+            <text class="c-tick" x="300" y="198" text-anchor="middle">2560</text>
+            <polyline class="line-scr" points="45,178.9 109,102.1 173,39.4 237,26.6 300,25.5" />
+            <polyline class="line-pre" points="45,170.9 109,102.1 173,37.3 237,25.3 300,25.5" />
+            <circle class="dot-pre" cx="45" cy="170.9" r="2.4" />
+            <circle class="dot-pre" cx="300" cy="25.5" r="2.4" />
+            <circle class="dot-scr" cx="45" cy="178.9" r="2.4" />
+            <line class="line-pre" x1="60" y1="44" x2="78" y2="44" />
+            <text class="lab-pre" x="83" y="48">pretrained</text>
+            <line class="line-scr" x1="60" y1="62" x2="78" y2="62" />
+            <text class="lab-scr" x="83" y="66">from scratch</text>
+            <text class="c-axis-title" x="172" y="211" text-anchor="middle">labeled examples (log scale)</text>
+          </svg>
+          <figcaption>Fig 4. Fine-tuning erases the difference.</figcaption>
+        </figure>
+      </div>
+      <p class="fig-two-caption">
+        <b>The two figures disagree, and that is the finding.</b> The probe (left) says the pretrained
+        encoder has organised real structure: concentration is nearly as decodable as from a
+        label-trained encoder. The fine-tuning curve (right) says that structure buys nothing once the
+        whole model is free to move on an easy task. Both are true.
+      </p>
+
+      <h2 class="h-label">What it means</h2>
+      <p>
+        The encoder had learned real structure. The null was therefore a statement about task
+        difficulty and about the fine-tuning protocol, not about the representation. A task that a
+        from-scratch model can solve within the available budget cannot distinguish a good
+        initialisation from a bad one.
+      </p>
+
+      <h2 class="h-label">What would falsify it</h2>
+      <p>
+        The fine-tuning gap should reappear once the task is hard enough that a from-scratch model
+        cannot catch up within a fixed budget. A robustness sweep over signal-to-noise ratio and peak
+        overlap is running now. If the gap does not reappear, the probing result needs a different
+        explanation, and I will write that here.
+      </p>
+
+      <h2 class="h-label">Limitations</h2>
+      <ul>
+        <li>The compound library is synthetic, frozen, and small: twelve compounds, distinct peaks, moderate noise, so the supervised task saturates quickly.</li>
+        <li>One dimension. No real spectrometer data and no chemistry-grade realism.</li>
+        <li>Three seeds per fine-tuning condition; the random-encoder baseline is a single draw, not an average over initialisations.</li>
+        <li>The reconstruction objective has a height bias that under-predicts tall peaks.</li>
+        <li>Linear probes measure decodability, not whether a downstream model uses the structure.</li>
+      </ul>
+
+      <h2 class="h-label">Reproducibility</h2>
+      <p>
+        Config-driven YAML pipeline with typed dataclasses. Every entry point seeded. 31 tests. A
+        logged decision record. Every number on this page regenerates from one command.
+      </p>
+    </article>
+
+    <nav class="prevnext">
+      <span class="spacer">&larr;</span>
+      <a href="/work/regace/">Next work: Regace AI &rarr;</a>
+    </nav>
+  </main>
+</body>
+</html>

@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Regace AI · Tanmay Hinge</title>
+  <meta name="description" content="A retrieval-augmented generation engine for regulatory affairs teams, built so that every generated claim traces to a source passage. The hard part was the evaluation." />
+  <meta property="og:type" content="article" />
+  <meta property="og:title" content="Regace AI" />
+  <meta property="og:description" content="Retrieval-augmented generation over regulated text, where the hard part was the evaluation harness." />
+  <meta property="og:url" content="https://tanmayhinge.com/work/regace/" />
+  <meta property="og:image" content="/og/home.png" />
+  <meta name="twitter:card" content="summary" />
+
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="192x192" href="/circle_favicon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/circle_favicon.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="/styles.css?v=11" />
+</head>
+
+<body>
+  <main class="container reading">
+    <a class="backlink" href="/#work">&larr; Work</a>
+
+    <p class="kicker">retrieval and agents · regulated text · 2026 · write-up</p>
+    <h1 class="ptitle">Regace AI</h1>
+    <p class="dek">Generation where every claim traces to a source.</p>
+
+    <dl class="meta">
+      <dt>Site</dt><dd><a href="https://regaceai.com" target="_blank" rel="noopener noreferrer">regaceai.com</a></dd>
+      <dt>Status</dt><dd>two pilot pharmaceutical clients</dd>
+      <dt>Stack</dt><dd>retrieval, reranking, LLM generation</dd>
+    </dl>
+
+    <article class="report prose">
+      <h2 class="h-label">What it is</h2>
+      <p>
+        A retrieval-augmented generation engine for regulatory affairs teams. Structure-aware
+        ingestion, hybrid dense and keyword retrieval with reranking, citation-grounded generation.
+        10,000+ indexed documents, two pilot pharmaceutical clients.
+      </p>
+
+      <h2 class="h-label">The part that was hard</h2>
+      <p>
+        Not the retrieval. The evaluation. A curated question-answer test set, retrieval precision and
+        recall, and grounding checks, used to decide whether a change to chunking or embedding or
+        reranking had actually improved anything. Most of what I know about verifying language model
+        outputs I learned by discovering how easy it is to convince yourself you have improved a system.
+      </p>
+
+      <h2 class="h-label">What I would do differently</h2>
+      <div class="placeholder"><b>To write</b>One honest paragraph. This is the paragraph that separates a research page from a founder page.</div>
+    </article>
+
+    <nav class="prevnext">
+      <a href="/research/spectral-disentangling/">&larr; Prev: Disentangling mixed spectra</a>
+      <a href="/work/merit-labs/">Next: Merit Labs &rarr;</a>
+    </nav>
+  </main>
+</body>
+</html>
