@@ -51,8 +51,7 @@ body {
 /* Prose is narrower than the index: the page's only structural tension */
 .prose { max-width: 64ch; }
 
-/* Article pages: one centered reading column; body copy fills it, justified */
-.reading { max-width: 38rem; }
+/* Article pages: same width as the homepage; body copy fills it, justified */
 .reading .prose,
 .reading .dek,
 .reading .report p,
