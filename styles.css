@@ -257,6 +257,15 @@ a:focus-visible {
 .row:focus-visible .row-marker { transform: translateX(4px); }
 .row-marker::after { content: " \2192"; }
 
+/* non-link status label (e.g. work in progress), no arrow */
+.row-status {
+  font-family: var(--mono);
+  font-size: var(--t-micro);
+  letter-spacing: 0.06em;
+  color: var(--muted);
+  white-space: nowrap;
+}
+
 /* teaching row: same shape, not a link */
 .row.static { cursor: default; }
 
