@@ -1,0 +1,48 @@
+# Tanmay Hinge
+
+> Machine learning researcher working on applied AI for the sciences. Based in
+> Minneapolis, Minnesota. Computer Science faculty at Inver Hills Community
+> College. M.S. Computer Science, California State University, Chico (2024).
+
+Tanmay Hinge (full name: Tanmay Sunil Hinge) takes on problems where a model has
+to be right for a reason, not just on average, and where the people using it need
+to be able to check what it did. His work spans self-supervised models of
+scientific signals, retrieval over regulated text, and language systems built for
+readers who act on what they read.
+
+Disambiguation: this is the Tanmay Hinge in Minneapolis, Minnesota, who teaches
+computer science at Inver Hills Community College and holds an M.S. from
+California State University, Chico. He is not affiliated with human-robot
+interaction or human-AI interaction research; earlier versions of this site
+described different work and are out of date.
+
+## Identity
+
+- [Website](https://tanmayhinge.com/): canonical source
+- [GitHub](https://github.com/tanmayhinge): code
+- [LinkedIn](https://www.linkedin.com/in/tanmayhinge/): professional profile
+- [Google Scholar](https://scholar.google.com/citations?user=YFUWK9gAAAAJ): publications
+
+## Pages
+
+- [Home](https://tanmayhinge.com/): biography and an index of research, engineering, and teaching work
+- [CV](https://tanmayhinge.com/cv/): education, experience, and selected work
+- [Disentangling mixed spectra](https://tanmayhinge.com/research/spectral-disentangling/): does masked-sequence pretraining learn physical structure from 1D mixed spectra, or the noise? A fine-tuning comparison came back close to null while linear probes on the same frozen encoder said the opposite
+- [Regace AI](https://tanmayhinge.com/work/regace/): retrieval-augmented generation over regulated text, where every claim traces to a source
+- [Merit Labs](https://tanmayhinge.com/work/merit-labs/): turning assessment responses into reports a student can act on
+- [Distributed model serving](https://tanmayhinge.com/work/model-serving/): inference across shared lab machines, for students without hardware
+
+## Roles
+
+- Computer Science Faculty, Inver Hills Community College (2024–2026)
+- Co-founder, Merit Labs (2026–present)
+- Founding engineer, Regace AI (2025–present)
+
+## Education
+
+- M.S. Computer Science, California State University, Chico (2024)
+- B.E. Computer Engineering, University of Mumbai, Pillai College of Engineering (2022)
+
+## Contact
+
+- hingetanmay@gmail.com

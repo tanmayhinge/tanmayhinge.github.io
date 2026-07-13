@@ -4,6 +4,8 @@
    ============================================================ */
 
 :root {
+  color-scheme: light;
+
   --bg:     #EAEDF2;   /* cool plotter paper */
   --ink:    #141A24;   /* blue-black: text + spectrum trace */
   --muted:  #5C6672;   /* slate: tags, years, captions, secondary */
@@ -15,6 +17,7 @@
 
   --serif: 'Source Serif 4', Georgia, 'Times New Roman', serif;
   --display: 'Fraunces', Georgia, serif;
+  --brand: 'Oranienbaum', Georgia, serif;   /* the name, in the navbar, nowhere else */
   --mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 
   /* five sizes, nothing between */
@@ -26,6 +29,28 @@
 
   --u: 8px;   /* spacing unit; every gap is n*u */
   --rail: 170px;   /* left column: photo, section labels, dates */
+}
+
+/* ---- dark: the same four colours, inverted ----
+   Paper goes to night, ink to light, and the ultramarine lifts so it survives
+   a dark ground. --hair, --tint, the chart marks and the spectrum mask are all
+   derived from these four, so they follow without further work.
+   The two blocks must stay in sync; a selector list cannot cross a media query. */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+    --bg:     #10141A;
+    --ink:    #E6E9EF;
+    --muted:  #8A94A2;
+    --accent: #7F8FFF;
+  }
+}
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --bg:     #10141A;
+  --ink:    #E6E9EF;
+  --muted:  #8A94A2;
+  --accent: #7F8FFF;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -100,14 +125,35 @@ a:focus-visible {
 }
 .topnav a { text-decoration: none; color: var(--muted); }
 .topnav a:hover { color: var(--ink); }
+/* Oranienbaum ships one weight (400) and runs small and tall-ascendered,
+   so it needs a size bump and open tracking to hold the bar. */
 .topnav .brand {
-  font-family: var(--display);
-  font-size: 1rem;
-  font-weight: 600;
-  letter-spacing: -0.01em;
+  font-family: var(--brand);
+  font-size: 1.5rem;
+  font-weight: 400;
+  letter-spacing: 0.02em;
   color: var(--ink);
 }
-.topnav .navlinks { display: flex; gap: calc(3 * var(--u)); }
+/* On the homepage the brand IS the page's h1 — strip the heading defaults. */
+.topnav .brandline { font-size: inherit; font-weight: inherit; line-height: 1; }
+.topnav .navlinks { display: flex; align-items: baseline; gap: calc(3 * var(--u)); }
+
+/* the one button on the site: reads as a nav link, not a control */
+.theme-toggle {
+  font: inherit;
+  line-height: 1;
+  color: var(--muted);
+  background: none;
+  border: 0;
+  padding: 0;
+  cursor: pointer;
+}
+.theme-toggle:hover { color: var(--ink); }
+.theme-toggle:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
 
 .backlink {
   display: inline-block;
@@ -193,9 +239,12 @@ a:focus-visible {
   column-gap: calc(5 * var(--u));
   margin-bottom: calc(1 * var(--u));
 }
+/* .idx-label and .row-title are real h2/h3 elements so the index has an outline
+   a crawler can read. Both reset the heading defaults to render as before. */
 .idx-label {
   font-family: var(--mono);
   font-size: var(--t-micro);
+  font-weight: 400;
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--muted);
@@ -282,7 +331,16 @@ a:focus-visible {
   font-size: var(--t-micro);
   letter-spacing: 0.06em;
   color: var(--muted);
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: calc(2 * var(--u));
+  flex-wrap: wrap;
 }
+/* rel="me" anchors: the identity graph needs real links, not just JSON-LD */
+.foot a { color: var(--muted); text-decoration-color: var(--hair); }
+.foot a:hover { color: var(--ink); text-decoration-color: var(--accent); }
+.foot-links { display: flex; gap: calc(1.5 * var(--u)); flex-wrap: wrap; }
 
 /* ============================================================
    Project page template

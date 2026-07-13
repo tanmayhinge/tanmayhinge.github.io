@@ -3,14 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Tanmay Hinge</title>
-  <meta name="description" content="Tanmay Hinge, machine learning researcher working on applied machine learning for the sciences." />
+  <title>Tanmay Hinge — Machine Learning Researcher</title>
+  <meta name="description" content="Tanmay Hinge is a machine learning researcher in Minneapolis working on applied AI for the sciences, and computer science faculty at Inver Hills Community College." />
+  <meta name="author" content="Tanmay Hinge" />
+  <link rel="canonical" href="https://tanmayhinge.com/" />
+
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="Tanmay Hinge" />
+  <meta property="og:site_name" content="Tanmay Hinge" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:title" content="Tanmay Hinge — Machine Learning Researcher" />
   <meta property="og:description" content="Applied machine learning for the sciences. Models that have to be right for a reason, and checkable by the people who use them." />
   <meta property="og:url" content="https://tanmayhinge.com/" />
-  <meta property="og:image" content="/og/home.png" />
+  <meta property="og:image" content="https://tanmayhinge.com/og/home.png" />
   <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://tanmayhinge.com/og/home.png" />
 
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
   <link rel="icon" type="image/png" sizes="192x192" href="/circle_favicon.png">
@@ -18,20 +24,93 @@
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=Oranienbaum&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="/styles.css?v=15" />
+  <link rel="stylesheet" href="/styles.css?v=19" />
+
+  <!-- stamp the stored theme before first paint; blocking on purpose -->
+  <script>(function(){try{var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <script src="/theme.js" defer></script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Person",
+        "@id": "https://tanmayhinge.com/#person",
+        "name": "Tanmay Hinge",
+        "alternateName": "Tanmay Sunil Hinge",
+        "url": "https://tanmayhinge.com/",
+        "image": "https://tanmayhinge.com/public/profile.jpg",
+        "email": "hingetanmay@gmail.com",
+        "jobTitle": "Machine Learning Researcher",
+        "description": "Machine learning researcher working on applied AI for the sciences: self-supervised models of scientific signals, retrieval over regulated text, and language systems built for readers who act on what they read.",
+        "address": {
+          "@type": "PostalAddress",
+          "addressLocality": "Minneapolis",
+          "addressRegion": "MN",
+          "addressCountry": "US"
+        },
+        "worksFor": {
+          "@type": "CollegeOrUniversity",
+          "name": "Inver Hills Community College",
+          "url": "https://www.inverhills.edu/"
+        },
+        "alumniOf": [
+          {
+            "@type": "CollegeOrUniversity",
+            "name": "California State University, Chico",
+            "url": "https://www.csuchico.edu/"
+          },
+          {
+            "@type": "CollegeOrUniversity",
+            "name": "University of Mumbai, Pillai College of Engineering"
+          }
+        ],
+        "knowsAbout": [
+          "Machine learning",
+          "Self-supervised learning",
+          "Representation learning",
+          "Scientific machine learning",
+          "Retrieval-augmented generation",
+          "Natural language processing"
+        ],
+        "sameAs": [
+          "https://github.com/tanmayhinge",
+          "https://www.linkedin.com/in/tanmayhinge/",
+          "https://scholar.google.com/citations?user=YFUWK9gAAAAJ"
+        ]
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://tanmayhinge.com/#website",
+        "url": "https://tanmayhinge.com/",
+        "name": "Tanmay Hinge",
+        "publisher": { "@id": "https://tanmayhinge.com/#person" },
+        "inLanguage": "en-US"
+      },
+      {
+        "@type": "ProfilePage",
+        "url": "https://tanmayhinge.com/",
+        "isPartOf": { "@id": "https://tanmayhinge.com/#website" },
+        "mainEntity": { "@id": "https://tanmayhinge.com/#person" }
+      }
+    ]
+  }
+  </script>
 </head>
 
 <body>
   <main class="container">
 
     <nav class="topnav">
-      <a class="brand" href="/">Tanmay Hinge</a>
+      <h1 class="brandline"><a class="brand" href="/">Tanmay Hinge</a></h1>
       <span class="navlinks">
         <a href="#work">Research</a>
         <a href="/cv/">CV</a>
         <a href="https://github.com/tanmayhinge" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <button class="theme-toggle" type="button" aria-label="Switch to dark theme" aria-pressed="false">◐</button>
       </span>
     </nav>
 
@@ -40,7 +119,6 @@
         <img class="headshot" src="/public/profile.jpg" alt="Tanmay Hinge" width="130" height="162" />
       </div>
       <div class="main">
-        <h1>Tanmay Hinge</h1>
         <p>
           I am a machine learning researcher working on applied AI for the sciences. I take on problems
           where a model has to be right for a reason, not just on average, and where the people using
@@ -52,6 +130,11 @@
           domain researchers. I bring the modeling, they bring the science, and the problems worth
           solving live where those meet.
         </p>
+        <p>
+          I am based in Minneapolis, Minnesota, where I teach computer science at Inver Hills
+          Community College. I hold an M.S. in Computer Science from California State University,
+          Chico.
+        </p>
         <p class="email"><a href="mailto:hingetanmay@gmail.com">hingetanmay@gmail.com</a></p>
       </div>
     </header>
@@ -59,72 +142,80 @@
     <div class="index" id="work">
 
       <section class="sec">
-        <div class="labelline"><span class="idx-label">Research</span></div>
+        <div class="labelline"><h2 class="idx-label">Research</h2></div>
         <div class="row static">
           <span class="row-year">2026</span>
-          <span class="row-body">
-            <span class="row-title">Biomolecular machine learning</span>
+          <div class="row-body">
+            <h3 class="row-title">Biomolecular machine learning</h3>
             <span class="row-tag">representation learning · molecular data</span>
-          </span>
+          </div>
           <span class="row-status">in progress</span>
         </div>
         <a class="row" href="/research/spectral-disentangling/">
           <span class="row-year">2026</span>
-          <span class="row-body">
-            <span class="row-title">Disentangling mixed spectra</span>
+          <div class="row-body">
+            <h3 class="row-title">Disentangling mixed spectra</h3>
             <span class="row-tag">self-supervised learning · scientific data</span>
             <span class="row-sentence">Does masked pretraining learn physics, or noise?</span>
-          </span>
+          </div>
           <span class="row-marker">report</span>
         </a>
       </section>
 
       <section class="sec">
-        <div class="labelline"><span class="idx-label">Engineering</span></div>
+        <div class="labelline"><h2 class="idx-label">Engineering</h2></div>
         <a class="row" href="/work/regace/">
           <span class="row-year">2025</span>
-          <span class="row-body">
-            <span class="row-title">Regace AI</span>
+          <div class="row-body">
+            <h3 class="row-title">Regace AI</h3>
             <span class="row-tag">retrieval and agents · regulated text</span>
             <span class="row-sentence">Generation where every claim traces to a source.</span>
-          </span>
+          </div>
           <span class="row-marker">write-up</span>
         </a>
         <a class="row" href="/work/merit-labs/">
           <span class="row-year">2026</span>
-          <span class="row-body">
-            <span class="row-title">Merit Labs</span>
+          <div class="row-body">
+            <h3 class="row-title">Merit Labs</h3>
             <span class="row-tag">language models · human-facing systems</span>
             <span class="row-sentence">Assessment responses into reports a student can act on.</span>
-          </span>
+          </div>
           <span class="row-marker">write-up</span>
         </a>
         <a class="row" href="/work/model-serving/">
           <span class="row-year">2022</span>
-          <span class="row-body">
-            <span class="row-title">Distributed model serving</span>
+          <div class="row-body">
+            <h3 class="row-title">Distributed model serving</h3>
             <span class="row-tag">systems · ML infrastructure</span>
             <span class="row-sentence">Inference across shared lab machines, for students without hardware.</span>
-          </span>
+          </div>
           <span class="row-marker">code</span>
         </a>
       </section>
 
       <section class="sec">
-        <div class="labelline"><span class="idx-label">Teaching</span></div>
+        <div class="labelline"><h2 class="idx-label">Teaching</h2></div>
         <div class="row static">
           <span class="row-year">2024&ndash;26</span>
-          <span class="row-body">
-            <span class="row-title">Computer Science Faculty</span>
+          <div class="row-body">
+            <h3 class="row-title">Computer Science Faculty</h3>
             <span class="row-tag">Inver Hills Community College</span>
             <span class="row-sentence">Four courses, full-time. 100+ students mentored.</span>
-          </span>
+          </div>
         </div>
       </section>
 
     </div>
 
-    <footer class="foot">Last updated 10 July 2026</footer>
+    <footer class="foot">
+      <span class="foot-links">
+        <a href="https://github.com/tanmayhinge" rel="me noopener noreferrer" target="_blank">GitHub</a>
+        <a href="https://www.linkedin.com/in/tanmayhinge/" rel="me noopener noreferrer" target="_blank">LinkedIn</a>
+        <a href="https://scholar.google.com/citations?user=YFUWK9gAAAAJ" rel="me noopener noreferrer" target="_blank">Google&nbsp;Scholar</a>
+        <a href="mailto:hingetanmay@gmail.com">Email</a>
+      </span>
+      <span>Last updated <time datetime="2026-07-13">13 July 2026</time></span>
+    </footer>
   </main>
 </body>
 </html>
