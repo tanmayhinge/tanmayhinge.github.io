@@ -519,6 +519,9 @@ table.data .hl { color: var(--ink); font-weight: 600; }
 .dot-scr      { fill: var(--muted); }
 .lab-pre      { fill: var(--ink); font: 500 12px var(--mono); }
 .lab-scr      { fill: var(--muted); font: 500 12px var(--mono); }
+/* the supervised reference line: present as a ceiling, never the subject */
+.line-sup     { stroke: var(--muted); fill: none; stroke-width: 1.2; stroke-dasharray: 1 3; }
+.lab-sup      { fill: var(--muted); font: 12px var(--mono); }
 
 /* ============================================================
    The spectrum (the one moving thing)
@@ -536,6 +539,11 @@ table.data .hl { color: var(--ink); font-weight: 600; }
   animation: reconstruct 0.7s 0.25s ease-out forwards;
 }
 @keyframes reconstruct { from { transform: scaleX(1); } to { transform: scaleX(0); } }
+
+/* static report figures: the ground truth underneath, and the spans the model cannot see.
+   accent stays reserved for reconstructed peaks, so components are muted, never coloured. */
+.spec-comp   { fill: none; stroke: var(--muted); stroke-width: 0.8; opacity: 0.55; vector-effect: non-scaling-stroke; }
+.spec-hidden { fill: var(--tint); }
 
 /* ============================================================
    CV
