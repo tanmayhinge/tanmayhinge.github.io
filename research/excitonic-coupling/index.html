@@ -1,0 +1,565 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Predicting excitonic couplings · Tanmay Hinge</title>
+  <meta name="description" content="A kernel model for the excitonic coupling of a molecule pair, and a learning curve with a knee in it. The knee turned out to be the finding: 40,000 couplings carry far less information than their count suggests." />
+  <meta name="author" content="Tanmay Hinge" />
+  <link rel="canonical" href="https://tanmayhinge.com/research/excitonic-coupling/" />
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="Tanmay Hinge" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:title" content="Predicting excitonic couplings" />
+  <meta property="og:description" content="The learning curve had a knee in it. The knee was the finding: 40,000 couplings pin down 400 molecules and say almost nothing about a 401st." />
+  <meta property="og:url" content="https://tanmayhinge.com/research/excitonic-coupling/" />
+  <meta property="og:image" content="https://tanmayhinge.com/og/excitonic.png" />
+  <meta property="article:published_time" content="2026-07-17" />
+  <meta property="article:modified_time" content="2026-07-17" />
+  <meta property="article:author" content="https://tanmayhinge.com/" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://tanmayhinge.com/og/excitonic.png" />
+
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="192x192" href="/circle_favicon.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/circle_favicon.png">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=Oranienbaum&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="/styles.css?v=20" />
+
+  <!-- stamp the stored theme before first paint; blocking on purpose -->
+  <script>(function(){try{var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <script src="/theme.js" defer></script>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "ScholarlyArticle",
+        "@id": "https://tanmayhinge.com/research/excitonic-coupling/#article",
+        "headline": "Predicting excitonic couplings",
+        "description": "A kernel model for the excitonic coupling of a molecule pair, and a learning curve with a knee in it. The knee turned out to be the finding: 40,000 couplings carry far less information than their count suggests.",
+        "url": "https://tanmayhinge.com/research/excitonic-coupling/",
+        "image": "https://tanmayhinge.com/og/excitonic.png",
+        "datePublished": "2026-07-17",
+        "dateModified": "2026-07-17",
+        "inLanguage": "en-US",
+        "keywords": [
+          "kernel methods",
+          "kernel ridge regression",
+          "Gaussian processes",
+          "Coulomb matrix",
+          "excitonic coupling",
+          "low-rank matrix completion",
+          "scientific machine learning",
+          "learning curves"
+        ],
+        "author": {
+          "@type": "Person",
+          "@id": "https://tanmayhinge.com/#person",
+          "name": "Tanmay Hinge",
+          "url": "https://tanmayhinge.com/"
+        },
+        "publisher": {
+          "@type": "Person",
+          "@id": "https://tanmayhinge.com/#person",
+          "name": "Tanmay Hinge",
+          "url": "https://tanmayhinge.com/"
+        },
+        "mainEntityOfPage": {
+          "@type": "WebPage",
+          "@id": "https://tanmayhinge.com/research/excitonic-coupling/"
+        },
+        "isPartOf": {
+          "@id": "https://tanmayhinge.com/#website"
+        }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Tanmay Hinge",
+            "item": "https://tanmayhinge.com/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Research",
+            "item": "https://tanmayhinge.com/#work"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Predicting excitonic couplings",
+            "item": "https://tanmayhinge.com/research/excitonic-coupling/"
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+</head>
+
+<body>
+  <main class="container reading">
+    <nav class="topnav">
+      <a class="brand" href="/">Tanmay Hinge</a>
+      <span class="navlinks">
+        <a href="/#work">Research</a>
+        <a href="/cv/">CV</a>
+        <a href="https://github.com/tanmayhinge" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <button class="theme-toggle" type="button" aria-label="Switch to dark theme" aria-pressed="false">◐</button>
+      </span>
+    </nav>
+
+    <!-- generated: bimolecular-ml/scripts/make_site_figures.py (real SVD of the coupling matrix) -->
+    <div class="spectrum-band">
+      <svg class="spectrum" viewBox="0 0 1000 210" role="img" aria-label="Singular values of the 200 by 200 coupling matrix on a log axis, first 24 of 200 shown. Two are of order 5,000; every one after them sits at 1e-10 or below, fourteen orders of magnitude down, and stays there to the 200th. The coupling table is exactly rank 2.">
+        <line class="c-grid" x1="78.00" y1="31.20" x2="984.00" y2="31.20"/>
+        <text class="c-tick" x="70.00" y="35.20" text-anchor="end">10⁴</text>
+        <line class="c-grid" x1="78.00" y1="61.60" x2="984.00" y2="61.60"/>
+        <text class="c-tick" x="70.00" y="65.60" text-anchor="end">1</text>
+        <line class="c-grid" x1="78.00" y1="92.00" x2="984.00" y2="92.00"/>
+        <text class="c-tick" x="70.00" y="96.00" text-anchor="end">10⁻⁴</text>
+        <line class="c-grid" x1="78.00" y1="122.40" x2="984.00" y2="122.40"/>
+        <text class="c-tick" x="70.00" y="126.40" text-anchor="end">10⁻⁸</text>
+        <line class="c-grid" x1="78.00" y1="152.80" x2="984.00" y2="152.80"/>
+        <text class="c-tick" x="70.00" y="156.80" text-anchor="end">10⁻¹²</text>
+        <rect class="c-bar hl" x="79.60" y="33.12" width="34.55" height="134.88"/>
+        <rect class="c-bar hl" x="117.35" y="33.31" width="34.55" height="134.69"/>
+        <rect class="c-bar" x="155.10" y="137.20" width="34.55" height="30.80"/>
+        <rect class="c-bar" x="192.85" y="139.33" width="34.55" height="28.67"/>
+        <rect class="c-bar" x="230.60" y="139.41" width="34.55" height="28.59"/>
+        <rect class="c-bar" x="268.35" y="139.46" width="34.55" height="28.54"/>
+        <rect class="c-bar" x="306.10" y="139.54" width="34.55" height="28.46"/>
+        <rect class="c-bar" x="343.85" y="139.55" width="34.55" height="28.45"/>
+        <rect class="c-bar" x="381.60" y="139.57" width="34.55" height="28.43"/>
+        <rect class="c-bar" x="419.35" y="139.60" width="34.55" height="28.40"/>
+        <rect class="c-bar" x="457.10" y="139.63" width="34.55" height="28.37"/>
+        <rect class="c-bar" x="494.85" y="139.66" width="34.55" height="28.34"/>
+        <rect class="c-bar" x="532.60" y="139.71" width="34.55" height="28.29"/>
+        <rect class="c-bar" x="570.35" y="139.76" width="34.55" height="28.24"/>
+        <rect class="c-bar" x="608.10" y="139.77" width="34.55" height="28.23"/>
+        <rect class="c-bar" x="645.85" y="139.81" width="34.55" height="28.19"/>
+        <rect class="c-bar" x="683.60" y="139.82" width="34.55" height="28.18"/>
+        <rect class="c-bar" x="721.35" y="139.87" width="34.55" height="28.13"/>
+        <rect class="c-bar" x="759.10" y="139.93" width="34.55" height="28.07"/>
+        <rect class="c-bar" x="796.85" y="139.96" width="34.55" height="28.04"/>
+        <rect class="c-bar" x="834.60" y="139.97" width="34.55" height="28.03"/>
+        <rect class="c-bar" x="872.35" y="140.00" width="34.55" height="28.00"/>
+        <rect class="c-bar" x="910.10" y="140.02" width="34.55" height="27.98"/>
+        <rect class="c-bar" x="947.85" y="140.03" width="34.55" height="27.97"/>
+        <line class="c-axis" x1="78.00" y1="168.00" x2="984.00" y2="168.00"/>
+        <text class="c-val" x="167.50" y="38.12">two components carry the whole 200 × 200 table</text>
+        <text class="c-cat" x="167.50" y="125.20">everything after them is floating-point zero — flat on to σ₂₀₀</text>
+        <text class="c-tick" x="78.00" y="202.00">singular values of the 200 × 200 coupling matrix (first 24 of 200) · σ₁ = 5586 · σ₂ = 5279 · σ₃ = 1.1e-10</text>
+        <rect class="spec-cover" x="78.00" y="0" width="906.00" height="210"/>
+      </svg>
+    </div>
+
+    <p class="kicker">kernel methods · molecular data · 2026 · report</p>
+    <h1 class="ptitle">Predicting excitonic couplings</h1>
+    <p class="dek">The learning curve had a knee in it. The knee was the finding.</p>
+
+    <dl class="meta">
+      <dt>Code</dt><dd><a href="https://github.com/tanmayhinge/bimolecular-ml" target="_blank" rel="noopener noreferrer">github.com/tanmayhinge/bimolecular-ml</a></dd>
+      <dt>Status</dt><dd>complete: model built, curve measured, the data's own structure found underneath it</dd>
+      <dt>Stack</dt><dd>Python, NumPy, SciPy</dd>
+    </dl>
+
+    <article class="report prose">
+
+      <h2 class="h-label">The question</h2>
+      <p>
+        Given two molecules, <em>A</em> and <em>B</em>, predict the excitonic coupling between them from
+        their geometries alone. The library holds 200 <em>A</em>-monomers and 200 <em>B</em>-monomers,
+        which pair into 40,000 dimers, and every coupling in the table was paid for with a
+        quantum-chemistry calculation. So the question a model is actually asked here is not whether it
+        can fit 40,000 numbers. It is how few of those calculations you need before the model can supply
+        the rest. That is what a learning curve measures, and it is the deliverable.
+      </p>
+      <p>
+        The curve I got was not the shape I expected, and chasing the reason turned out to be worth more
+        than the model.
+      </p>
+
+      <h2 class="h-label">The representation</h2>
+      <p>
+        Every monomer in the library has the same 15 atoms, the same composition (C<sub>6</sub>H<sub>5</sub>NO<sub>3</sub>),
+        and — this is the part worth noticing — the same atomic order. That makes the usual Coulomb-matrix
+        machinery unnecessary. Row <em>k</em> already denotes the same atom in every molecule, so there is
+        nothing to sort and no reason to fall back on eigenvalues. The diagonal, <sup>1</sup>⁄<sub>2</sub> Z<sup>2.4</sup>,
+        is then identical in all 400 molecules and carries no information at all, so it goes. What is left
+        is the 105 off-diagonal entries of the upper triangle, checked against <code>dscribe</code>.
+      </p>
+
+      <!-- generated: bimolecular-ml/scripts/make_site_figures.py -->
+      <figure class="fig">
+        <svg viewBox="0 0 1000 200" role="img" aria-labelledby="f0t f0d">
+          <title id="f0t">How a pair of molecules becomes one kernel entry</title>
+          <desc id="f0d">A dimer's two monomers each become a 15 by 15 Coulomb matrix. The diagonal is identical in every molecule and carries no information, so it is discarded, leaving the 105 off-diagonal entries of the upper triangle as the descriptor. A Laplacian kernel scores each monomer separately and the two are multiplied. Because L1 distance is additive across the blocks, that product is the same model as an ordinary kernel on the concatenated descriptors.</desc>
+          <text class="c-cat" x="28.00" y="16">a dimer</text>
+          <rect x="28.00" y="32" width="78.00" height="60" rx="3" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.35"/>
+          <text class="c-val" x="67.00" y="68" text-anchor="middle">A</text>
+          <rect x="28.00" y="108" width="78.00" height="60" rx="3" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.35"/>
+          <text class="c-val" x="67.00" y="144" text-anchor="middle">B</text>
+          <text class="c-tick" x="67.00" y="186" text-anchor="middle">15 atoms each</text>
+          <path class="c-axis" fill="none" d="M114.00 62 L160.00 62"/>
+          <path class="c-axis" fill="none" d="M114.00 138 L160.00 138"/>
+          <text class="c-cat" x="168" y="16">Coulomb matrix</text>
+          <rect x="168" y="32" width="60" height="60" rx="2" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.35"/>
+          <rect class="c-bar hl" x="169.00" y="33.00" width="10.6" height="10.6" opacity="0.3"/>
+          <rect class="c-bar hl" x="180.80" y="44.80" width="10.6" height="10.6" opacity="0.3"/>
+          <rect class="c-bar hl" x="192.60" y="56.60" width="10.6" height="10.6" opacity="0.3"/>
+          <rect class="c-bar hl" x="204.40" y="68.40" width="10.6" height="10.6" opacity="0.3"/>
+          <rect class="c-bar hl" x="216.20" y="80.20" width="10.6" height="10.6" opacity="0.3"/>
+          <rect x="168" y="108" width="60" height="60" rx="2" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.35"/>
+          <rect class="c-bar hl" x="169.00" y="109.00" width="10.6" height="10.6" opacity="0.3"/>
+          <rect class="c-bar hl" x="180.80" y="120.80" width="10.6" height="10.6" opacity="0.3"/>
+          <rect class="c-bar hl" x="192.60" y="132.60" width="10.6" height="10.6" opacity="0.3"/>
+          <rect class="c-bar hl" x="204.40" y="144.40" width="10.6" height="10.6" opacity="0.3"/>
+          <rect class="c-bar hl" x="216.20" y="156.20" width="10.6" height="10.6" opacity="0.3"/>
+          <text class="c-tick" x="198" y="186" text-anchor="middle">15 × 15</text>
+          <path class="c-axis" fill="none" d="M236.00 62 L282.00 62"/>
+          <path class="c-axis" fill="none" d="M236.00 138 L282.00 138"/>
+          <text class="c-cat" x="290.00" y="16">descriptor</text>
+          <rect x="290.00" y="32" width="132.00" height="60" rx="3" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.35"/>
+          <text class="c-val" x="356.00" y="68" text-anchor="middle">105 entries</text>
+          <rect x="290.00" y="108" width="132.00" height="60" rx="3" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.35"/>
+          <text class="c-val" x="356.00" y="144" text-anchor="middle">105 entries</text>
+          <text class="c-tick" x="356.00" y="186" text-anchor="middle">diagonal dropped</text>
+          <path class="c-axis" fill="none" d="M430.00 62 L476.00 62"/>
+          <path class="c-axis" fill="none" d="M430.00 138 L476.00 138"/>
+          <text class="c-cat" x="484.00" y="16">Laplacian kernel</text>
+          <rect x="484.00" y="32" width="150.00" height="60" rx="3" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.35"/>
+          <text class="c-val" x="559.00" y="68" text-anchor="middle">k(A, A′)</text>
+          <rect x="484.00" y="108" width="150.00" height="60" rx="3" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.35"/>
+          <text class="c-val" x="559.00" y="144" text-anchor="middle">k(B, B′)</text>
+          <path class="c-axis" fill="none" d="M642 62 L672 62 L672 138 L642 138"/>
+          <path class="c-axis" fill="none" d="M672 100 L716 100"/>
+          <text class="c-cat" x="724" y="16">product kernel</text>
+          <rect x="724" y="70" width="256" height="60" rx="3" fill="none" stroke="currentColor" stroke-width="1.2" opacity="0.35"/>
+          <text class="c-val" x="852" y="106" text-anchor="middle">k(A, A′) · k(B, B′)</text>
+          <text class="c-tick" x="852" y="186" text-anchor="middle">= one kernel on the concatenation</text>
+        </svg>
+        <figcaption>
+          Each monomer becomes 105 numbers. The two are scored separately and multiplied — which, because
+          L<sub>1</sub> distance is additive across the two blocks, is exactly the same model as one kernel
+          on the concatenated descriptors. The natural baseline and the product kernel are not two things.
+        </figcaption>
+      </figure>
+
+      <h2 class="h-label">Model and cost</h2>
+      <p>
+        A pair is scored with the product kernel <em>K</em>((A,B),(A′,B′)) = <em>k</em>(A,A′) · <em>k</em>(B,B′),
+        with <em>k</em> Laplacian, exp(−<em>d</em>/σ), and <em>d</em> the L<sub>1</sub> distance between
+        descriptors. On a full grid of training dimers the kernel matrix is a Kronecker product,
+        <em>K</em> = <em>K<sub>A</sub></em> ⊗ <em>K<sub>B</sub></em>, so kernel ridge regression can be
+        solved from the eigendecompositions of the two 200 × 200 blocks rather than from the product —
+        O(<em>n</em><sup>3</sup>) instead of O(<em>n</em><sup>6</sup>).
+      </p>
+      <p>
+        That is not a micro-optimisation. Fitting all 40,000 dimers takes <b>8 ms</b>. The dense
+        40,000 × 40,000 solve it replaces would need a <b>12.8 GB</b> kernel matrix before it did any
+        arithmetic. Hyperparameters come from cross-validation <em>grouped by monomer</em>, so no monomer
+        leaks across folds, and targets are centred before solving.
+      </p>
+
+      <h2 class="h-label">Two regimes, and they disagree</h2>
+      <p>
+        There are two different questions hiding in "how much data do you need", and they have to go on
+        the same axis to be compared. Hold out <em>dimers</em>, and you are asking the model to predict a
+        new pairing of molecules it has already met. Hold out <em>monomers</em>, and you are asking it to
+        predict a molecule it has never seen. The horizontal axis is training pairs in both cases, because
+        a pair is what costs a calculation; the 400 monomer geometries are cheap by comparison.
+      </p>
+
+      <!-- generated: bimolecular-ml/scripts/make_site_figures.py (real model output, 5 draws per point) -->
+      <figure class="fig">
+        <svg viewBox="0 0 1000 430" role="img" aria-labelledby="f1t f1d">
+          <title id="f1t">Learning curve for the two regimes, on log-log axes</title>
+          <desc id="f1d">Two curves against the number of training pairs. Predicting unseen pairs of monomers the model has already seen falls from an MAE of 9.4 to 0.008, dropping two orders of magnitude either side of 800 training pairs and passing through the reference band. Predicting pairs of entirely new monomers starts near 22 and only reaches 11 with six hundred times more data, against a target standard deviation of 38. Bands are one standard deviation over five draws.</desc>
+          <rect class="spec-hidden" x="74.00" y="255.37" width="910.00" height="83.43"/>
+          <line class="c-grid" x1="74.00" y1="338.80" x2="984.00" y2="338.80"/>
+          <text class="c-tick" x="66.00" y="342.80" text-anchor="end">0.01</text>
+          <line class="c-grid" x1="74.00" y1="255.37" x2="984.00" y2="255.37"/>
+          <text class="c-tick" x="66.00" y="259.37" text-anchor="end">0.1</text>
+          <line class="c-grid" x1="74.00" y1="171.94" x2="984.00" y2="171.94"/>
+          <text class="c-tick" x="66.00" y="175.94" text-anchor="end">1</text>
+          <line class="c-grid" x1="74.00" y1="88.51" x2="984.00" y2="88.51"/>
+          <text class="c-tick" x="66.00" y="92.51" text-anchor="end">10</text>
+          <text class="c-tick" x="110.38" y="390.00" text-anchor="middle">16</text>
+          <text class="c-tick" x="370.37" y="390.00" text-anchor="middle">125</text>
+          <text class="c-tick" x="545.69" y="390.00" text-anchor="middle">500</text>
+          <text class="c-tick" x="721.02" y="390.00" text-anchor="middle">2,000</text>
+          <text class="c-tick" x="896.34" y="390.00" text-anchor="middle">8,000</text>
+          <line class="c-axis" x1="74.00" y1="372.00" x2="984.00" y2="372.00"/>
+          <line class="c-axis" x1="74.00" y1="18.00" x2="74.00" y2="372.00"/>
+          <text class="c-axis-title" x="529.00" y="424.00" text-anchor="middle">training pairs (reference calculations)</text>
+          <text class="c-axis-title" x="74.00" y="14.00" text-anchor="start">mean absolute error</text>
+          <text class="c-cat" x="82.00" y="297.80">reference MAE quoted in the brief</text>
+          <line class="line-sup" x1="74.00" y1="39.76" x2="984.00" y2="39.76"/>
+          <text class="c-cat" x="984.00" y="32.76" text-anchor="end">standard deviation of the target, 38.4</text>
+          <line class="line-sup" x1="605.13" y1="34.00" x2="605.13" y2="372.00"/>
+          <text class="c-cat" x="611.13" y="175.76">800 free parameters</text>
+          <path class="spec-hidden" d="M110.38 48.78 L285.71 70.41 L461.03 76.09 L636.35 78.98 L811.68 80.24 L924.56 83.61 L924.56 87.06 L811.68 85.52 L636.35 81.07 L461.03 79.95 L285.71 79.65 L110.38 77.55 Z"/>
+          <path class="line-scr" d="M110.38 60.38 L285.71 74.73 L461.03 77.97 L636.35 80.01 L811.68 82.79 L924.56 85.30"/>
+          <circle class="dot-scr" cx="110.38" cy="60.38" r="3.2"/><circle class="dot-scr" cx="285.71" cy="74.73" r="3.2"/><circle class="dot-scr" cx="461.03" cy="77.97" r="3.2"/><circle class="dot-scr" cx="636.35" cy="80.01" r="3.2"/><circle class="dot-scr" cx="811.68" cy="82.79" r="3.2"/><circle class="dot-scr" cx="924.56" cy="85.30" r="3.2"/>
+          <path class="spec-hidden" d="M370.37 88.74 L458.03 108.24 L545.69 149.28 L633.35 222.39 L721.02 286.59 L808.68 322.07 L896.34 345.49 L896.34 346.04 L808.68 323.94 L721.02 289.49 L633.35 239.19 L545.69 157.58 L458.03 110.80 L370.37 93.06 Z"/>
+          <path class="line-pre" d="M370.37 90.84 L458.03 109.50 L545.69 153.19 L633.35 229.82 L721.02 288.01 L808.68 322.99 L896.34 345.76"/>
+          <circle class="dot-pre" cx="370.37" cy="90.84" r="3.2"/><circle class="dot-pre" cx="458.03" cy="109.50" r="3.2"/><circle class="dot-pre" cx="545.69" cy="153.19" r="3.2"/><circle class="dot-pre" cx="633.35" cy="229.82" r="3.2"/><circle class="dot-pre" cx="721.02" cy="288.01" r="3.2"/><circle class="dot-pre" cx="808.68" cy="322.99" r="3.2"/><circle class="dot-pre" cx="896.34" cy="345.76" r="3.2"/>
+          <text class="lab-scr" x="924.56" y="72.30" text-anchor="end">unseen monomers — new molecules</text>
+          <text class="lab-pre" x="896.34" y="369.76" text-anchor="end">unseen pairs of known monomers</text>
+        </svg>
+        <figcaption>
+          σ and λ are fixed at the selected values rather than re-tuned at each point, so the curve is a
+          statement about training-set size and nothing else. Five random draws per point; bands are one
+          standard deviation. Held-out test error throughout.
+        </figcaption>
+      </figure>
+
+      <p>
+        The lower curve does what a learning curve should. It passes through the reference band the brief
+        quotes as achievable and ends at an MAE of <b>0.0083</b> with 8,000 training pairs. That also
+        settles a question the raw data leaves open: the couplings have a standard deviation of 38.4 and a
+        range of about ±110, so a reference MAE of 0.01 to 0.1 is either quoted in different units or the
+        target is simply very learnable. It is the second. There is no unit mismatch.
+      </p>
+      <p>
+        The upper curve does nothing at all. Going from 16 training pairs to 10,000 — six hundred times the
+        reference data — moves the error from about 22 to about 11, against a target standard deviation of
+        38. Same kernel, same descriptor, same solver. It survives a wide search over σ and λ, both kernel
+        families, and standardised descriptors, and it barely moves as the training monomers go from 50 to
+        180, so it is not a tuning failure. The cause is visible directly in the descriptors: take any
+        monomer's nearest neighbour in Coulomb-matrix space, and the two most similar molecules in the
+        library still differ in their latent coupling factors by about three quarters of the typical
+        magnitude. Two hundred molecules scattered through a 105-dimensional space have no local
+        neighbourhood to interpolate across.
+      </p>
+      <p>
+        <b>So the 40,000 labels carry far less information than their count suggests.</b> They pin down the
+        400 monomers in the library and say very little about a 401st. More pairs cannot fix that. Only
+        more molecules could.
+      </p>
+
+      <h2 class="h-label">The kernel width has no interior optimum</h2>
+      <p>
+        Worth stating plainly, because it makes the fixed σ a deliberate choice rather than a loose end.
+        Widen the kernel and the error keeps falling, while the kernel matrix becomes numerically
+        catastrophic — and the error does not care.
+      </p>
+
+      <div class="table-wrap">
+        <table class="data">
+          <caption>Test MAE against kernel width at 4,000 training pairs. There is no minimum to find.</caption>
+          <thead>
+            <tr><th>σ (× median L<sub>1</sub>)</th><th class="num">test MAE</th><th class="num">cond(<em>K</em>)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>4</td><td class="num">0.24171</td><td class="num">3.5 × 10<sup>5</sup></td></tr>
+            <tr><td>16</td><td class="num">0.06062</td><td class="num">8.3 × 10<sup>6</sup></td></tr>
+            <tr><td class="hl">64</td><td class="num hl">0.01535</td><td class="num">1.5 × 10<sup>8</sup></td></tr>
+            <tr><td>256</td><td class="num">0.00386</td><td class="num">2.4 × 10<sup>9</sup></td></tr>
+            <tr><td>1024</td><td class="num">0.00097</td><td class="num">3.9 × 10<sup>10</sup></td></tr>
+            <tr><td>4096</td><td class="num">0.00025</td><td class="num">6.3 × 10<sup>11</sup></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        A kernel that keeps improving as it flattens towards a linear model is telling you the target is
+        much simpler than the representation. Re-tuning σ at every point of the learning curve would only
+        track the edge of whatever grid it was given, and would make each point a different model, so the
+        curves above fix σ at 64 × the median L<sub>1</sub> distance and λ at 10<sup>−10</sup>.
+      </p>
+
+      <h2 class="h-label">The knee</h2>
+      <p>
+        Now the shape. A learning curve in this field is normally a straight line on log-log axes — error
+        falling as a power of training-set size — and the exponent is the number you quote. This one is
+        not straight. It is nearly flat out to a few hundred pairs, drops <em>two orders of magnitude</em>
+        between 500 and 2,000, and flattens again. Fitting a power law would produce a number, and the
+        number would be a summary of something that is not a power law.
+      </p>
+      <p>
+        The drop lands at about 800. And 800 is 2 × (200 + 200): exactly the number of free parameters if
+        every coupling were a product of two numbers per monomer. That is a hypothesis read off a curve,
+        which is worth very little until it is checked directly — so, checked directly. The coupling matrix
+        is <b>exactly rank 2</b>. Its third singular value is 1.1 × 10<sup>−10</sup> against a leading
+        5,586; that is the cliff in the figure at the top of this page. Fit the best rank-2 matrix agreeing
+        with the observed entries and read off the rest, using <b>no chemistry whatsoever</b> — not the
+        Coulomb matrix, not the kernel, not σ — and every held-out coupling comes back to a maximum error
+        of 10<sup>−11</sup>.
+      </p>
+      <p>
+        Which is the real explanation of the knee. The error collapses exactly where enough dimers have
+        been seen to fix 800 numbers.
+      </p>
+
+      <h2 class="h-label">Putting the two together</h2>
+      <p>
+        The obvious reading — that the chemistry was never needed — is wrong, and the way it is wrong is
+        the useful part. Completion has to identify 800 numbers, and below roughly that many observations
+        the problem is underdetermined: some monomers appear in too few measured pairs to place at all, and
+        the method does not degrade so much as fail. Kernel ridge never fails that way. It has a smooth
+        prior to fall back on, so it is graceful when data is scarce, even though it plateaus early when
+        data is plentiful. The two have precisely opposite strengths, and the crossover sits where the
+        count of observations passes the count of unknowns.
+      </p>
+      <p>
+        So: seed the completion with the kernel's prediction instead of with zeros. Where observations are
+        plentiful they pin the matrix down and the seed is irrelevant. Where they are scarce and the matrix
+        is underdetermined, the seed decides which of the many consistent completions gets chosen, and the
+        kernel's smooth guess is a good one.
+      </p>
+
+      <!-- generated: bimolecular-ml/scripts/make_site_figures.py (real model output, 3 draws per point) -->
+      <figure class="fig">
+        <svg viewBox="0 0 1000 430" role="img" aria-labelledby="f2t f2d">
+          <title id="f2t">Kernel ridge, rank-2 completion, and the hybrid of the two</title>
+          <desc id="f2d">Three curves against training pairs on log-log axes. Kernel ridge degrades gracefully when data is scarce but plateaus near an MAE of 0.008. Rank-2 completion is useless below roughly 800 observations and exact above it. The hybrid, which seeds the completion with the kernel's prediction, follows whichever parent is better and beats both in the crossover region: at 2,000 pairs it reaches 0.004 where the kernel sits at 0.041.</desc>
+          <rect class="spec-hidden" x="74.00" y="86.77" width="910.00" height="24.75"/>
+          <line class="c-grid" x1="74.00" y1="359.06" x2="984.00" y2="359.06"/>
+          <text class="c-tick" x="66.00" y="363.06" text-anchor="end">10⁻¹²</text>
+          <line class="c-grid" x1="74.00" y1="309.55" x2="984.00" y2="309.55"/>
+          <text class="c-tick" x="66.00" y="313.55" text-anchor="end">10⁻¹⁰</text>
+          <line class="c-grid" x1="74.00" y1="260.04" x2="984.00" y2="260.04"/>
+          <text class="c-tick" x="66.00" y="264.04" text-anchor="end">10⁻⁸</text>
+          <line class="c-grid" x1="74.00" y1="210.54" x2="984.00" y2="210.54"/>
+          <text class="c-tick" x="66.00" y="214.54" text-anchor="end">10⁻⁶</text>
+          <line class="c-grid" x1="74.00" y1="161.03" x2="984.00" y2="161.03"/>
+          <text class="c-tick" x="66.00" y="165.03" text-anchor="end">10⁻⁴</text>
+          <line class="c-grid" x1="74.00" y1="111.52" x2="984.00" y2="111.52"/>
+          <text class="c-tick" x="66.00" y="115.52" text-anchor="end">10⁻²</text>
+          <line class="c-grid" x1="74.00" y1="62.02" x2="984.00" y2="62.02"/>
+          <text class="c-tick" x="66.00" y="66.02" text-anchor="end">1</text>
+          <line class="c-grid" x1="74.00" y1="37.26" x2="984.00" y2="37.26"/>
+          <text class="c-tick" x="66.00" y="41.26" text-anchor="end">10¹</text>
+          <text class="c-tick" x="115.72" y="390.00" text-anchor="middle">125</text>
+          <text class="c-tick" x="374.89" y="390.00" text-anchor="middle">500</text>
+          <text class="c-tick" x="634.06" y="390.00" text-anchor="middle">2,000</text>
+          <text class="c-tick" x="893.23" y="390.00" text-anchor="middle">8,000</text>
+          <line class="c-axis" x1="74.00" y1="372.00" x2="984.00" y2="372.00"/>
+          <line class="c-axis" x1="74.00" y1="18.00" x2="74.00" y2="372.00"/>
+          <text class="c-axis-title" x="529.00" y="424.00" text-anchor="middle">training pairs (reference calculations)</text>
+          <text class="c-axis-title" x="74.00" y="14.00" text-anchor="start">mean absolute error</text>
+          <line class="line-sup" x1="462.76" y1="34.00" x2="462.76" y2="372.00"/>
+          <text class="c-cat" x="468.76" y="334.30">800 free parameters</text>
+          <path class="line-sup" d="M115.72 25.02 L245.30 24.81 L374.89 24.37 L504.48 36.95 L634.06 63.68 L763.65 145.82 L893.23 350.91"/>
+          <circle class="dot-scr" cx="115.72" cy="25.02" r="3.2"/><circle class="dot-scr" cx="245.30" cy="24.81" r="3.2"/><circle class="dot-scr" cx="374.89" cy="24.37" r="3.2"/><circle class="dot-scr" cx="504.48" cy="36.95" r="3.2"/><circle class="dot-scr" cx="634.06" cy="63.68" r="3.2"/><circle class="dot-scr" cx="763.65" cy="145.82" r="3.2"/><circle class="dot-scr" cx="893.23" cy="350.91" r="3.2"/>
+          <path class="line-pre" d="M115.72 37.96 L245.30 43.39 L374.89 56.62 L504.48 84.63 L634.06 122.54 L763.65 226.05 L893.23 351.89"/>
+          <circle class="dot-pre" cx="115.72" cy="37.96" r="3.2"/><circle class="dot-pre" cx="245.30" cy="43.39" r="3.2"/><circle class="dot-pre" cx="374.89" cy="56.62" r="3.2"/><circle class="dot-pre" cx="504.48" cy="84.63" r="3.2"/><circle class="dot-pre" cx="634.06" cy="122.54" r="3.2"/><circle class="dot-pre" cx="763.65" cy="226.05" r="3.2"/><circle class="dot-pre" cx="893.23" cy="351.89" r="3.2"/>
+          <path class="line-scr" d="M115.72 37.96 L245.30 43.37 L374.89 56.30 L504.48 79.60 L634.06 96.29 L763.65 106.65 L893.23 113.57"/>
+          <circle class="dot-scr" cx="115.72" cy="37.96" r="3.2"/><circle class="dot-scr" cx="245.30" cy="43.37" r="3.2"/><circle class="dot-scr" cx="374.89" cy="56.30" r="3.2"/><circle class="dot-scr" cx="504.48" cy="79.60" r="3.2"/><circle class="dot-scr" cx="634.06" cy="96.29" r="3.2"/><circle class="dot-scr" cx="763.65" cy="106.65" r="3.2"/><circle class="dot-scr" cx="893.23" cy="113.57" r="3.2"/>
+          <text class="c-cat" x="879.23" y="355.89" text-anchor="end">machine precision</text>
+          <text class="lab-scr" x="374.89" y="12.37" text-anchor="middle">rank-2 completion (no chemistry)</text>
+          <text class="lab-scr" x="893.23" y="101.57" text-anchor="end">kernel ridge</text>
+          <text class="lab-pre" x="668.15" y="144.54">hybrid</text>
+        </svg>
+        <figcaption>
+          The hybrid inherits the better parent everywhere and beats both in the crossover region. Note the
+          vertical axis spans twelve decades; the completion and hybrid curves reach 2 × 10<sup>−12</sup>,
+          which is floating-point noise, not a small error.
+        </figcaption>
+      </figure>
+
+      <div class="table-wrap">
+        <table class="data">
+          <caption>Mean absolute error over three draws. The hybrid never loses to either parent.</caption>
+          <thead>
+            <tr><th>training pairs</th><th class="num">kernel ridge</th><th class="num">rank-2 completion</th><th class="num">hybrid</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>125</td><td class="num">9.37</td><td class="num">31.2</td><td class="num hl">9.37</td></tr>
+            <tr><td>250</td><td class="num">5.66</td><td class="num">31.8</td><td class="num hl">5.65</td></tr>
+            <tr><td>500</td><td class="num">1.70</td><td class="num">33.2</td><td class="num hl">1.65</td></tr>
+            <tr><td>1,000</td><td class="num">0.195</td><td class="num">10.3</td><td class="num hl">0.122</td></tr>
+            <tr><td>2,000</td><td class="num">0.041</td><td class="num">0.857</td><td class="num hl">0.0036</td></tr>
+            <tr><td>4,000</td><td class="num">0.0157</td><td class="num">4.1 × 10<sup>−4</sup></td><td class="num hl">2.4 × 10<sup>−7</sup></td></tr>
+            <tr><td>8,000</td><td class="num">0.0083</td><td class="num">2.1 × 10<sup>−12</sup></td><td class="num hl">1.9 × 10<sup>−12</sup></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        The crossover region is exactly the one that matters if the point is to spend fewer reference
+        calculations. At 2,000 training pairs the kernel alone sits at 0.041 and the completion at 0.86,
+        while the hybrid is at <b>0.0036</b> — an order of magnitude below the better of its two parents.
+        At 4,000 it is at 2.4 × 10<sup>−7</sup> while the kernel is still near 0.016. That is the same
+        accuracy from far fewer calculations, which is what putting structure and chemistry together buys
+        over choosing one of them.
+      </p>
+
+      <h2 class="h-label">The Gaussian process variant</h2>
+      <p>
+        With the same product kernel, a GP and kernel ridge give the same prediction — the posterior mean
+        <em>is</em> the ridge solution, with the noise variance playing the role of λ. What the GP adds is a
+        posterior variance, and the useful question is whether that variance is honest about the split the
+        learning curve just exposed. It should be small for a pair of monomers seen elsewhere in training
+        and large for a pair involving a genuinely new molecule. It is:
+      </p>
+
+      <div class="table-wrap">
+        <table class="data">
+          <caption>Mean posterior variance, trained on a 100 × 100 monomer grid.</caption>
+          <thead>
+            <tr><th>test pairs drawn from</th><th class="num">posterior variance</th><th>reading</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>monomers seen in training</td><td class="num">1.0 × 10<sup>−12</sup></td><td>effectively certain</td></tr>
+            <tr><td class="hl">monomers never seen</td><td class="num hl">3.5 × 10<sup>−5</sup></td><td>seven orders of magnitude less sure</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        A model that is going to fail on unseen molecules should at least know that it will. This one does,
+        which is the difference between a limitation and a hazard.
+      </p>
+
+      <h2 class="h-label">Scope</h2>
+      <ul>
+        <li>The exact rank-2 structure is a property of this generated dataset, not a claim about coupling
+            in general. A real coupling table would be only approximately low-rank, its working rank read
+            off the singular-value spectrum rather than assumed — and the hybrid degrades gracefully in
+            that case, because the kernel seed is what carries it when the low-rank part is not exact.</li>
+        <li>The monomer-transfer limit is the honest headline. The model transfers between dimers of known
+            monomers; it does not transfer to new molecules. Predicting a new molecule needs more
+            molecules, not more dimers.</li>
+        <li>The learning curve's error bars cover draw-to-draw variance at fixed σ and λ, not the
+            hyperparameter selection itself.</li>
+        <li>200 monomers a side is small enough that the 105-dimensional descriptor space is essentially
+            empty, which is the direct cause of the upper curve's flatness. A larger library is the
+            experiment that would settle it.</li>
+      </ul>
+
+      <h2 class="h-label">Reproducibility</h2>
+      <p>
+        The notebook runs top to bottom from a clean kernel and is self-checking: the correctness
+        conditions are <code>assert</code>s, not printed output. The Coulomb matrices are checked against
+        <code>dscribe</code>, the Kronecker solve against a dense solve, and the product kernel against the
+        concatenated-descriptor kernel it claims to be identical to. Every figure on this page regenerates
+        from one script against the original data.
+      </p>
+    </article>
+
+    <nav class="prevnext">
+      <span class="spacer">&larr;</span>
+      <a href="/research/spectral-disentangling/">Next: Disentangling mixed spectra &rarr;</a>
+    </nav>
+
+    <footer class="foot">
+      <span class="foot-links">
+        <a href="https://github.com/tanmayhinge" rel="me noopener noreferrer" target="_blank">GitHub</a>
+        <a href="https://www.linkedin.com/in/tanmayhinge/" rel="me noopener noreferrer" target="_blank">LinkedIn</a>
+        <a href="https://scholar.google.com/citations?user=YFUWK9gAAAAJ" rel="me noopener noreferrer" target="_blank">Google&nbsp;Scholar</a>
+        <a href="mailto:hingetanmay@gmail.com">Email</a>
+      </span>
+      <span>Last updated <time datetime="2026-07-17">17 July 2026</time></span>
+    </footer>
+  </main>
+</body>
+</html>
