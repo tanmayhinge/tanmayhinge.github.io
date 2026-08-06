@@ -27,6 +27,7 @@ described different work and are out of date.
 
 - [Home](https://tanmayhinge.com/): biography and an index of research, engineering, and teaching work
 - [CV](https://tanmayhinge.com/cv/): education, experience, and selected work
+- [Do explanation tools find the right cells?](https://tanmayhinge.com/research/tissue-graph-probing/): a synthetic tissue testbed where the cells driving the label are known by construction, built to measure whether graph interpretability methods recover them. Most scored no better than random and GNNExplainer scored below it, while a marker heuristic that never consults the model matched the best learned method. A weight-randomisation control showed two of the tools were describing graph structure rather than the model, and that control's verdict turned out to depend on optimisation budget
 - [Disentangling mixed spectra](https://tanmayhinge.com/research/spectral-disentangling/): does masked-sequence pretraining learn physical structure from 1D mixed spectra, or the noise? A fine-tuning comparison came back close to null while linear probes on the same frozen encoder said the opposite. A harder regime then showed the representation failing long before the task does, and an oracle ablation refuted the obvious explanation for why
 - [Regace AI](https://tanmayhinge.com/work/regace/): retrieval-augmented generation over regulated text, where every claim traces to a source
 - [Merit Labs](https://tanmayhinge.com/work/merit-labs/): turning assessment responses into reports a student can act on
