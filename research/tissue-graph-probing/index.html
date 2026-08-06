@@ -35,15 +35,13 @@
   <script src="/theme.js" defer></script>
 
   <style>
-    /* page-local marks for the tissue panel; every colour comes from the theme vars */
-    .tissue-band { margin: calc(var(--u) * 3) 0 calc(var(--u) * 4); }
-    .tissue-band svg { width: 100%; height: auto; display: block; }
-    .tp-bg  { fill: var(--hair); }
-    .tp-off { fill: color-mix(in srgb, var(--muted) 55%, transparent); }
-    .tp-on  { fill: var(--accent); }
+    /* study figures are matplotlib PNGs on white; seat them on a light card so they
+       read as intentional in dark mode instead of as a bare bright rectangle */
+    .fig-img { background: #fff; border-radius: 6px; padding: calc(var(--u) * 1.5);
+               border: 1px solid var(--hair); }
+    .fig-img img { width: 100%; height: auto; display: block; }
     .tp-ref { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 3 3; }
     .c-bar.tp-rand { fill: color-mix(in srgb, var(--muted) 25%, var(--bg)); }
-    .tp-key { fill: var(--muted); font: 11px var(--mono); }
   </style>
 
   <script type="application/ld+json">
@@ -86,412 +84,12 @@
       </span>
     </nav>
 
-    <div class="tissue-band">
-      <svg viewBox="0 0 480 310" role="img" aria-label="A patch of synthetic tissue. Grey marks are background cells. Circles are tumour cells and squares are T cells; the ones highlighted in accent colour are the cells that drive the label in this sample, recorded when the tissue was generated.">
-<circle class="tp-bg" cx="373.9" cy="65.9" r="1.1"/>
-<circle class="tp-bg" cx="353.7" cy="34.2" r="1.1"/>
-<circle class="tp-bg" cx="246.0" cy="35.8" r="1.1"/>
-<circle class="tp-bg" cx="115.3" cy="146.0" r="1.1"/>
-<circle class="tp-bg" cx="131.6" cy="192.7" r="1.1"/>
-<circle class="tp-bg" cx="384.2" cy="164.8" r="1.1"/>
-<circle class="tp-bg" cx="372.6" cy="192.9" r="1.1"/>
-<circle class="tp-bg" cx="336.1" cy="34.5" r="1.1"/>
-<circle class="tp-bg" cx="170.9" cy="143.9" r="1.1"/>
-<circle class="tp-bg" cx="101.9" cy="13.1" r="1.1"/>
-<circle class="tp-bg" cx="109.3" cy="84.4" r="1.1"/>
-<circle class="tp-bg" cx="181.1" cy="238.8" r="1.1"/>
-<circle class="tp-bg" cx="125.6" cy="245.4" r="1.1"/>
-<circle class="tp-bg" cx="109.2" cy="218.4" r="1.1"/>
-<circle class="tp-bg" cx="118.3" cy="151.6" r="1.1"/>
-<circle class="tp-bg" cx="251.5" cy="47.4" r="1.1"/>
-<circle class="tp-bg" cx="153.2" cy="20.0" r="1.1"/>
-<circle class="tp-bg" cx="359.3" cy="107.2" r="1.1"/>
-<circle class="tp-bg" cx="93.4" cy="278.3" r="1.1"/>
-<circle class="tp-bg" cx="343.4" cy="258.5" r="1.1"/>
-<circle class="tp-bg" cx="314.7" cy="50.3" r="1.1"/>
-<circle class="tp-bg" cx="312.9" cy="113.8" r="1.1"/>
-<circle class="tp-bg" cx="347.8" cy="252.9" r="1.1"/>
-<circle class="tp-bg" cx="100.2" cy="86.5" r="1.1"/>
-<circle class="tp-bg" cx="143.6" cy="146.4" r="1.1"/>
-<circle class="tp-bg" cx="173.6" cy="195.4" r="1.1"/>
-<circle class="tp-bg" cx="215.5" cy="36.6" r="1.1"/>
-<circle class="tp-bg" cx="148.8" cy="122.6" r="1.6"/>
-<circle class="tp-bg" cx="164.0" cy="38.6" r="1.6"/>
-<circle class="tp-bg" cx="381.0" cy="73.1" r="1.6"/>
-<circle class="tp-bg" cx="331.6" cy="29.9" r="1.6"/>
-<circle class="tp-bg" cx="383.3" cy="226.1" r="1.6"/>
-<circle class="tp-bg" cx="168.5" cy="205.3" r="1.6"/>
-<circle class="tp-bg" cx="368.7" cy="148.8" r="1.6"/>
-<circle class="tp-bg" cx="235.4" cy="223.7" r="1.6"/>
-<circle class="tp-bg" cx="232.2" cy="49.7" r="1.6"/>
-<circle class="tp-bg" cx="137.1" cy="131.8" r="1.6"/>
-<circle class="tp-bg" cx="347.6" cy="283.3" r="1.6"/>
-<circle class="tp-bg" cx="199.9" cy="129.4" r="1.6"/>
-<circle class="tp-bg" cx="313.8" cy="125.6" r="1.6"/>
-<circle class="tp-bg" cx="101.6" cy="185.8" r="1.6"/>
-<circle class="tp-bg" cx="151.2" cy="70.2" r="1.6"/>
-<circle class="tp-bg" cx="106.7" cy="120.8" r="1.6"/>
-<circle class="tp-bg" cx="334.3" cy="270.4" r="1.6"/>
-<circle class="tp-bg" cx="121.1" cy="122.0" r="1.6"/>
-<circle class="tp-bg" cx="155.4" cy="102.6" r="1.6"/>
-<circle class="tp-bg" cx="182.0" cy="137.1" r="1.6"/>
-<circle class="tp-bg" cx="245.3" cy="15.0" r="1.6"/>
-<circle class="tp-bg" cx="308.9" cy="264.2" r="1.6"/>
-<circle class="tp-bg" cx="374.8" cy="83.0" r="1.6"/>
-<circle class="tp-bg" cx="239.5" cy="52.7" r="1.6"/>
-<circle class="tp-bg" cx="264.8" cy="38.2" r="1.6"/>
-<circle class="tp-bg" cx="220.2" cy="87.7" r="1.6"/>
-<circle class="tp-bg" cx="160.7" cy="257.9" r="1.6"/>
-<circle class="tp-on" cx="270.7" cy="188.1" r="2.6"/>
-<circle class="tp-on" cx="204.2" cy="265.6" r="2.6"/>
-<circle class="tp-on" cx="234.6" cy="254.8" r="2.6"/>
-<circle class="tp-off" cx="362.7" cy="245.3" r="2.6"/>
-<circle class="tp-off" cx="124.0" cy="275.2" r="2.6"/>
-<circle class="tp-off" cx="354.1" cy="271.9" r="2.6"/>
-<circle class="tp-on" cx="292.8" cy="223.2" r="2.6"/>
-<circle class="tp-off" cx="299.5" cy="262.0" r="2.6"/>
-<circle class="tp-off" cx="330.7" cy="288.1" r="2.6"/>
-<circle class="tp-on" cx="201.9" cy="254.9" r="2.6"/>
-<circle class="tp-on" cx="151.6" cy="210.3" r="2.6"/>
-<circle class="tp-on" cx="245.8" cy="187.2" r="2.6"/>
-<circle class="tp-on" cx="282.7" cy="149.1" r="2.6"/>
-<circle class="tp-off" cx="387.1" cy="286.7" r="2.6"/>
-<circle class="tp-off" cx="252.7" cy="262.3" r="2.6"/>
-<circle class="tp-on" cx="244.0" cy="245.4" r="2.6"/>
-<circle class="tp-on" cx="231.7" cy="229.8" r="2.6"/>
-<circle class="tp-off" cx="274.8" cy="292.3" r="2.6"/>
-<circle class="tp-off" cx="178.6" cy="293.2" r="2.6"/>
-<circle class="tp-off" cx="262.2" cy="284.5" r="2.6"/>
-<circle class="tp-off" cx="238.5" cy="298.0" r="2.6"/>
-<circle class="tp-on" cx="148.4" cy="231.7" r="2.6"/>
-<circle class="tp-on" cx="268.4" cy="109.8" r="2.6"/>
-<circle class="tp-off" cx="128.0" cy="288.8" r="2.6"/>
-<circle class="tp-on" cx="282.4" cy="217.6" r="2.6"/>
-<circle class="tp-on" cx="256.8" cy="179.4" r="2.6"/>
-<circle class="tp-off" cx="211.7" cy="298.9" r="2.6"/>
-<circle class="tp-off" cx="148.4" cy="294.4" r="2.6"/>
-<circle class="tp-on" cx="199.1" cy="249.2" r="2.6"/>
-<circle class="tp-off" cx="382.8" cy="239.6" r="2.6"/>
-<circle class="tp-on" cx="234.4" cy="239.3" r="2.6"/>
-<circle class="tp-off" cx="215.4" cy="270.1" r="2.6"/>
-<circle class="tp-on" cx="286.7" cy="191.5" r="2.6"/>
-<circle class="tp-on" cx="219.8" cy="257.6" r="2.6"/>
-<circle class="tp-off" cx="328.3" cy="218.7" r="2.6"/>
-<circle class="tp-off" cx="306.4" cy="247.9" r="2.6"/>
-<circle class="tp-off" cx="196.6" cy="273.4" r="2.6"/>
-<circle class="tp-off" cx="232.3" cy="276.5" r="2.6"/>
-<circle class="tp-off" cx="217.4" cy="286.0" r="2.6"/>
-<circle class="tp-off" cx="236.2" cy="263.6" r="2.6"/>
-<circle class="tp-on" cx="196.1" cy="240.6" r="2.6"/>
-<circle class="tp-on" cx="216.4" cy="237.3" r="2.6"/>
-<circle class="tp-on" cx="193.8" cy="234.4" r="2.6"/>
-<circle class="tp-on" cx="150.5" cy="203.3" r="2.6"/>
-<circle class="tp-off" cx="209.7" cy="293.3" r="2.6"/>
-<circle class="tp-on" cx="240.2" cy="220.2" r="2.6"/>
-<circle class="tp-off" cx="342.3" cy="278.8" r="2.6"/>
-<circle class="tp-on" cx="259.5" cy="193.8" r="2.6"/>
-<circle class="tp-off" cx="304.6" cy="295.0" r="2.6"/>
-<circle class="tp-off" cx="360.6" cy="182.9" r="2.6"/>
-<circle class="tp-on" cx="167.5" cy="256.3" r="2.6"/>
-<circle class="tp-off" cx="303.6" cy="224.2" r="2.6"/>
-<circle class="tp-off" cx="336.5" cy="168.4" r="2.6"/>
-<circle class="tp-off" cx="287.1" cy="293.6" r="2.6"/>
-<circle class="tp-off" cx="293.1" cy="271.2" r="2.6"/>
-<circle class="tp-on" cx="266.8" cy="177.2" r="2.6"/>
-<circle class="tp-on" cx="233.2" cy="195.5" r="2.6"/>
-<circle class="tp-on" cx="213.8" cy="180.5" r="2.6"/>
-<circle class="tp-on" cx="168.7" cy="231.6" r="2.6"/>
-<circle class="tp-on" cx="257.7" cy="201.5" r="2.6"/>
-<circle class="tp-on" cx="195.9" cy="198.2" r="2.6"/>
-<circle class="tp-off" cx="298.0" cy="296.0" r="2.6"/>
-<circle class="tp-on" cx="264.1" cy="226.6" r="2.6"/>
-<circle class="tp-on" cx="205.7" cy="215.6" r="2.6"/>
-<circle class="tp-on" cx="270.3" cy="211.6" r="2.6"/>
-<circle class="tp-on" cx="280.3" cy="206.5" r="2.6"/>
-<circle class="tp-on" cx="196.4" cy="161.1" r="2.6"/>
-<circle class="tp-off" cx="265.3" cy="259.6" r="2.6"/>
-<circle class="tp-on" cx="275.6" cy="232.6" r="2.6"/>
-<circle class="tp-off" cx="291.1" cy="230.1" r="2.6"/>
-<circle class="tp-on" cx="250.6" cy="218.6" r="2.6"/>
-<circle class="tp-off" cx="243.4" cy="284.1" r="2.6"/>
-<circle class="tp-on" cx="224.4" cy="221.0" r="2.6"/>
-<circle class="tp-on" cx="251.0" cy="236.8" r="2.6"/>
-<circle class="tp-on" cx="173.4" cy="257.4" r="2.6"/>
-<circle class="tp-on" cx="208.1" cy="236.0" r="2.6"/>
-<circle class="tp-off" cx="222.7" cy="281.2" r="2.6"/>
-<circle class="tp-on" cx="215.5" cy="252.4" r="2.6"/>
-<circle class="tp-on" cx="237.2" cy="234.3" r="2.6"/>
-<circle class="tp-off" cx="247.0" cy="278.2" r="2.6"/>
-<circle class="tp-on" cx="123.7" cy="202.5" r="2.6"/>
-<circle class="tp-on" cx="117.7" cy="212.4" r="2.6"/>
-<circle class="tp-on" cx="152.8" cy="224.0" r="2.6"/>
-<circle class="tp-off" cx="299.7" cy="245.1" r="2.6"/>
-<circle class="tp-off" cx="236.0" cy="271.0" r="2.6"/>
-<circle class="tp-on" cx="288.7" cy="152.8" r="2.6"/>
-<circle class="tp-on" cx="321.0" cy="151.6" r="2.6"/>
-<circle class="tp-off" cx="223.6" cy="291.8" r="2.6"/>
-<circle class="tp-off" cx="306.3" cy="207.8" r="2.6"/>
-<circle class="tp-off" cx="311.9" cy="278.5" r="2.6"/>
-<circle class="tp-on" cx="258.1" cy="243.1" r="2.6"/>
-<circle class="tp-off" cx="286.0" cy="267.2" r="2.6"/>
-<circle class="tp-off" cx="267.9" cy="282.8" r="2.6"/>
-<circle class="tp-off" cx="324.2" cy="272.7" r="2.6"/>
-<circle class="tp-on" cx="315.6" cy="181.4" r="2.6"/>
-<circle class="tp-on" cx="248.7" cy="252.1" r="2.6"/>
-<circle class="tp-on" cx="306.5" cy="159.4" r="2.6"/>
-<circle class="tp-off" cx="285.2" cy="247.6" r="2.6"/>
-<circle class="tp-off" cx="277.6" cy="241.4" r="2.6"/>
-<circle class="tp-off" cx="199.9" cy="287.7" r="2.6"/>
-<circle class="tp-off" cx="298.7" cy="283.0" r="2.6"/>
-<circle class="tp-on" cx="224.8" cy="253.2" r="2.6"/>
-<circle class="tp-on" cx="309.6" cy="202.1" r="2.6"/>
-<circle class="tp-on" cx="290.1" cy="129.1" r="2.6"/>
-<circle class="tp-on" cx="173.4" cy="265.9" r="2.6"/>
-<circle class="tp-off" cx="368.9" cy="258.5" r="2.6"/>
-<circle class="tp-off" cx="353.4" cy="159.7" r="2.6"/>
-<circle class="tp-on" cx="248.4" cy="144.7" r="2.6"/>
-<circle class="tp-on" cx="268.9" cy="167.2" r="2.6"/>
-<circle class="tp-on" cx="281.8" cy="124.2" r="2.6"/>
-<circle class="tp-on" cx="256.4" cy="27.5" r="2.6"/>
-<circle class="tp-on" cx="187.0" cy="174.1" r="2.6"/>
-<circle class="tp-on" cx="331.4" cy="118.7" r="2.6"/>
-<circle class="tp-on" cx="180.2" cy="256.3" r="2.6"/>
-<circle class="tp-on" cx="240.8" cy="115.0" r="2.6"/>
-<circle class="tp-on" cx="300.6" cy="77.5" r="2.6"/>
-<circle class="tp-off" cx="380.5" cy="13.3" r="2.6"/>
-<circle class="tp-on" cx="177.8" cy="206.2" r="2.6"/>
-<circle class="tp-on" cx="277.8" cy="197.3" r="2.6"/>
-<circle class="tp-off" cx="297.2" cy="10.5" r="2.6"/>
-<circle class="tp-on" cx="235.2" cy="87.1" r="2.6"/>
-<circle class="tp-on" cx="305.5" cy="153.6" r="2.6"/>
-<circle class="tp-on" cx="334.8" cy="98.6" r="2.6"/>
-<circle class="tp-on" cx="291.0" cy="139.5" r="2.6"/>
-<circle class="tp-on" cx="179.6" cy="76.3" r="2.6"/>
-<circle class="tp-off" cx="339.4" cy="146.0" r="2.6"/>
-<circle class="tp-on" cx="255.1" cy="227.8" r="2.6"/>
-<circle class="tp-on" cx="239.9" cy="106.7" r="2.6"/>
-<circle class="tp-off" cx="292.3" cy="263.0" r="2.6"/>
-<circle class="tp-on" cx="256.2" cy="137.8" r="2.6"/>
-<circle class="tp-on" cx="224.7" cy="206.6" r="2.6"/>
-<circle class="tp-on" cx="259.1" cy="124.3" r="2.6"/>
-<circle class="tp-on" cx="237.2" cy="204.2" r="2.6"/>
-<circle class="tp-on" cx="265.7" cy="79.6" r="2.6"/>
-<circle class="tp-on" cx="251.5" cy="127.7" r="2.6"/>
-<circle class="tp-on" cx="283.4" cy="113.2" r="2.6"/>
-<circle class="tp-off" cx="337.0" cy="62.9" r="2.6"/>
-<circle class="tp-on" cx="234.7" cy="73.1" r="2.6"/>
-<circle class="tp-on" cx="286.5" cy="103.8" r="2.6"/>
-<circle class="tp-on" cx="283.2" cy="85.4" r="2.6"/>
-<circle class="tp-off" cx="369.7" cy="55.5" r="2.6"/>
-<circle class="tp-on" cx="293.2" cy="55.9" r="2.6"/>
-<circle class="tp-on" cx="214.9" cy="95.7" r="2.6"/>
-<circle class="tp-on" cx="282.0" cy="64.8" r="2.6"/>
-<circle class="tp-on" cx="252.0" cy="95.7" r="2.6"/>
-<circle class="tp-on" cx="250.0" cy="118.7" r="2.6"/>
-<circle class="tp-on" cx="178.0" cy="220.5" r="2.6"/>
-<circle class="tp-on" cx="324.3" cy="85.2" r="2.6"/>
-<circle class="tp-off" cx="368.5" cy="103.0" r="2.6"/>
-<circle class="tp-on" cx="220.8" cy="198.9" r="2.6"/>
-<circle class="tp-on" cx="264.2" cy="67.9" r="2.6"/>
-<circle class="tp-off" cx="373.6" cy="247.2" r="2.6"/>
-<circle class="tp-off" cx="379.3" cy="90.7" r="2.6"/>
-<circle class="tp-on" cx="216.8" cy="102.4" r="2.6"/>
-<circle class="tp-on" cx="243.3" cy="197.1" r="2.6"/>
-<circle class="tp-on" cx="262.9" cy="209.9" r="2.6"/>
-<circle class="tp-on" cx="248.0" cy="134.1" r="2.6"/>
-<circle class="tp-on" cx="317.6" cy="105.8" r="2.6"/>
-<circle class="tp-on" cx="278.9" cy="104.5" r="2.6"/>
-<circle class="tp-on" cx="317.8" cy="117.8" r="2.6"/>
-<circle class="tp-off" cx="357.7" cy="134.0" r="2.6"/>
-<circle class="tp-on" cx="272.0" cy="144.3" r="2.6"/>
-<circle class="tp-on" cx="228.0" cy="92.2" r="2.6"/>
-<circle class="tp-on" cx="231.7" cy="171.6" r="2.6"/>
-<circle class="tp-on" cx="248.8" cy="103.5" r="2.6"/>
-<circle class="tp-on" cx="198.2" cy="59.9" r="2.6"/>
-<circle class="tp-on" cx="208.6" cy="50.1" r="2.6"/>
-<circle class="tp-on" cx="272.4" cy="181.5" r="2.6"/>
-<circle class="tp-on" cx="108.4" cy="104.0" r="2.6"/>
-<circle class="tp-on" cx="307.9" cy="57.0" r="2.6"/>
-<circle class="tp-on" cx="302.7" cy="192.1" r="2.6"/>
-<circle class="tp-off" cx="340.8" cy="102.8" r="2.6"/>
-<circle class="tp-on" cx="329.3" cy="103.9" r="2.6"/>
-<circle class="tp-on" cx="300.9" cy="91.7" r="2.6"/>
-<circle class="tp-on" cx="223.8" cy="100.3" r="2.6"/>
-<circle class="tp-on" cx="291.8" cy="84.8" r="2.6"/>
-<circle class="tp-off" cx="338.9" cy="128.6" r="2.6"/>
-<circle class="tp-on" cx="294.6" cy="152.0" r="2.6"/>
-<circle class="tp-on" cx="294.4" cy="123.2" r="2.6"/>
-<circle class="tp-on" cx="260.6" cy="163.5" r="2.6"/>
-<circle class="tp-on" cx="225.0" cy="154.4" r="2.6"/>
-<circle class="tp-on" cx="295.7" cy="206.5" r="2.6"/>
-<circle class="tp-off" cx="378.9" cy="142.3" r="2.6"/>
-<circle class="tp-off" cx="331.8" cy="186.9" r="2.6"/>
-<circle class="tp-on" cx="247.8" cy="157.0" r="2.6"/>
-<circle class="tp-off" cx="356.8" cy="171.8" r="2.6"/>
-<circle class="tp-on" cx="224.9" cy="38.0" r="2.6"/>
-<circle class="tp-off" cx="338.4" cy="193.7" r="2.6"/>
-<circle class="tp-off" cx="357.6" cy="191.1" r="2.6"/>
-<circle class="tp-on" cx="326.9" cy="137.7" r="2.6"/>
-<circle class="tp-on" cx="199.5" cy="114.7" r="2.6"/>
-<circle class="tp-off" cx="347.9" cy="118.1" r="2.6"/>
-<circle class="tp-on" cx="311.6" cy="155.8" r="2.6"/>
-<circle class="tp-on" cx="300.6" cy="116.6" r="2.6"/>
-<circle class="tp-on" cx="263.9" cy="113.6" r="2.6"/>
-<circle class="tp-on" cx="209.3" cy="43.8" r="2.6"/>
-<circle class="tp-on" cx="277.2" cy="185.6" r="2.6"/>
-<circle class="tp-on" cx="264.1" cy="30.0" r="2.6"/>
-<circle class="tp-off" cx="368.5" cy="42.4" r="2.6"/>
-<circle class="tp-on" cx="256.3" cy="66.2" r="2.6"/>
-<circle class="tp-on" cx="191.0" cy="143.2" r="2.6"/>
-<circle class="tp-off" cx="333.6" cy="48.5" r="2.6"/>
-<circle class="tp-on" cx="279.5" cy="80.5" r="2.6"/>
-<circle class="tp-on" cx="178.6" cy="162.1" r="2.6"/>
-<circle class="tp-off" cx="360.2" cy="152.7" r="2.6"/>
-<circle class="tp-on" cx="206.8" cy="146.7" r="2.6"/>
-<circle class="tp-on" cx="178.6" cy="183.9" r="2.6"/>
-<circle class="tp-off" cx="341.6" cy="112.1" r="2.6"/>
-<circle class="tp-off" cx="363.4" cy="38.6" r="2.6"/>
-<circle class="tp-on" cx="182.9" cy="116.8" r="2.6"/>
-<circle class="tp-on" cx="265.4" cy="185.7" r="2.6"/>
-<circle class="tp-off" cx="361.5" cy="51.5" r="2.6"/>
-<circle class="tp-off" cx="350.7" cy="40.8" r="2.6"/>
-<circle class="tp-on" cx="275.2" cy="22.3" r="2.6"/>
-<circle class="tp-on" cx="286.2" cy="71.5" r="2.6"/>
-<circle class="tp-on" cx="308.5" cy="136.0" r="2.6"/>
-<circle class="tp-off" cx="362.9" cy="66.0" r="2.6"/>
-<circle class="tp-off" cx="342.0" cy="93.3" r="2.6"/>
-<circle class="tp-on" cx="252.6" cy="89.4" r="2.6"/>
-<circle class="tp-on" cx="319.7" cy="131.8" r="2.6"/>
-<circle class="tp-on" cx="247.4" cy="213.1" r="2.6"/>
-<circle class="tp-on" cx="162.4" cy="138.1" r="2.6"/>
-<circle class="tp-on" cx="294.4" cy="169.5" r="2.6"/>
-<circle class="tp-on" cx="177.0" cy="143.7" r="2.6"/>
-<circle class="tp-on" cx="160.2" cy="156.5" r="2.6"/>
-<circle class="tp-on" cx="276.8" cy="127.8" r="2.6"/>
-<circle class="tp-on" cx="319.2" cy="63.2" r="2.6"/>
-<circle class="tp-on" cx="303.7" cy="111.5" r="2.6"/>
-<circle class="tp-on" cx="287.7" cy="182.7" r="2.6"/>
-<circle class="tp-off" cx="353.1" cy="244.6" r="2.6"/>
-<circle class="tp-on" cx="156.8" cy="92.9" r="2.6"/>
-<circle class="tp-on" cx="104.5" cy="50.1" r="2.6"/>
-<circle class="tp-on" cx="182.5" cy="107.6" r="2.6"/>
-<circle class="tp-on" cx="285.5" cy="93.1" r="2.6"/>
-<circle class="tp-off" cx="380.0" cy="245.0" r="2.6"/>
-<circle class="tp-on" cx="187.0" cy="111.6" r="2.6"/>
-<circle class="tp-on" cx="311.5" cy="35.3" r="2.6"/>
-<circle class="tp-off" cx="338.7" cy="15.1" r="2.6"/>
-<circle class="tp-off" cx="311.3" cy="221.5" r="2.6"/>
-<circle class="tp-on" cx="266.1" cy="4.5" r="2.6"/>
-<circle class="tp-on" cx="229.8" cy="142.4" r="2.6"/>
-<circle class="tp-on" cx="146.9" cy="262.4" r="2.6"/>
-<rect class="tp-on" x="311.0" y="99.7" width="4.2" height="4.2"/>
-<rect class="tp-on" x="308.9" y="90.2" width="4.2" height="4.2"/>
-<rect class="tp-on" x="292.8" y="100.0" width="4.2" height="4.2"/>
-<rect class="tp-on" x="283.2" y="132.4" width="4.2" height="4.2"/>
-<rect class="tp-on" x="265.2" y="190.9" width="4.2" height="4.2"/>
-<rect class="tp-on" x="245.3" y="204.5" width="4.2" height="4.2"/>
-<rect class="tp-on" x="260.8" y="201.9" width="4.2" height="4.2"/>
-<rect class="tp-on" x="272.3" y="168.7" width="4.2" height="4.2"/>
-<rect class="tp-on" x="225.7" y="232.8" width="4.2" height="4.2"/>
-<rect class="tp-on" x="188.8" y="249.1" width="4.2" height="4.2"/>
-<rect class="tp-on" x="241.4" y="223.6" width="4.2" height="4.2"/>
-<rect class="tp-on" x="227.1" y="240.5" width="4.2" height="4.2"/>
-<rect class="tp-on" x="228.3" y="105.2" width="4.2" height="4.2"/>
-<rect class="tp-on" x="208.8" y="117.9" width="4.2" height="4.2"/>
-<rect class="tp-on" x="254.5" y="128.4" width="4.2" height="4.2"/>
-<rect class="tp-on" x="226.9" y="130.0" width="4.2" height="4.2"/>
-<rect class="tp-on" x="163.9" y="209.0" width="4.2" height="4.2"/>
-<rect class="tp-on" x="163.3" y="198.0" width="4.2" height="4.2"/>
-<rect class="tp-on" x="146.6" y="214.5" width="4.2" height="4.2"/>
-<rect class="tp-off" x="150.8" y="177.3" width="4.2" height="4.2"/>
-<rect class="tp-on" x="310.8" y="142.3" width="4.2" height="4.2"/>
-<rect class="tp-on" x="297.2" y="140.2" width="4.2" height="4.2"/>
-<rect class="tp-on" x="298.3" y="156.0" width="4.2" height="4.2"/>
-<rect class="tp-on" x="304.1" y="143.7" width="4.2" height="4.2"/>
-<rect class="tp-on" x="263.8" y="93.8" width="4.2" height="4.2"/>
-<rect class="tp-on" x="279.0" y="96.9" width="4.2" height="4.2"/>
-<rect class="tp-on" x="267.2" y="116.3" width="4.2" height="4.2"/>
-<rect class="tp-on" x="245.4" y="75.2" width="4.2" height="4.2"/>
-<rect class="tp-on" x="206.1" y="181.6" width="4.2" height="4.2"/>
-<rect class="tp-on" x="191.6" y="184.7" width="4.2" height="4.2"/>
-<rect class="tp-on" x="234.0" y="181.0" width="4.2" height="4.2"/>
-<rect class="tp-on" x="177.0" y="172.7" width="4.2" height="4.2"/>
-<rect class="tp-on" x="318.0" y="93.4" width="4.2" height="4.2"/>
-<rect class="tp-on" x="314.6" y="72.2" width="4.2" height="4.2"/>
-<rect class="tp-on" x="321.2" y="77.2" width="4.2" height="4.2"/>
-<rect class="tp-on" x="290.8" y="71.5" width="4.2" height="4.2"/>
-<rect class="tp-on" x="273.1" y="33.3" width="4.2" height="4.2"/>
-<rect class="tp-on" x="258.2" y="40.5" width="4.2" height="4.2"/>
-<rect class="tp-on" x="235.1" y="30.3" width="4.2" height="4.2"/>
-<rect class="tp-on" x="268.6" y="8.7" width="4.2" height="4.2"/>
-<rect class="tp-on" x="152.2" y="128.1" width="4.2" height="4.2"/>
-<rect class="tp-on" x="171.4" y="117.3" width="4.2" height="4.2"/>
-<rect class="tp-on" x="164.4" y="149.8" width="4.2" height="4.2"/>
-<rect class="tp-on" x="141.8" y="126.0" width="4.2" height="4.2"/>
-<rect class="tp-on" x="280.8" y="198.1" width="4.2" height="4.2"/>
-<rect class="tp-on" x="254.7" y="211.6" width="4.2" height="4.2"/>
-<rect class="tp-on" x="274.7" y="210.6" width="4.2" height="4.2"/>
-<rect class="tp-on" x="264.8" y="218.3" width="4.2" height="4.2"/>
-<rect class="tp-on" x="214.3" y="153.0" width="4.2" height="4.2"/>
-<rect class="tp-on" x="187.7" y="161.9" width="4.2" height="4.2"/>
-<rect class="tp-on" x="222.8" y="168.8" width="4.2" height="4.2"/>
-<rect class="tp-on" x="220.4" y="128.9" width="4.2" height="4.2"/>
-<rect class="tp-on" x="219.3" y="58.9" width="4.2" height="4.2"/>
-<rect class="tp-on" x="193.0" y="74.4" width="4.2" height="4.2"/>
-<rect class="tp-on" x="223.0" y="45.5" width="4.2" height="4.2"/>
-<rect class="tp-on" x="212.9" y="43.2" width="4.2" height="4.2"/>
-<rect class="tp-on" x="160.8" y="247.9" width="4.2" height="4.2"/>
-<rect class="tp-on" x="141.2" y="248.3" width="4.2" height="4.2"/>
-<rect class="tp-on" x="160.4" y="237.3" width="4.2" height="4.2"/>
-<rect class="tp-on" x="154.5" y="249.5" width="4.2" height="4.2"/>
-<rect class="tp-on" x="241.3" y="232.7" width="4.2" height="4.2"/>
-<rect class="tp-on" x="220.7" y="240.0" width="4.2" height="4.2"/>
-<rect class="tp-on" x="214.4" y="220.4" width="4.2" height="4.2"/>
-<rect class="tp-on" x="238.2" y="207.8" width="4.2" height="4.2"/>
-<rect class="tp-on" x="111.2" y="198.9" width="4.2" height="4.2"/>
-<rect class="tp-on" x="135.5" y="208.7" width="4.2" height="4.2"/>
-<rect class="tp-off" x="113.2" y="180.3" width="4.2" height="4.2"/>
-<rect class="tp-on" x="101.2" y="204.3" width="4.2" height="4.2"/>
-<rect class="tp-on" x="298.0" y="184.4" width="4.2" height="4.2"/>
-<rect class="tp-on" x="278.8" y="188.8" width="4.2" height="4.2"/>
-<rect class="tp-on" x="303.2" y="179.1" width="4.2" height="4.2"/>
-<rect class="tp-on" x="280.1" y="170.4" width="4.2" height="4.2"/>
-<rect class="tp-on" x="92.7" y="95.2" width="4.2" height="4.2"/>
-<rect class="tp-on" x="94.6" y="103.3" width="4.2" height="4.2"/>
-<rect class="tp-on" x="139.7" y="79.1" width="4.2" height="4.2"/>
-<rect class="tp-off" x="151.4" y="54.8" width="4.2" height="4.2"/>
-<rect class="tp-on" x="140.7" y="101.7" width="4.2" height="4.2"/>
-<rect class="tp-on" x="146.8" y="86.2" width="4.2" height="4.2"/>
-<rect class="tp-on" x="318.1" y="110.1" width="4.2" height="4.2"/>
-<rect class="tp-on" x="300.1" y="95.7" width="4.2" height="4.2"/>
-<rect class="tp-on" x="298.3" y="102.4" width="4.2" height="4.2"/>
-<rect class="tp-on" x="308.0" y="106.1" width="4.2" height="4.2"/>
-<rect class="tp-on" x="312.8" y="27.7" width="4.2" height="4.2"/>
-<rect class="tp-on" x="301.8" y="37.6" width="4.2" height="4.2"/>
-<rect class="tp-on" x="292.7" y="39.5" width="4.2" height="4.2"/>
-<rect class="tp-on" x="310.0" y="59.9" width="4.2" height="4.2"/>
-<rect class="tp-on" x="256.5" y="151.3" width="4.2" height="4.2"/>
-<rect class="tp-on" x="261.4" y="138.6" width="4.2" height="4.2"/>
-<rect class="tp-on" x="253.9" y="157.8" width="4.2" height="4.2"/>
-<rect class="tp-on" x="270.4" y="150.2" width="4.2" height="4.2"/>
-<rect class="tp-on" x="100.0" y="33.2" width="4.2" height="4.2"/>
-<rect class="tp-on" x="87.9" y="36.2" width="4.2" height="4.2"/>
-<rect class="tp-on" x="94.7" y="48.2" width="4.2" height="4.2"/>
-<rect class="tp-off" x="98.8" y="0.5" width="4.2" height="4.2"/>
-<rect class="tp-off" x="127.6" y="4.4" width="4.2" height="4.2"/>
-<rect class="tp-off" x="138.5" y="137.6" width="4.2" height="4.2"/>
-<rect class="tp-off" x="198.6" y="4.6" width="4.2" height="4.2"/>
-        <text class="tp-key" x="12" y="304">circles: tumour &nbsp;&nbsp; squares: T cells &nbsp;&nbsp; highlighted: the cells that drive the label</text>
-      </svg>
-    </div>
-
     <p class="kicker">interpretability &middot; spatial biology &middot; 2026 &middot; report</p>
     <h1 class="ptitle">Do explanation tools find the right cells?</h1>
     <p class="dek">I built tissue where I know which cells matter, then asked the popular tools to point at them.</p>
 
     <dl class="meta">
       <dt>Code</dt><dd><a href="https://github.com/tanmayhinge/tissue-graph-probing" target="_blank" rel="noopener noreferrer">github.com/tanmayhinge/tissue-graph-probing</a></dd>
-      <dt>Status</dt><dd>five phases gated, 96 acceptance tests, two claims retracted along the way</dd>
       <dt>Stack</dt><dd>Python, PyTorch, PyTorch&nbsp;Geometric</dd>
     </dl>
 
@@ -514,8 +112,16 @@
         Not real tissue. Cells with types and marker profiles, scattered under rules I control, with a
         label defined as a function of the cells themselves: a sample counts as positive when enough
         tumour cells have a T cell sitting close by. Because I write the rule, I can record every cell
-        that contributed. That is the panel at the top of this page, with the driver cells picked out.
+        that contributed. Fig 1 shows six generated samples.
       </p>
+      <figure class="fig">
+        <div class="fig-img">
+          <img src="fig/phase1_sanity_grid.png" width="1440" height="990" loading="lazy"
+               alt="Six panels of synthetic tissue. The top row shows positive samples and the bottom row negative ones. Engaged tumour cells and the T cells enabling them are marked in red and dark blue, unengaged tumour cells in orange, decoy T cells in pale blue, with macrophages and stroma in grey." />
+        </div>
+        <figcaption>Fig 1. Six generated samples, positives on top. The engaged region is the cluster where T cells sit on tumour; everything else is background or decoy.</figcaption>
+      </figure>
+
       <p>
         Two extra things get recorded, and they turn out to matter more than the driver list. First, a
         stricter set: the smallest group of cells whose removal actually flips the label. Second,
@@ -533,9 +139,9 @@
 
       <h2 class="h-label">Most of them do not find the cells</h2>
       <figure class="fig">
-        <svg viewBox="0 0 700 268" role="img" aria-labelledby="f1t f1d">
-          <title id="f1t">Average precision at recovering the driver cells, by method</title>
-          <desc id="f1d">Random guessing scores 0.058. GNNExplainer scores 0.044, below guessing. Attention rollout 0.090, saliency 0.095, integrated gradients 0.153. A marker heuristic that never consults the model scores 0.169, and CNN integrated gradients 0.189.</desc>
+        <svg viewBox="0 0 700 268" role="img" aria-labelledby="f2t f2d">
+          <title id="f2t">Average precision at recovering the driver cells, by method</title>
+          <desc id="f2d">Random guessing scores 0.058. GNNExplainer scores 0.044, below guessing. Attention rollout 0.090, saliency 0.095, integrated gradients 0.153. A marker heuristic that never consults the model scores 0.169, and CNN integrated gradients 0.189.</desc>
 <line class="c-axis" x1="176" y1="14" x2="176" y2="246"/>
 <rect class="c-bar" x="176" y="14" width="444.1" height="22" rx="2"/>
 <text class="c-cat" x="166" y="29" text-anchor="end">CNN integrated gradients</text>
@@ -561,7 +167,7 @@
 <line class="tp-ref" x1="312.3" y1="8" x2="312.3" y2="246"/>
 <text class="c-axis-title" x="176" y="268">average precision at finding the driver cells</text>
         </svg>
-        <figcaption>Fig 1. Higher is better. The dashed line is random guessing.</figcaption>
+        <figcaption>Fig 2. Higher is better. The dashed line is random guessing.</figcaption>
       </figure>
       <p>
         GNNExplainer, probably the best known of these tools, lands at 0.044 against a random baseline
@@ -588,9 +194,9 @@
 
       <h2 class="h-label">One gotcha worth passing on</h2>
       <figure class="fig">
-        <svg viewBox="0 0 820 258" role="img" aria-labelledby="f2t f2d">
-          <title id="f2t">GNNExplainer randomisation correlation against optimisation budget</title>
-          <desc id="f2d">Correlation with a randomised network falls from 0.852 at 30 epochs to 0.554 at 100, 0.366 at 200 and 0.283 at 400, then 0.340 at 800. The common default of 100 epochs sits partway down the slope.</desc>
+        <svg viewBox="0 0 820 258" role="img" aria-labelledby="f3t f3d">
+          <title id="f3t">GNNExplainer randomisation correlation against optimisation budget</title>
+          <desc id="f3d">Correlation with a randomised network falls from 0.852 at 30 epochs to 0.554 at 100, 0.366 at 200 and 0.283 at 400, then 0.340 at 800. The common default of 100 epochs sits partway down the slope.</desc>
 <line class="c-grid" x1="96" y1="190.0" x2="760" y2="190.0"/>
 <text class="c-tick" x="86" y="194.0" text-anchor="end">0.2</text>
 <line class="c-grid" x1="96" y1="143.1" x2="760" y2="143.1"/>
@@ -614,7 +220,7 @@
 <text class="c-tick" x="347.5" y="30">common default</text>
 <text class="c-axis-title" x="96" y="238">optimisation epochs, log scale</text>
         </svg>
-        <figcaption>Fig 2. Lower is better. The same test returns a different verdict depending on how long you run it.</figcaption>
+        <figcaption>Fig 3. Lower is better. The same test returns a different verdict depending on how long you run it.</figcaption>
       </figure>
       <p>
         That randomisation number is not a fixed property of the method. It depends on how long you
