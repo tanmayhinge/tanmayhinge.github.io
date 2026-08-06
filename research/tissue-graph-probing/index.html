@@ -3,15 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Do explanation tools find the right cells? &middot; Tanmay Hinge</title>
-  <meta name="description" content="I built synthetic tissue where the cells driving the label are known by construction, then asked the popular graph-explanation tools to find them. Most did no better than guessing, and one scored below it." />
+  <title>Auditing attribution methods on synthetic tissue &middot; Tanmay Hinge</title>
+  <meta name="description" content="Synthetic tissue where the cells driving the label are known by construction, used to measure whether graph attribution methods recover them. Most did not, and the controls that catch this are routinely skipped." />
   <meta name="author" content="Tanmay Hinge" />
   <link rel="canonical" href="https://tanmayhinge.com/research/tissue-graph-probing/" />
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Tanmay Hinge" />
   <meta property="og:locale" content="en_US" />
-  <meta property="og:title" content="Do explanation tools find the right cells?" />
-  <meta property="og:description" content="Synthetic tissue where the answer is known by construction. Most explanation tools did no better than guessing, and a heuristic that never touches the model did about as well as the best of them." />
+  <meta property="og:title" content="Auditing attribution methods on synthetic tissue" />
+  <meta property="og:description" content="Most attribution methods did not recover the driver cells, and one scored below random. A marker heuristic that never consults the model matched the best of them." />
   <meta property="og:url" content="https://tanmayhinge.com/research/tissue-graph-probing/" />
   <meta property="og:image" content="https://tanmayhinge.com/og/tissue.png" />
   <meta property="article:published_time" content="2026-08-06" />
@@ -40,6 +40,7 @@
     .fig-img { background: #fff; border-radius: 6px; padding: calc(var(--u) * 1.5);
                border: 1px solid var(--hair); }
     .fig-img img { width: 100%; height: auto; display: block; }
+    .tnote { font: 400 11px var(--mono); color: var(--muted); }
     .tp-ref { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 3 3; }
     .c-bar.tp-rand { fill: color-mix(in srgb, var(--muted) 25%, var(--bg)); }
   </style>
@@ -51,7 +52,7 @@
       {
         "@type": "ScholarlyArticle",
         "@id": "https://tanmayhinge.com/research/tissue-graph-probing/#article",
-        "headline": "Do explanation tools find the right cells?",
+        "headline": "Auditing attribution methods on synthetic tissue",
         "description": "A synthetic testbed for measuring whether interpretability methods on cell graphs recover the cells that actually drive a tissue-level label.",
         "url": "https://tanmayhinge.com/research/tissue-graph-probing/",
         "image": "https://tanmayhinge.com/og/tissue.png",
@@ -85,8 +86,8 @@
     </nav>
 
     <p class="kicker">interpretability &middot; spatial biology &middot; 2026 &middot; report</p>
-    <h1 class="ptitle">Do explanation tools find the right cells?</h1>
-    <p class="dek">I built tissue where I know which cells matter, then asked the popular tools to point at them.</p>
+    <h1 class="ptitle">Auditing attribution methods on synthetic tissue</h1>
+    <p class="dek">If you cannot check an explanation, you cannot call it faithful. So I built tissue where checking is possible.</p>
 
     <dl class="meta">
       <dt>Code</dt><dd><a href="https://github.com/tanmayhinge/tissue-graph-probing" target="_blank" rel="noopener noreferrer">github.com/tanmayhinge/tissue-graph-probing</a></dd>
@@ -97,51 +98,163 @@
 
       <h2 class="h-label">The problem</h2>
       <p>
-        Show a model a slice of tumour tissue and it will predict something useful. The obvious next
-        question is which cells made it say that. There are popular tools for answering this, and
-        people use them to make biological claims.
+        Give a graph neural network a slice of tumour tissue, one node per cell, and it will predict
+        a tissue-level outcome. The question everyone asks next is which cells drove the prediction,
+        and there is a standard toolkit for answering it: GNNExplainer, attention rollout, integrated
+        gradients. Papers use these outputs to make biological claims.
       </p>
       <p>
-        The catch is that they get tested on real tissue, where nobody knows the true answer. So
-        &ldquo;the method highlighted the important cells&rdquo; is a statement no one can check. It
-        is taken on faith.
+        The difficulty is that these methods are evaluated on real tissue, where the cells that
+        actually drive the outcome are unknown. A method highlights some cells, the cells look
+        plausible, and the explanation is accepted. Faithfulness gets asserted rather than measured,
+        because on real data there is nothing to measure it against. The claim is not so much
+        unverified as unfalsifiable.
       </p>
 
-      <h2 class="h-label">So I built tissue where I know the answer</h2>
+      <h2 class="h-label">Building tissue where the answer is known</h2>
       <p>
-        Not real tissue. Cells with types and marker profiles, scattered under rules I control, with a
-        label defined as a function of the cells themselves: a sample counts as positive when enough
-        tumour cells have a T cell sitting close by. Because I write the rule, I can record every cell
-        that contributed. Fig 1 shows six generated samples.
+        The way out is to give up on real tissue and construct a setting where the answer is written
+        down in advance. Cells get a type, a six-channel marker vector and a position, placed under
+        rules I control. The label is then defined as an explicit function of that cell table: a
+        sample is positive when the fraction of tumour cells with a cytotoxic T cell within 30&nbsp;&micro;m
+        exceeds a threshold.
+      </p>
+      <p>
+        Because the rule is mine, every cell that participates can be recorded at generation time.
+        That recording is the whole point of the exercise, and it is more than a list of important
+        cells.
+      </p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Recorded per sample</th><th>What it is</th></tr></thead>
+          <tbody>
+            <tr><td>constructive drivers</td><td>engaged tumour cells and the T cells enabling them</td></tr>
+            <tr><td>counterfactual set</td><td>an irredundant set whose removal flips the label, verified by leave-one-out</td></tr>
+            <tr><td>decoys</td><td>T cells with identical markers sitting away from any tumour, causally inert</td></tr>
+            <tr><td>signed relevance</td><td>+1 for evidence, &minus;1 for counter-evidence, 0 for irrelevant</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        The signed vector matters more than it looks. The score is a ratio, so unengaged tumour cells
+        sit in the denominator and removing one <em>raises</em> the score. They are evidence against
+        the positive class, and a method that assigns them negative attribution is being correct. An
+        earlier version of the protocol scored attributions against a binary mask and would have
+        marked exactly that behaviour wrong.
       </p>
       <figure class="fig">
         <div class="fig-img">
           <img src="fig/phase1_sanity_grid.png" width="1440" height="990" loading="lazy"
                alt="Six panels of synthetic tissue. The top row shows positive samples and the bottom row negative ones. Engaged tumour cells and the T cells enabling them are marked in red and dark blue, unengaged tumour cells in orange, decoy T cells in pale blue, with macrophages and stroma in grey." />
         </div>
-        <figcaption>Fig 1. Six generated samples, positives on top. The engaged region is the cluster where T cells sit on tumour; everything else is background or decoy.</figcaption>
+        <figcaption>Fig 1. Six generated samples, positives on top. The engaged region is where T cells sit on tumour; everything else is background or decoy.</figcaption>
       </figure>
 
+      <h2 class="h-label">What the generator has to guarantee</h2>
       <p>
-        Two extra things get recorded, and they turn out to matter more than the driver list. First, a
-        stricter set: the smallest group of cells whose removal actually flips the label. Second,
-        decoys, which are cells with identical marker profiles sitting in the wrong place. Anything
-        worth calling an explanation should point at the first and ignore the second.
+        A synthetic benchmark is only worth as much as its generator, and mine was wrong twice before
+        it was right. The first version was <strong>93&nbsp;% solvable without looking at a single tumour
+        cell</strong>: local T cell density alone reached AUC 0.928, because I had placed one enabling
+        T cell per engaged tumour cell, which oversupplied them fourfold and left a density signature
+        a model could read directly. Any faithfulness number computed on that data would have been
+        measuring a shortcut.
+      </p>
+      <p>
+        The second problem was physical. Cells were drawn as independent points with no minimum
+        separation, so 2.23&nbsp;% of them overlapped and about 7.7&nbsp;% of driver cells had a partner
+        closer than 2&nbsp;&micro;m. No attribution method, graph or pixel, can separate two cells occupying
+        the same point, so that put an irreducible floor under the headline metric before any method
+        was tested.
+      </p>
+      <p>
+        Both were caught by acceptance tests written before the implementation, and the fixes are
+        matched aggregate density between driver and decoy T cells, and hard-core placement with an
+        8&nbsp;&micro;m minimum separation. The suite now runs 96 tests across five gated phases, including
+        shortcut probes that must sit at chance and a check that the label recomputes exactly from
+        the serialised record.
       </p>
 
-      <h2 class="h-label">The test</h2>
+      <h2 class="h-label">The models</h2>
       <p>
-        Train a graph neural network on this tissue. It solves the task almost perfectly, around 0.999
-        AUC, which matters because you cannot ask what a broken model was thinking. Then hand each
-        explanation tool a sample and ask which cells mattered, and score its answer against the
-        recorded truth.
+        Cells become nodes carrying only their marker vectors, connected by a radius graph with the
+        distance as an edge feature. Cell type is never a feature; it has to be inferred from
+        markers, which is what makes the probing question below meaningful. I trained GIN and GATv2
+        at four ratios of graph radius to label radius, plus a CNN on a rendered image of the same
+        field as a non-graph baseline sharing the same splits.
+      </p>
+      <p>
+        Every model reaches test AUC around 0.999. That matters for a reason that is easy to skip:
+        you cannot meaningfully ask what a broken classifier was attending to. If attribution fails
+        here, it fails against a model that solved the task.
       </p>
 
-      <h2 class="h-label">Most of them do not find the cells</h2>
+      <h2 class="h-label">What the representation already encodes</h2>
+      <p>
+        Before scoring any explanation, it is worth asking what the trained network actually
+        represents. Linear probes on the frozen encoder answer that, but only if they are read
+        against the right floor. The informative comparison is not against chance, it is against the
+        same architecture with random weights.
+      </p>
       <figure class="fig">
-        <svg viewBox="0 0 700 268" role="img" aria-labelledby="f2t f2d">
-          <title id="f2t">Average precision at recovering the driver cells, by method</title>
-          <desc id="f2d">Random guessing scores 0.058. GNNExplainer scores 0.044, below guessing. Attention rollout 0.090, saliency 0.095, integrated gradients 0.153. A marker heuristic that never consults the model scores 0.169, and CNN integrated gradients 0.189.</desc>
+        <svg viewBox="0 0 780 210" role="img" aria-labelledby="f2t f2d">
+          <title id="f2t">Linear probe scores on trained versus randomly initialised encoders</title>
+          <desc id="f2d">Whether a tumour cell is engaged is decodable at AUC 1.000 from both a trained and an untrained encoder. Driver status likewise, 0.999 against 0.998. Only the graph-level score shows a real gap, 0.924 trained against 0.768 untrained.</desc>
+<line class="c-axis" x1="210" y1="10" x2="210" y2="181"/>
+<rect class="c-bar hl" x="210" y="16" width="470.0" height="17" rx="2"/>
+<text class="c-val" x="688.0" y="29">1.000</text>
+<text class="c-cat" x="200" y="29" text-anchor="end">trained</text>
+<rect class="c-bar" x="210" y="36" width="469.9" height="17" rx="2"/>
+<text class="c-val" x="687.9" y="49">1.000</text>
+<text class="c-cat" x="200" y="49" text-anchor="end">untrained</text>
+<text class="c-axis-title" x="8" y="35">is_engaged  (tumour cells)</text>
+<rect class="c-bar hl" x="210" y="79" width="468.9" height="17" rx="2"/>
+<text class="c-val" x="686.9" y="92">0.998</text>
+<text class="c-cat" x="200" y="92" text-anchor="end">trained</text>
+<rect class="c-bar" x="210" y="99" width="468.2" height="17" rx="2"/>
+<text class="c-val" x="686.2" y="112">0.996</text>
+<text class="c-cat" x="200" y="112" text-anchor="end">untrained</text>
+<text class="c-axis-title" x="8" y="98">is_driver</text>
+<rect class="c-bar hl" x="210" y="142" width="434.4" height="17" rx="2"/>
+<text class="c-val" x="652.4" y="155">0.924</text>
+<text class="c-cat" x="200" y="155" text-anchor="end">trained</text>
+<rect class="c-bar" x="210" y="162" width="361.1" height="17" rx="2"/>
+<text class="c-val" x="579.1" y="175">0.768</text>
+<text class="c-cat" x="200" y="175" text-anchor="end">untrained</text>
+<text class="c-axis-title" x="8" y="161">graph score  (the task)</text>
+<text class="c-axis-title" x="210" y="203">linear probe score on a frozen encoder</text>
+        </svg>
+        <figcaption>Fig 2. Node-level driver properties come free from message passing. Only the readout is learned.</figcaption>
+      </figure>
+      <p>
+        The driver property is linearly decodable at <strong>AUC 1.000 from a randomly initialised
+        network</strong>. At this radius, asking whether a tumour cell has a T cell within the label
+        distance is a one-hop aggregate, and any message-passing layer computes it whether trained or
+        not. Training adds nothing at the node level and shows up only in the graph-level readout.
+      </p>
+      <p>
+        This reframes everything downstream. If a method recovers the driver cells, that may reflect
+        structure present in any network over this graph rather than anything the model learned. The
+        randomisation control stops being a formality and becomes the result.
+      </p>
+
+      <h2 class="h-label">How attribution gets scored</h2>
+      <p>
+        Each method returns one signed score per cell, computed with respect to the positive-class
+        logit. Those get scored four ways: average precision against the counterfactual set, rank
+        correlation against the signed relevance vector, the share of attribution landing on inert
+        decoys, and deletion and insertion curves computed on logits rather than probabilities.
+      </p>
+      <p>
+        Alongside the learned methods run six baselines, and these are not decoration. One is a
+        marker heuristic asking only whether a cell looks like a tumour cell. Another is distance to
+        the nearest T cell. If a learned method cannot beat these, that is the finding.
+      </p>
+
+      <h2 class="h-label">Results</h2>
+      <figure class="fig">
+        <svg viewBox="0 0 700 268" role="img" aria-labelledby="f3t f3d">
+          <title id="f3t">Average precision at recovering the driver cells, by method</title>
+          <desc id="f3d">Random guessing scores 0.058. GNNExplainer scores 0.044, below guessing. Attention rollout 0.090, saliency 0.095, integrated gradients 0.153. A marker heuristic that never consults the model scores 0.169, and CNN integrated gradients 0.189.</desc>
 <line class="c-axis" x1="176" y1="14" x2="176" y2="246"/>
 <rect class="c-bar" x="176" y="14" width="444.1" height="22" rx="2"/>
 <text class="c-cat" x="166" y="29" text-anchor="end">CNN integrated gradients</text>
@@ -167,36 +280,108 @@
 <line class="tp-ref" x1="312.3" y1="8" x2="312.3" y2="246"/>
 <text class="c-axis-title" x="176" y="268">average precision at finding the driver cells</text>
         </svg>
-        <figcaption>Fig 2. Higher is better. The dashed line is random guessing.</figcaption>
+        <figcaption>Fig 3. Higher is better. The dashed line is random guessing.</figcaption>
       </figure>
       <p>
-        GNNExplainer, probably the best known of these tools, lands at 0.044 against a random baseline
-        of 0.058. It is worse than guessing. Attention rollout manages 0.090. The best graph method,
-        integrated gradients, reaches 0.153.
+        GNNExplainer, the most widely used of these tools, lands at 0.044 against a random baseline
+        of 0.058. It is worse than guessing, and stays worse across every optimisation budget I
+        tested. Attention rollout reaches 0.090. The best graph method is integrated gradients, at 0.153 for
+        the zero-baseline variant and 0.144 for the dataset-mean one.
       </p>
       <p>
-        The uncomfortable line is the highlighted one. That is a heuristic which asks
-        &ldquo;does this look like a tumour cell?&rdquo; and stops there. It never touches the model.
-        It scores 0.169, better than every graph explanation method tested.
+        The awkward line is the highlighted one. A heuristic that projects the marker vector onto the
+        tumour mean and consults no model at all scores 0.169, above every graph explanation method
+        tested.
       </p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>method</th><th>AP</th><th>randomisation &rho;<br><span class="tnote">across both modes</span></th><th>decoy mass</th></tr></thead>
+          <tbody>
+            <tr><td>integrated gradients (mean)</td><td>0.144</td><td>&minus;0.39 to +0.60</td><td>0.156</td></tr>
+            <tr><td>saliency</td><td>0.095</td><td>&minus;0.21 to +0.60</td><td>0.214</td></tr>
+            <tr><td>attention rollout</td><td>0.090</td><td>+0.17 to +0.99</td><td>0.224</td></tr>
+            <tr><td>GNNExplainer</td><td>0.044</td><td>+0.37 to +0.86</td><td>0.149</td></tr>
+            <tr><td>random baseline</td><td>0.058</td><td>&mdash;</td><td>0.156</td></tr>
+          </tbody>
+        </table>
+      </div>
 
-      <h2 class="h-label">The check that actually mattered</h2>
+      <h2 class="h-label">Where the attribution mass goes</h2>
       <p>
-        Here is a cheap test that is easy to skip. Scramble the network&rsquo;s weights so it knows
-        nothing, then run the explanation tools again. If a tool returns roughly the same answer on a
-        randomised network as on a trained one, it was never reading the model in the first place.
+        Average precision says whether a method ranks the right cells highly. It says nothing about
+        where the rest of the mass ends up. The decoys exist for that: T cells with markers identical
+        to the enabling ones, placed away from any tumour, contributing nothing to the label.
       </p>
-      <p>
-        GNNExplainer&rsquo;s answers stayed 0.83 to 0.89 correlated on one architecture. Attention
-        rollout reached 0.99. Both were, in effect, describing the shape of the graph rather than
-        anything the model had learned. Only integrated gradients came through this cleanly.
-      </p>
-
-      <h2 class="h-label">One gotcha worth passing on</h2>
       <figure class="fig">
-        <svg viewBox="0 0 820 258" role="img" aria-labelledby="f3t f3d">
-          <title id="f3t">GNNExplainer randomisation correlation against optimisation budget</title>
-          <desc id="f3d">Correlation with a randomised network falls from 0.852 at 30 epochs to 0.554 at 100, 0.366 at 200 and 0.283 at 400, then 0.340 at 800. The common default of 100 epochs sits partway down the slope.</desc>
+        <svg viewBox="0 0 740 318" role="img" aria-labelledby="f4t f4d">
+          <title id="f4t">Share of attribution landing on causally inert decoy cells</title>
+          <desc id="f4d">Local CTL density places 42.3 percent of its attribution on decoys, the highest of any method. CNN integrated gradients 26.2, attention rollout 22.4, saliency 21.4. Random sits at 15.6 percent. Tumour-likeness is lowest at 5.6 percent.</desc>
+<line class="c-axis" x1="208" y1="10" x2="208" y2="286"/>
+<rect class="c-bar" x="208" y="14" width="53.5" height="20" rx="2"/>
+<text class="c-cat" x="198" y="28" text-anchor="end">tumour-likeness</text>
+<text class="c-val" x="269.5" y="28">0.056</text>
+<rect class="c-bar" x="208" y="45" width="82.5" height="20" rx="2"/>
+<text class="c-cat" x="198" y="59" text-anchor="end">distance to nearest CTL</text>
+<text class="c-val" x="298.5" y="59">0.086</text>
+<rect class="c-bar" x="208" y="76" width="142.1" height="20" rx="2"/>
+<text class="c-cat" x="198" y="90" text-anchor="end">GNNExplainer</text>
+<text class="c-val" x="358.1" y="90">0.149</text>
+<rect class="c-bar" x="208" y="107" width="148.6" height="20" rx="2"/>
+<text class="c-cat" x="198" y="121" text-anchor="end">integrated gradients</text>
+<text class="c-val" x="364.6" y="121">0.156</text>
+<rect class="c-bar tp-rand" x="208" y="138" width="148.6" height="20" rx="2"/>
+<text class="c-cat" x="198" y="152" text-anchor="end">random</text>
+<text class="c-val" x="364.6" y="152">0.156</text>
+<rect class="c-bar" x="208" y="169" width="204.9" height="20" rx="2"/>
+<text class="c-cat" x="198" y="183" text-anchor="end">saliency</text>
+<text class="c-val" x="420.9" y="183">0.214</text>
+<rect class="c-bar" x="208" y="200" width="213.6" height="20" rx="2"/>
+<text class="c-cat" x="198" y="214" text-anchor="end">attention rollout</text>
+<text class="c-val" x="429.6" y="214">0.224</text>
+<rect class="c-bar" x="208" y="231" width="250.1" height="20" rx="2"/>
+<text class="c-cat" x="198" y="245" text-anchor="end">CNN integrated gradients</text>
+<text class="c-val" x="466.1" y="245">0.262</text>
+<rect class="c-bar hl" x="208" y="262" width="404.5" height="20" rx="2"/>
+<text class="c-cat" x="198" y="276" text-anchor="end">local CTL density</text>
+<text class="c-val" x="620.5" y="276">0.423</text>
+<line class="tp-ref" x1="356.6" y1="6" x2="356.6" y2="286"/>
+<text class="c-axis-title" x="208" y="308">share of attribution landing on inert decoy cells</text>
+        </svg>
+        <figcaption>Fig 4. Lower is better. The dashed line is the random baseline; anything above it is drawn to decoys more than chance would be.</figcaption>
+      </figure>
+      <p>
+        Local T cell density, included precisely as a shortcut detector, puts 42&nbsp;% of its mass on
+        decoys. Attention rollout and the CNN sit well above the random line too. Integrated
+        gradients and GNNExplainer are near chance, which for GNNExplainer is less reassuring than it
+        sounds given it was not finding the drivers either.
+      </p>
+
+      <h2 class="h-label">The controls that decide whether any of this counts</h2>
+      <p>
+        Randomise the network&rsquo;s weights and run the methods again. If the output barely changes,
+        the method was never reading the model. This is a cheap test and it is the one that matters
+        most here, because Fig 2 established that the graph alone carries the driver structure.
+      </p>
+      <p>
+        Attention rollout returns attributions <strong>0.957 to 0.993</strong> rank-correlated with its
+        own output on a randomised network under the cascading variant. GNNExplainer sits at 0.37 to
+        0.86 depending on architecture and radius, near-total on GATv2 and weaker on GIN at the
+        densest graph. Integrated gradients is the only method that survives full randomisation
+        cleanly.
+      </p>
+      <p>
+        Two further controls point the same way. Methods applied to encoders trained on
+        <em>shuffled labels</em> still reach AP up to 0.343 against the true driver sets, higher than
+        any method manages on a correctly trained model. And several score better from an untrained
+        network than a trained one. An explanation that improves when you delete the model&rsquo;s
+        training is not explaining the model.
+      </p>
+
+      <h2 class="h-label">A result that generalises past this testbed</h2>
+      <figure class="fig">
+        <svg viewBox="0 0 820 258" role="img" aria-labelledby="f5t f5d">
+          <title id="f5t">GNNExplainer randomisation correlation against optimisation budget</title>
+          <desc id="f5d">Correlation with a randomised network falls from 0.852 at 30 epochs to 0.554 at 100, 0.366 at 200 and 0.283 at 400, then 0.340 at 800. The common default of 100 epochs sits partway down the slope.</desc>
 <line class="c-grid" x1="96" y1="190.0" x2="760" y2="190.0"/>
 <text class="c-tick" x="86" y="194.0" text-anchor="end">0.2</text>
 <line class="c-grid" x1="96" y1="143.1" x2="760" y2="143.1"/>
@@ -220,48 +405,58 @@
 <text class="c-tick" x="347.5" y="30">common default</text>
 <text class="c-axis-title" x="96" y="238">optimisation epochs, log scale</text>
         </svg>
-        <figcaption>Fig 3. Lower is better. The same test returns a different verdict depending on how long you run it.</figcaption>
+        <figcaption>Fig 5. The same control returns a different verdict depending on how long you run it.</figcaption>
       </figure>
       <p>
-        That randomisation number is not a fixed property of the method. It depends on how long you
-        let GNNExplainer optimise. At 30 epochs it reads 0.85, which looks damning. At 400 it settles
-        near 0.28, which looks acceptable. The common default is 100, partway down the slope, where
-        the number has not converged and means very little.
+        The randomisation number is not a fixed property of GNNExplainer. It depends on how long the
+        mask is optimised, moving from 0.85 at 30 epochs to 0.28 by 400. At 30 epochs the mask has
+        barely left its random initialisation, and two under-optimised masks correlate with each
+        other for reasons that have nothing to do with the model.
       </p>
       <p>
-        Anyone reporting this test should say what budget they ran it at. I have not seen that done.
-      </p>
-
-      <h2 class="h-label">Things I got wrong</h2>
-      <p>
-        My first generator was broken in a way that took a while to notice. A model could hit 93 %
-        accuracy on it without looking at a single tumour cell, because the local density of T cells
-        gave the answer away on its own. Every faithfulness number I would have computed on it was
-        measuring a shortcut.
-      </p>
-      <p>
-        Then I got the GNNExplainer verdict wrong twice in opposite directions. I called it void, found
-        the number was an artefact of too little optimisation, retracted that, and then over-corrected
-        by generalising from the single most favourable setting. The final answer sits between the two.
-        Both corrections are in the repository rather than tidied away, which I think is the honest
-        way to leave it.
+        The common default is 100 epochs, partway down that slope, where the number has not
+        converged. Anyone reporting this control should state the budget they ran it at. I have not
+        seen that done.
       </p>
 
-      <h2 class="h-label">What this does and does not show</h2>
+      <h2 class="h-label">What I got wrong</h2>
       <p>
-        This is synthetic tissue and one family of labels. It does not prove these tools fail on real
-        data, and a method that misses my driver cells might still point somewhere biologically
-        useful. What it does show is that when the answer is checkable, most of these tools do not
-        recover it, a heuristic with no model access competes with the best of them, and the control
-        that catches this costs about ten minutes to run.
+        Besides the two generator defects, I got the GNNExplainer verdict wrong twice in opposite
+        directions. I first called it void on a correlation of 0.93, discovered that figure was an
+        artefact of running only 30 epochs, and retracted. Then I over-corrected, generalising to
+        &ldquo;not void&rdquo; from a single measurement at the most favourable setting in the grid. The
+        settled answer, across the full grid at a converged budget, is 0.37 to 0.86: it does largely
+        fail, but not at the number I first published.
       </p>
       <p>
-        Full write-up, code and the gated test suite are in the
+        Both corrections are in the repository rather than tidied away. The sequence 0.93 to 0.29 to
+        0.38&ndash;0.86 is more informative than any single number from it.
+      </p>
+
+      <h2 class="h-label">Scope</h2>
+      <p>
+        This is synthetic tissue and one family of labels. It does not show that these methods fail
+        on real data, and a method that misses my driver cells could still point somewhere
+        biologically useful. Driver sets here are also spatially contiguous, which hands any method
+        with a smoothness prior an unearned advantage; a blob baseline scores 0.099 on that alone.
+      </p>
+      <p>
+        I built a second label family with sparse drivers to test whether the findings survive a
+        harder task. No model could learn it: both architectures sit at chance while a direct count
+        of the motif separates the classes perfectly. Counting a triangle motif is provably outside
+        what these architectures can represent, so the harder question stays open, and the attempt
+        produced a boundary condition instead. Faithfulness benchmarks are limited by model
+        expressiveness, not only by label design.
+      </p>
+      <p>
+        What does hold is narrower and still worth saying. When the answer is checkable, most of
+        these methods did not recover it, a heuristic with no model access matched the best of them,
+        and the control that exposes this costs minutes to run. Code, figures and the gated test
+        suite are in the
         <a href="https://github.com/tanmayhinge/tissue-graph-probing" target="_blank" rel="noopener noreferrer">repository</a>.
       </p>
 
     </article>
-
     <nav class="prevnext">
       <a href="/research/spectral-disentangling/">&larr; Previous: Disentangling mixed spectra</a>
       <a href="/work/regace/">Next work: Regace AI &rarr;</a>
