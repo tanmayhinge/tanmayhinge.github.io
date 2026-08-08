@@ -1,6 +1,6 @@
 /* ============================================================
    tanmayhinge.com — "the index tells the truth"
-   Four colours. Three type roles. Five sizes. 8px rhythm.
+   Five colours. Three type roles. Five sizes. 8px rhythm.
    ============================================================ */
 
 :root {
@@ -9,7 +9,8 @@
   --bg:     #EAEDF2;   /* cool plotter paper */
   --ink:    #141A24;   /* blue-black: text + spectrum trace */
   --muted:  #5C6672;   /* slate: tags, years, captions, secondary */
-  --accent: #2136D4;   /* ultramarine: link underlines + reconstructed peaks ONLY */
+  --accent: #2136D4;   /* ultramarine: reconstructed peaks + focus rings */
+  --hot:    #ff7936;   /* the link highlight: hover colour, never an underline */
 
   /* derived, not new colours */
   --hair: color-mix(in srgb, var(--ink) 12%, transparent);
@@ -17,12 +18,11 @@
 
   --serif: 'Source Serif 4', Georgia, 'Times New Roman', serif;
   --display: 'Fraunces', Georgia, serif;
-  --brand: 'Oranienbaum', Georgia, serif;   /* the name, in the navbar, nowhere else */
+  --brand: 'Girassol', Georgia, serif;   /* the name, in the navbar, nowhere else */
   --mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 
   /* five sizes, nothing between */
   --t-display: clamp(2.3rem, 1.4rem + 3.6vw, 3.1rem);
-  --t-title: 1.35rem;
   --t-body: 1.0625rem;
   --t-small: 0.8125rem;
   --t-micro: 0.6875rem;
@@ -55,7 +55,13 @@
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
 
-html { -webkit-text-size-adjust: 100%; }
+html {
+  -webkit-text-size-adjust: 100%;
+  /* Always reserve the scrollbar gutter. Without this, short pages have no
+     scrollbar and long ones do, so the centred column jumps sideways by half
+     the scrollbar width every time you change page. */
+  scrollbar-gutter: stable;
+}
 
 body {
   background: var(--bg);
@@ -73,6 +79,18 @@ body {
   padding: calc(4 * var(--u)) calc(3 * var(--u)) calc(8 * var(--u));
 }
 
+/* The homepage runs tighter than the rest of the site: the hero photo is tall,
+   and this buys back the vertical space that keeps Research in view on open.
+   Scoped to .home so no other page moves. */
+.home { --col-w: 75%; padding-top: calc(3 * var(--u)); }
+.home .topnav { margin-bottom: calc(3.5 * var(--u)); }
+.home .index {
+  width: var(--col-w);
+  margin-inline: auto;
+  margin-top: calc(1 * var(--u));
+}
+.home .sec { padding-top: calc(3 * var(--u)); }
+
 /* Prose is narrower than the index: the page's only structural tension */
 .prose { max-width: 64ch; }
 
@@ -82,65 +100,86 @@ body {
 .reading .report p,
 .reading .report li,
 .reading .report ul,
-.reading .referees,
 .reading figcaption,
 .reading .fig-two-caption { max-width: none; }
 .reading .report p { text-align: justify; hyphens: auto; }
 
-/* ---- links: text stays ink, the accent lives in the underline ---- */
+/* ---- links: no underline anywhere; the highlight is a colour change ---- */
 a {
   color: var(--ink);
-  text-decoration: underline;
-  text-decoration-color: var(--accent);
-  text-decoration-thickness: 1px;
-  text-underline-offset: 2px;
+  text-decoration: none;
+  transition: color .15s ease;
 }
-a:hover { text-decoration-thickness: 2px; }
+a:hover { color: var(--hot); }
 a:focus-visible {
   outline: 2px solid var(--ink);
   outline-offset: 3px;
   border-radius: 2px;
 }
 
-.sep { color: var(--muted); margin: 0 calc(0.75 * var(--u)); }
+/* the homepage h1: the brand can't carry it, since the nav is shared verbatim */
+.visually-hidden {
+  position: absolute;
+  width: 1px; height: 1px;
+  margin: -1px; padding: 0; border: 0;
+  clip-path: inset(50%);
+  overflow: hidden;
+  white-space: nowrap;
+}
+
 
 /* ============================================================
    Top nav
    ============================================================ */
+/* a centred masthead: the name, then the links beneath it */
 .topnav {
   position: sticky;
   top: 0;
   z-index: 50;
   display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: calc(3 * var(--u));
+  flex-direction: column;
+  align-items: center;
+  gap: calc(2 * var(--u));   /* between the name and the links below it */
   font-family: var(--mono);
   font-size: var(--t-small);
   /* full-bleed to the content-column edges so it reads as a bar */
   margin: 0 calc(-3 * var(--u)) calc(6 * var(--u));
-  padding: calc(1.75 * var(--u)) calc(3 * var(--u));
+  padding: calc(2 * var(--u)) calc(3 * var(--u));
   background: var(--bg);
   border-bottom: 1px solid var(--hair);
 }
 .topnav a { text-decoration: none; color: var(--muted); }
-.topnav a:hover { color: var(--ink); }
-/* Oranienbaum ships one weight (400) and runs small and tall-ascendered,
-   so it needs a size bump and open tracking to hold the bar. */
+.topnav a:hover { color: var(--hot); }
+/* Girassol ships one weight (400), so size and tracking do the work
+   of making the name hold the bar. */
 .topnav .brand {
   font-family: var(--brand);
-  font-size: 1.5rem;
+  font-size: 2rem;
   font-weight: 400;
   letter-spacing: 0.02em;
   color: var(--ink);
+  /* on the brand itself, not the h1 wrapper: the wrapper only exists on the
+     homepage, and leaving the reset there made the nav taller on every other page */
+  line-height: 1;
 }
-/* On the homepage the brand IS the page's h1 — strip the heading defaults. */
-.topnav .brandline { font-size: inherit; font-weight: inherit; line-height: 1; }
-.topnav .navlinks { display: flex; align-items: baseline; gap: calc(3 * var(--u)); }
+.topnav .navlinks {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: calc(1 * var(--u)) calc(3 * var(--u));
+}
 
-/* the one button on the site: reads as a nav link, not a control */
+/* the one button on the site: reads as a nav link, not a control.
+   Fixed to the page's top-right corner, outside the centred column, and above
+   the sticky bar (z-index 50) so it stays reachable while scrolling. */
 .theme-toggle {
+  position: fixed;
+  top: calc(2 * var(--u));
+  right: calc(3 * var(--u));
+  z-index: 60;
   font: inherit;
+  font-size: var(--t-body);   /* a step up the scale from the nav links */
   line-height: 1;
   color: var(--muted);
   background: none;
@@ -148,82 +187,52 @@ a:focus-visible {
   padding: 0;
   cursor: pointer;
 }
-.theme-toggle:hover { color: var(--ink); }
+.theme-toggle:hover { color: var(--hot); }
 .theme-toggle:focus-visible {
   outline: 2px solid var(--ink);
   outline-offset: 3px;
   border-radius: 2px;
 }
 
-.backlink {
-  display: inline-block;
-  font-family: var(--mono);
-  font-size: var(--t-small);
-  color: var(--muted);
-  text-decoration: none;
-  margin-bottom: calc(6 * var(--u));
-}
-.backlink:hover { color: var(--ink); }
 
 /* ============================================================
    Home hero
    ============================================================ */
-/* two-column: left rail (photo, labels, dates) | right content */
-.railed {
-  display: grid;
-  grid-template-columns: var(--rail) 1fr;
-  column-gap: calc(5 * var(--u));
-  align-items: start;
-}
 
-.hero { margin-bottom: calc(7 * var(--u)); }
+
+/* The hero stacks: photo first, then the lead paragraph under it.
+   --col-w (set on .home) drives photo, hero text and the index alike, so the
+   whole homepage column shares one edge. */
+.hero {
+  display: block;
+  margin-bottom: calc(3.5 * var(--u));
+}
 .hero .main > :last-child { margin-bottom: 0; }
 
+/* No object-fit and no fixed height: the photo runs at its natural 3:4
+   so the whole frame is visible, sized as a share of the column. */
 .headshot {
-  width: 130px;
-  height: 162px;            /* 4:5, matches the photo so nothing is cropped */
-  object-fit: cover;
-  object-position: top center;
-  border-radius: 6px;
-  border: 1px solid var(--hair);
   display: block;
+  width: var(--col-w);
+  height: auto;
+  margin-inline: auto;
+  margin-bottom: calc(3 * var(--u));   /* breathing room before the lead paragraph */
+  border-radius: 8px;
+  border: 1px solid var(--hair);
 }
 
-.hero h1 {
-  font-family: var(--display);
-  font-optical-sizing: auto;
-  font-size: var(--t-display);
-  font-weight: 600;
-  line-height: 1.02;
-  letter-spacing: -0.02em;
-  margin-bottom: calc(4 * var(--u));
-}
-.hero .subtitle {
-  font-family: var(--mono);
-  font-size: var(--t-small);
-  color: var(--muted);
-  margin-top: calc(1 * var(--u));
-  margin-bottom: calc(4 * var(--u));
+/* text column is the photo's width, so their edges line up exactly */
+.hero .main {
+  width: var(--col-w);
+  max-width: none;
+  margin-inline: auto;
 }
 .hero p {
-  max-width: 64ch;
+  max-width: none;
   margin-bottom: calc(3 * var(--u));
   text-align: justify;
   hyphens: auto;
 }
-.hero .email { text-align: left; hyphens: none; }
-.hero .interests {
-  font-size: var(--t-small);
-  font-style: italic;
-  color: var(--muted);
-  max-width: 64ch;
-  margin-bottom: calc(3 * var(--u));
-}
-.hero .email {
-  font-family: var(--mono);
-  font-size: var(--t-small);
-}
-.hero .email a { text-decoration-color: var(--accent); }
 
 /* ============================================================
    Index (the truth table)
@@ -244,13 +253,13 @@ a:focus-visible {
 .idx-label {
   font-family: var(--mono);
   font-size: var(--t-micro);
-  font-weight: 400;
+  font-weight: 700;          /* the section title carries the weight */
   letter-spacing: 0.18em;
   text-transform: uppercase;
-  color: var(--muted);
+  color: var(--ink);         /* darker than the entries beneath it, not lighter */
 }
 
-/* a row is a whole-row link; year sits in the left rail, content on the right */
+/* a row is a whole-row link: name on the left, year pinned right */
 .row {
   display: grid;
   grid-template-columns: var(--rail) 1fr auto;
@@ -260,7 +269,8 @@ a:focus-visible {
   text-decoration: none;
   color: var(--ink);
 }
-.row-body { min-width: 0; }
+/* the index rows: just a name and a year, sharing the label's left edge */
+.row.minimal { grid-template-columns: 1fr auto; }
 .row:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; border-radius: 3px; }
 
 .row-year { font-family: var(--mono); font-size: var(--t-small); color: var(--muted); }
@@ -268,57 +278,16 @@ a:focus-visible {
 .row-title {
   font-family: var(--display);
   font-optical-sizing: auto;
-  font-size: var(--t-title);
-  font-weight: 500;
+  font-size: var(--t-body);  /* one step down the scale from --t-title */
+  font-weight: 400;          /* list entries sit lighter than their section title */
   line-height: 1.15;
-  text-decoration: underline;
-  text-decoration-color: transparent;   /* revealed on hover */
-  text-underline-offset: 3px;
-  transition: text-decoration-color .15s ease;
+  transition: color .15s ease;
 }
 .row:hover .row-title,
-.row:focus-visible .row-title { text-decoration-color: var(--accent); }
+.row:focus-visible .row-title { color: var(--hot); }
 
-.row-tag {
-  display: block;
-  font-family: var(--mono);
-  font-size: var(--t-micro);
-  letter-spacing: 0.1em;
-  color: var(--muted);
-  margin-top: calc(0.75 * var(--u));
-}
-.row-sentence {
-  display: block;
-  margin-top: calc(1 * var(--u));
-  color: var(--ink);
-  max-width: 54ch;
-}
-
-.row-marker {
-  font-family: var(--mono);
-  font-size: var(--t-micro);
-  letter-spacing: 0.06em;
-  color: var(--muted);
-  white-space: nowrap;
-  transition: transform .15s ease;
-}
-.row:hover .row-marker,
-.row:focus-visible .row-marker { transform: translateX(4px); }
-.row-marker::after { content: " \2192"; }
-
-/* non-link status label (e.g. work in progress), no arrow */
-.row-status {
-  font-family: var(--mono);
-  font-size: var(--t-micro);
-  letter-spacing: 0.06em;
-  color: var(--muted);
-  white-space: nowrap;
-}
-
-/* teaching row: same shape, not a link */
+/* rows that aren't links */
 .row.static { cursor: default; }
-
-.currently p, .row-body p { max-width: 60ch; margin: 0; }
 
 /* ============================================================
    Footer
@@ -338,8 +307,8 @@ a:focus-visible {
   flex-wrap: wrap;
 }
 /* rel="me" anchors: the identity graph needs real links, not just JSON-LD */
-.foot a { color: var(--muted); text-decoration-color: var(--hair); }
-.foot a:hover { color: var(--ink); text-decoration-color: var(--accent); }
+.foot a { color: var(--muted); }
+.foot a:hover { color: var(--hot); }
 .foot-links { display: flex; gap: calc(1.5 * var(--u)); flex-wrap: wrap; }
 
 /* ============================================================
@@ -381,7 +350,7 @@ a:focus-visible {
   border-top: 1px solid var(--hair);
 }
 .meta dt { color: var(--muted); letter-spacing: 0.04em; }
-.meta dd a { text-decoration-color: var(--accent); }
+
 
 .report { margin-top: calc(5 * var(--u)); }
 
@@ -407,22 +376,6 @@ a:focus-visible {
 }
 .report em { font-style: italic; }
 
-.placeholder {
-  border: 1px dashed var(--hair);
-  background: var(--tint);
-  color: var(--muted);
-  font-family: var(--mono);
-  font-size: var(--t-small);
-  padding: calc(2 * var(--u)) calc(2 * var(--u));
-  margin: calc(3 * var(--u)) 0;
-}
-.placeholder b {
-  display: block;
-  font-size: var(--t-micro);
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  margin-bottom: calc(0.5 * var(--u));
-}
 
 .prevnext {
   display: flex;
@@ -435,16 +388,9 @@ a:focus-visible {
   font-size: var(--t-small);
 }
 .prevnext a { text-decoration: none; color: var(--muted); }
-.prevnext a:hover { color: var(--ink); }
+.prevnext a:hover { color: var(--hot); }
 .prevnext .spacer { color: transparent; }
 
-.referees {
-  font-family: var(--mono);
-  font-size: var(--t-small);
-  color: var(--muted);
-  margin-top: calc(6 * var(--u));
-  max-width: 60ch;
-}
 
 /* ============================================================
    Figures & data tables (ink + muted only; no accent)
@@ -548,31 +494,39 @@ table.data .hl { color: var(--ink); font-weight: 600; }
 /* ============================================================
    CV
    ============================================================ */
-.cv-download { font-family: var(--mono); font-size: var(--t-small); margin: calc(2 * var(--u)) 0 calc(5 * var(--u)); }
-.cv-block { margin-top: calc(5 * var(--u)); }
-.cv-entry { padding: calc(2 * var(--u)) 0; }
-.cv-entry + .cv-entry { border-top: 1px solid var(--hair); }
-.cv-head { display: flex; justify-content: space-between; align-items: baseline; gap: calc(2 * var(--u)); }
-.cv-title { font-weight: 600; }
-.cv-org { color: var(--muted); font-size: var(--t-small); margin-top: calc(0.5 * var(--u)); }
-.cv-date { font-family: var(--mono); font-size: var(--t-small); color: var(--muted); white-space: nowrap; }
-.cv-entry ul { margin: calc(1 * var(--u)) 0 0; padding-left: calc(2.5 * var(--u)); }
-.cv-entry li { font-size: var(--t-small); color: var(--muted); line-height: 1.5; margin-bottom: calc(0.5 * var(--u)); max-width: 66ch; }
+/* ============================================================
+   Photowall — uncropped photos butted edge to edge, no captions
+   ============================================================ */
+/* Columns, not grid: a grid needs uniform cells, which would mean cropping.
+   Flowing the photos down columns keeps every frame whole. The trade-off is
+   that the columns end at uneven heights. */
+.photowall {
+  columns: 180px;
+  column-gap: 0;
+  margin-top: calc(5 * var(--u));
+  line-height: 0;          /* no inline gaps between stacked images */
+}
+.photowall img {
+  display: block;
+  width: 100%;
+  height: auto;            /* cancels the HTML height attribute; nothing is cropped */
+  margin: 0;
+  break-inside: avoid;
+}
+
 
 /* ============================================================
    Responsive
    ============================================================ */
 @media (max-width: 640px) {
   .container { padding: calc(3 * var(--u)) calc(2.5 * var(--u)) calc(6 * var(--u)); }
-  .railed, .labelline, .row { grid-template-columns: 1fr; }
-  .hero .rail { margin-bottom: calc(2 * var(--u)); }
+  .labelline, .row { grid-template-columns: 1fr; }
+  .home { --col-w: 80%; }   /* 60% of a phone column is too small to read as a portrait */
   .row { row-gap: calc(0.5 * var(--u)); padding: calc(1.5 * var(--u)) 0; }
-  .row-marker { justify-self: start; }
   .fig-two { grid-template-columns: 1fr; }
-  .cv-head { flex-direction: column; gap: calc(0.25 * var(--u)); }
 }
 
 @media (prefers-reduced-motion: reduce) {
   .spec-cover { animation: none; transform: scaleX(0); }
-  .row-title, .row-marker { transition: none; }
+  .row-title { transition: none; }
 }

@@ -20,19 +20,21 @@
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:image" content="https://tanmayhinge.com/og/tissue.png" />
 
+  <!-- head:start -->
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
   <link rel="icon" type="image/png" sizes="192x192" href="/circle_favicon.png">
   <link rel="apple-touch-icon" sizes="180x180" href="/circle_favicon.png">
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=Oranienbaum&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..600&family=Girassol&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="/styles.css?v=20" />
+  <link rel="stylesheet" href="/styles.css?v=40" />
 
   <!-- stamp the stored theme before first paint; blocking on purpose -->
   <script>(function(){try{var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
   <script src="/theme.js" defer></script>
+  <!-- head:end -->
 
   <style>
     /* study figures are matplotlib PNGs on white; seat them on a light card so they
@@ -75,15 +77,18 @@
 </head>
 <body>
   <main class="container reading">
+    <!-- nav:start -->
     <nav class="topnav">
+      <button class="theme-toggle" type="button" aria-label="Switch to dark theme" aria-pressed="false">◐</button>
       <a class="brand" href="/">Tanmay Hinge</a>
       <span class="navlinks">
-        <a href="/#work">Research</a>
-        <a href="/cv/">CV</a>
+        <a href="/#research">Research</a>
+        <a href="/photowall/">Photowall</a>
         <a href="https://github.com/tanmayhinge" target="_blank" rel="noopener noreferrer">GitHub</a>
-        <button class="theme-toggle" type="button" aria-label="Switch to dark theme" aria-pressed="false">&#9680;</button>
+        <a href="https://www.youtube.com/@tanmayhinge" target="_blank" rel="noopener noreferrer">YouTube</a>
       </span>
     </nav>
+    <!-- nav:end -->
 
     <p class="kicker">interpretability &middot; spatial biology &middot; 2026 &middot; report</p>
     <h1 class="ptitle">Auditing attribution methods on synthetic tissue</h1>
@@ -459,7 +464,7 @@
     </article>
     <nav class="prevnext">
       <a href="/research/spectral-disentangling/">&larr; Previous: Disentangling mixed spectra</a>
-      <a href="/work/regace/">Next work: Regace AI &rarr;</a>
+      <a href="/work/model-serving/">Next work: Distributed model serving &rarr;</a>
     </nav>
 
     <footer class="foot">

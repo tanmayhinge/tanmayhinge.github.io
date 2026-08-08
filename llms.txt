@@ -25,13 +25,11 @@ described different work and are out of date.
 
 ## Pages
 
-- [Home](https://tanmayhinge.com/): biography and an index of research, engineering, and teaching work
-- [CV](https://tanmayhinge.com/cv/): education, experience, and selected work
+- [Home](https://tanmayhinge.com/): biography and an index of work and research
 - [Predicting excitonic couplings](https://tanmayhinge.com/research/excitonic-coupling/): kernel regression on Coulomb-matrix descriptors for excitonic couplings between molecules. The learning curve turned out to have a knee in it, and the knee was the finding: the data pins down the molecules it already contains while saying almost nothing about an unseen one. Includes a Gaussian process variant and a kernel-width analysis showing no interior optimum
 - [Auditing attribution methods on synthetic tissue](https://tanmayhinge.com/research/tissue-graph-probing/): a synthetic tissue testbed where the cells driving the label are known by construction, built to measure whether graph interpretability methods recover them. Most scored no better than random and GNNExplainer scored below it, while a marker heuristic that never consults the model matched the best learned method. A weight-randomisation control showed two of the tools were describing graph structure rather than the model, and that control's verdict turned out to depend on optimisation budget
 - [Disentangling mixed spectra](https://tanmayhinge.com/research/spectral-disentangling/): does masked-sequence pretraining learn physical structure from 1D mixed spectra, or the noise? A fine-tuning comparison came back close to null while linear probes on the same frozen encoder said the opposite. A harder regime then showed the representation failing long before the task does, and an oracle ablation refuted the obvious explanation for why
-- [Regace AI](https://tanmayhinge.com/work/regace/): retrieval-augmented generation over regulated text, where every claim traces to a source
-- [Merit Labs](https://tanmayhinge.com/work/merit-labs/): turning assessment responses into reports a student can act on
+- [Photowall](https://tanmayhinge.com/photowall/): photographs outside the research — motorcycles, national parks, Halloween costumes, a childhood in Mumbai
 - [Distributed model serving](https://tanmayhinge.com/work/model-serving/): inference across shared lab machines, for students without hardware
 
 ## Roles
