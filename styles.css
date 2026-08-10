@@ -339,6 +339,7 @@ a:focus-visible {
    Project page template
    ============================================================ */
 .kicker {
+  text-align: center;
   font-family: var(--mono);
   font-size: var(--t-micro);
   letter-spacing: 0.14em;
@@ -347,6 +348,7 @@ a:focus-visible {
   margin-bottom: calc(2 * var(--u));
 }
 .ptitle {
+  text-align: center;
   font-family: var(--display);
   font-optical-sizing: auto;
   font-size: var(--t-display);
@@ -361,6 +363,9 @@ a:focus-visible {
   color: var(--ink);
   max-width: 60ch;
   margin-top: calc(2 * var(--u));
+  /* set as an abstract under the centred title: justified like the body copy */
+  text-align: justify;
+  hyphens: auto;
 }
 
 .meta {
