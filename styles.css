@@ -1,6 +1,6 @@
 /* ============================================================
    tanmayhinge.com — "the index tells the truth"
-   Five colours. Three type roles. Five sizes. 8px rhythm.
+   Five colours. Three type roles. Four sizes. 8px rhythm.
    ============================================================ */
 
 :root {
@@ -9,8 +9,11 @@
   --bg:     #EAEDF2;   /* cool plotter paper */
   --ink:    #141A24;   /* blue-black: text + spectrum trace */
   --muted:  #5C6672;   /* slate: tags, years, captions, secondary */
-  --accent: #2136D4;   /* ultramarine: reconstructed peaks + focus rings */
-  --hot:    #ff7936;   /* the link highlight: hover colour, never an underline */
+  --accent: #2136D4;   /* ultramarine: reserved for reconstructed peaks in the figures */
+  /* the link highlight: hover colour. Re-tuned per mode — the dark-ground
+     #ff7936 only reaches 2.2:1 on this background, and it is the hover state
+     of every link on the site, so it has to clear 4.5:1 here. */
+  --hot:    #BF360C;
 
   /* derived, not new colours */
   --hair: color-mix(in srgb, var(--ink) 12%, transparent);
@@ -21,7 +24,7 @@
   --brand: 'Girassol', Georgia, serif;   /* the name, in the navbar, nowhere else */
   --mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
 
-  /* five sizes, nothing between */
+  /* four sizes, nothing between */
   --t-display: clamp(2.3rem, 1.4rem + 3.6vw, 3.1rem);
   --t-body: 1.0625rem;
   --t-small: 0.8125rem;
@@ -31,10 +34,11 @@
   --rail: 170px;   /* left column: photo, section labels, dates */
 }
 
-/* ---- dark: the same four colours, inverted ----
-   Paper goes to night, ink to light, and the ultramarine lifts so it survives
-   a dark ground. --hair, --tint, the chart marks and the spectrum mask are all
-   derived from these four, so they follow without further work.
+/* ---- dark: the same five colours, inverted ----
+   Paper goes to night, ink to light, the ultramarine lifts so it survives a
+   dark ground, and --hot returns to the brighter orange that only works
+   against night. --hair, --tint, the chart marks and the spectrum mask are all
+   derived from these, so they follow without further work.
    The two blocks must stay in sync; a selector list cannot cross a media query. */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
@@ -43,6 +47,7 @@
     --ink:    #E6E9EF;
     --muted:  #8A94A2;
     --accent: #7F8FFF;
+    --hot:    #ff7936;
   }
 }
 :root[data-theme="dark"] {
@@ -51,6 +56,7 @@
   --ink:    #E6E9EF;
   --muted:  #8A94A2;
   --accent: #7F8FFF;
+  --hot:    #ff7936;
 }
 
 * { margin: 0; padding: 0; box-sizing: border-box; }
@@ -74,7 +80,7 @@ body {
 }
 
 .container {
-  max-width: 760px;
+  max-width: 860px;
   margin: 0 auto;
   padding: calc(4 * var(--u)) calc(3 * var(--u)) calc(8 * var(--u));
 }
@@ -91,9 +97,6 @@ body {
 }
 .home .sec { padding-top: calc(3 * var(--u)); }
 
-/* Prose is narrower than the index: the page's only structural tension */
-.prose { max-width: 64ch; }
-
 /* Article pages: same width as the homepage; body copy fills it, justified */
 .reading .prose,
 .reading .dek,
@@ -104,7 +107,11 @@ body {
 .reading .fig-two-caption { max-width: none; }
 .reading .report p { text-align: justify; hyphens: auto; }
 
-/* ---- links: no underline anywhere; the highlight is a colour change ---- */
+/* ---- links: the highlight is a colour change, not an underline ----
+   Nav, footer and index rows carry no rule at all: they sit alone or in a list,
+   so their position already marks them as links. Body copy is the exception —
+   a link mid-sentence needs something other than colour to be findable, so
+   prose links get a hairline (see .report below). */
 a {
   color: var(--ink);
   text-decoration: none;
@@ -116,6 +123,23 @@ a:focus-visible {
   outline-offset: 3px;
   border-radius: 2px;
 }
+
+/* first thing in the tab order, revealed only when focused */
+.skip {
+  position: absolute;
+  left: calc(3 * var(--u));
+  top: calc(-6 * var(--u));
+  z-index: 70;
+  font-family: var(--mono);
+  font-size: var(--t-small);
+  color: var(--ink);
+  background: var(--bg);
+  padding: var(--u) calc(1.5 * var(--u));
+  border: 1px solid var(--hair);
+  border-radius: 3px;
+  transition: top .15s ease;
+}
+.skip:focus { top: calc(1 * var(--u)); }
 
 /* the homepage h1: the brand can't carry it, since the nav is shared verbatim */
 .visually-hidden {
@@ -209,7 +233,7 @@ a:focus-visible {
 }
 .hero .main > :last-child { margin-bottom: 0; }
 
-/* No object-fit and no fixed height: the photo runs at its natural 3:4
+/* No object-fit and no fixed height: the photo runs at its natural 1:1
    so the whole frame is visible, sized as a share of the column. */
 .headshot {
   display: block;
@@ -278,7 +302,7 @@ a:focus-visible {
 .row-title {
   font-family: var(--display);
   font-optical-sizing: auto;
-  font-size: var(--t-body);  /* one step down the scale from --t-title */
+  font-size: var(--t-body);  /* the body size; the section label above carries the weight */
   font-weight: 400;          /* list entries sit lighter than their section title */
   line-height: 1.15;
   transition: color .15s ease;
@@ -363,18 +387,21 @@ a:focus-visible {
   margin-top: calc(6 * var(--u));
   margin-bottom: calc(2 * var(--u));
 }
-.report p, .report li { max-width: 64ch; }
 .report p { margin-bottom: calc(3 * var(--u)); }
 .report ul { margin: 0 0 calc(3 * var(--u)); padding-left: calc(2.5 * var(--u)); }
 .report li { margin-bottom: calc(1 * var(--u)); color: var(--ink); }
-.report p code, .report li code, .report dd code {
+.report p code, .report li code {
   font-family: var(--mono);
   font-size: 0.85em;
   background: var(--tint);
   padding: 0.1em 0.35em;
   border-radius: 3px;
 }
-.report em { font-style: italic; }
+
+/* Links inside running text, and only there. Colour alone cannot carry a link
+   mid-sentence, so the hairline does it; on hover both move to --hot together. */
+.report p a, .report li a, .hero p a { border-bottom: 1px solid var(--hair); }
+.report p a:hover, .report li a:hover, .hero p a:hover { border-bottom-color: var(--hot); }
 
 
 .prevnext {
@@ -492,9 +519,6 @@ table.data .hl { color: var(--ink); font-weight: 600; }
 .spec-hidden { fill: var(--tint); }
 
 /* ============================================================
-   CV
-   ============================================================ */
-/* ============================================================
    Photowall — uncropped photos butted edge to edge, no captions
    ============================================================ */
 /* Columns, not grid: a grid needs uniform cells, which would mean cropping.
@@ -520,9 +544,8 @@ table.data .hl { color: var(--ink); font-weight: 600; }
    ============================================================ */
 @media (max-width: 640px) {
   .container { padding: calc(3 * var(--u)) calc(2.5 * var(--u)) calc(6 * var(--u)); }
-  .labelline, .row { grid-template-columns: 1fr; }
+  .labelline { grid-template-columns: 1fr; }
   .home { --col-w: 80%; }   /* 60% of a phone column is too small to read as a portrait */
-  .row { row-gap: calc(0.5 * var(--u)); padding: calc(1.5 * var(--u)) 0; }
   .fig-two { grid-template-columns: 1fr; }
 }
 

@@ -1,5 +1,9 @@
 User-agent: *
 Allow: /
+# Build tooling and the source fragments it injects. GitHub Pages serves the
+# repo verbatim, so these are reachable; there is nothing in them worth indexing.
+Disallow: /build.py
+Disallow: /partials/
 
 # AI crawlers are welcome. Allowed on purpose — being cited by an
 # assistant is the point, not something to defend against.

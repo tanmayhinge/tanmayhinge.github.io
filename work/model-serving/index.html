@@ -14,22 +14,29 @@
   <meta property="og:description" content="Inference across shared lab machines, for students without hardware. The earliest thing I built that was infrastructure for other people's research." />
   <meta property="og:url" content="https://tanmayhinge.com/work/model-serving/" />
   <meta property="og:image" content="https://tanmayhinge.com/og/home.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Tanmay Hinge — machine learning researcher" />
   <meta property="article:published_time" content="2022-01-01" />
   <meta property="article:modified_time" content="2026-07-13" />
   <meta property="article:author" content="https://tanmayhinge.com/" />
-  <meta name="twitter:card" content="summary" />
+  <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:image" content="https://tanmayhinge.com/og/home.png" />
 
   <!-- head:start -->
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
   <link rel="icon" type="image/png" sizes="192x192" href="/circle_favicon.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="/circle_favicon.png">
+  <link rel="apple-touch-icon" sizes="192x192" href="/circle_favicon.png">
+
+  <!-- matches --bg in each mode, so the browser chrome does not fight the page -->
+  <meta name="theme-color" content="#EAEDF2" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#10141A" media="(prefers-color-scheme: dark)" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..600&family=Girassol&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="/styles.css?v=40" />
+  <link rel="stylesheet" href="/styles.css?v=42" />
 
   <!-- stamp the stored theme before first paint; blocking on purpose -->
   <script>(function(){try{var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
@@ -106,8 +113,9 @@
 <body>
   <main class="container reading">
     <!-- nav:start -->
-    <nav class="topnav">
-      <button class="theme-toggle" type="button" aria-label="Switch to dark theme" aria-pressed="false">◐</button>
+    <a class="skip" href="#content">Skip to content</a>
+    <nav class="topnav" aria-label="Main">
+      <button class="theme-toggle" type="button" aria-label="Switch to dark theme">◐</button>
       <a class="brand" href="/">Tanmay Hinge</a>
       <span class="navlinks">
         <a href="/#research">Research</a>
@@ -118,12 +126,12 @@
     </nav>
     <!-- nav:end -->
 
-    <p class="kicker">systems · ML infrastructure · 2022 · code</p>
-    <h1 class="ptitle">Distributed model serving</h1>
+    <h1 class="ptitle" id="content" tabindex="-1">Distributed model serving</h1>
     <p class="dek">Inference across shared lab machines, for students without hardware.</p>
 
     <dl class="meta">
-      <dt>Status</dt><dd>completed 2022</dd>
+      <dt>Date</dt><dd>2022</dd>
+      <dt>Status</dt><dd>complete</dd>
     </dl>
 
     <article class="report prose">
@@ -135,18 +143,20 @@
       </p>
     </article>
 
-    <nav class="prevnext">
-      <a href="/research/spectral-disentangling/">&larr; Prev: Disentangling mixed spectra</a>
-      <span class="spacer">&rarr;</span>
+    <nav class="prevnext" aria-label="Article">
+      <a href="/research/spectral-disentangling/">&larr; Previous: Probing masked-sequence pretraining on synthetic mixed spectra</a>
+      <span class="spacer" aria-hidden="true">&rarr;</span>
     </nav>
 
-    <footer class="foot">
+    <footer class="foot" role="contentinfo">
+      <!-- foot:start -->
       <span class="foot-links">
         <a href="https://github.com/tanmayhinge" rel="me noopener noreferrer" target="_blank">GitHub</a>
         <a href="https://www.linkedin.com/in/tanmayhinge/" rel="me noopener noreferrer" target="_blank">LinkedIn</a>
         <a href="https://scholar.google.com/citations?user=YFUWK9gAAAAJ" rel="me noopener noreferrer" target="_blank">Google&nbsp;Scholar</a>
         <a href="mailto:hingetanmay@gmail.com">Email</a>
       </span>
+      <!-- foot:end -->
       <span>Last updated <time datetime="2026-07-13">13 July 2026</time></span>
     </footer>
   </main>

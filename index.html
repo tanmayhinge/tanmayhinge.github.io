@@ -15,19 +15,26 @@
   <meta property="og:description" content="Applied machine learning for the sciences. Models that have to be right for a reason, and checkable by the people who use them." />
   <meta property="og:url" content="https://tanmayhinge.com/" />
   <meta property="og:image" content="https://tanmayhinge.com/og/home.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="Tanmay Hinge — machine learning researcher" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:image" content="https://tanmayhinge.com/og/home.png" />
 
   <!-- head:start -->
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
   <link rel="icon" type="image/png" sizes="192x192" href="/circle_favicon.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="/circle_favicon.png">
+  <link rel="apple-touch-icon" sizes="192x192" href="/circle_favicon.png">
+
+  <!-- matches --bg in each mode, so the browser chrome does not fight the page -->
+  <meta name="theme-color" content="#EAEDF2" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#10141A" media="(prefers-color-scheme: dark)" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..600&family=Girassol&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="/styles.css?v=40" />
+  <link rel="stylesheet" href="/styles.css?v=42" />
 
   <!-- stamp the stored theme before first paint; blocking on purpose -->
   <script>(function(){try{var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
@@ -113,8 +120,9 @@
     <h1 class="visually-hidden">Tanmay Hinge</h1>
 
     <!-- nav:start -->
-    <nav class="topnav">
-      <button class="theme-toggle" type="button" aria-label="Switch to dark theme" aria-pressed="false">◐</button>
+    <a class="skip" href="#content">Skip to content</a>
+    <nav class="topnav" aria-label="Main">
+      <button class="theme-toggle" type="button" aria-label="Switch to dark theme">◐</button>
       <a class="brand" href="/">Tanmay Hinge</a>
       <span class="navlinks">
         <a href="/#research">Research</a>
@@ -125,7 +133,7 @@
     </nav>
     <!-- nav:end -->
 
-    <header class="hero">
+    <header class="hero" id="content" tabindex="-1">
       <img class="headshot" src="/public/hero.jpg" alt="Tanmay Hinge"
            width="854" height="854" fetchpriority="high" />
       <div class="main">
@@ -144,15 +152,15 @@
       <section class="sec" id="research">
         <div class="labelline"><h2 class="idx-label">Research</h2></div>
         <a class="row minimal" href="/research/excitonic-coupling/">
-          <h3 class="row-title">Predicting excitonic couplings</h3>
+          <h3 class="row-title">Learning curves for excitonic coupling prediction with product-kernel ridge regression</h3>
           <span class="row-year">2026</span>
         </a>
         <a class="row minimal" href="/research/tissue-graph-probing/">
-          <h3 class="row-title">Auditing attribution methods on synthetic tissue</h3>
+          <h3 class="row-title">A synthetic tissue benchmark for evaluating graph attribution methods in spatial biology</h3>
           <span class="row-year">2026</span>
         </a>
         <a class="row minimal" href="/research/spectral-disentangling/">
-          <h3 class="row-title">Disentangling mixed spectra</h3>
+          <h3 class="row-title">Probing masked-sequence pretraining on synthetic mixed spectra</h3>
           <span class="row-year">2026</span>
         </a>
         <a class="row minimal" href="/work/model-serving/">
@@ -187,13 +195,15 @@
 
     </div>
 
-    <footer class="foot">
+    <footer class="foot" role="contentinfo">
+      <!-- foot:start -->
       <span class="foot-links">
         <a href="https://github.com/tanmayhinge" rel="me noopener noreferrer" target="_blank">GitHub</a>
         <a href="https://www.linkedin.com/in/tanmayhinge/" rel="me noopener noreferrer" target="_blank">LinkedIn</a>
         <a href="https://scholar.google.com/citations?user=YFUWK9gAAAAJ" rel="me noopener noreferrer" target="_blank">Google&nbsp;Scholar</a>
         <a href="mailto:hingetanmay@gmail.com">Email</a>
       </span>
+      <!-- foot:end -->
       <span>Last updated <time datetime="2026-07-13">13 July 2026</time></span>
     </footer>
   </main>

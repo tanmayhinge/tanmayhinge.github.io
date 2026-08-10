@@ -12,10 +12,12 @@
     return chosen ? chosen === 'dark' : systemDark.matches;
   }
 
+  // The label names the action, so there is no aria-pressed: a "pressed"
+  // state alongside "Switch to light theme" reads as a contradiction.
+  // Until this deferred script runs the button carries the light-mode label
+  // from the nav partial, which is wrong for a dark-mode visitor for one frame.
   function sync() {
-    var dark = isDark();
-    button.setAttribute('aria-pressed', String(dark));
-    button.setAttribute('aria-label', dark ? 'Switch to light theme' : 'Switch to dark theme');
+    button.setAttribute('aria-label', isDark() ? 'Switch to light theme' : 'Switch to dark theme');
   }
 
   button.addEventListener('click', function () {

@@ -3,17 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Auditing attribution methods on synthetic tissue &middot; Tanmay Hinge</title>
-  <meta name="description" content="Synthetic tissue where the cells driving the label are known by construction, used to measure whether graph attribution methods recover them. Most did not, and the controls that catch this are routinely skipped." />
+  <title>A synthetic tissue attribution benchmark · Tanmay Hinge</title>
+  <meta name="description" content="Synthetic tissue where the cells driving the label are known by construction, used to measure whether graph attribution methods recover them. Most did not." />
   <meta name="author" content="Tanmay Hinge" />
   <link rel="canonical" href="https://tanmayhinge.com/research/tissue-graph-probing/" />
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Tanmay Hinge" />
   <meta property="og:locale" content="en_US" />
-  <meta property="og:title" content="Auditing attribution methods on synthetic tissue" />
+  <meta property="og:title" content="A synthetic tissue benchmark for evaluating graph attribution methods in spatial biology" />
   <meta property="og:description" content="Most attribution methods did not recover the driver cells, and one scored below random. A marker heuristic that never consults the model matched the best of them." />
   <meta property="og:url" content="https://tanmayhinge.com/research/tissue-graph-probing/" />
   <meta property="og:image" content="https://tanmayhinge.com/og/tissue.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="A synthetic tissue benchmark for graph attribution methods" />
   <meta property="article:published_time" content="2026-08-06" />
   <meta property="article:modified_time" content="2026-08-06" />
   <meta property="article:author" content="https://tanmayhinge.com/" />
@@ -23,13 +26,17 @@
   <!-- head:start -->
   <link rel="icon" type="image/x-icon" href="/favicon.ico">
   <link rel="icon" type="image/png" sizes="192x192" href="/circle_favicon.png">
-  <link rel="apple-touch-icon" sizes="180x180" href="/circle_favicon.png">
+  <link rel="apple-touch-icon" sizes="192x192" href="/circle_favicon.png">
+
+  <!-- matches --bg in each mode, so the browser chrome does not fight the page -->
+  <meta name="theme-color" content="#EAEDF2" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#10141A" media="(prefers-color-scheme: dark)" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..600&family=Girassol&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="/styles.css?v=40" />
+  <link rel="stylesheet" href="/styles.css?v=42" />
 
   <!-- stamp the stored theme before first paint; blocking on purpose -->
   <script>(function(){try{var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
@@ -54,8 +61,8 @@
       {
         "@type": "ScholarlyArticle",
         "@id": "https://tanmayhinge.com/research/tissue-graph-probing/#article",
-        "headline": "Auditing attribution methods on synthetic tissue",
-        "description": "A synthetic testbed for measuring whether interpretability methods on cell graphs recover the cells that actually drive a tissue-level label.",
+        "headline": "A synthetic tissue benchmark for evaluating graph attribution methods in spatial biology",
+        "description": "Synthetic tissue where the cells driving the label are known by construction, used to measure whether graph attribution methods recover them. Most did not.",
         "url": "https://tanmayhinge.com/research/tissue-graph-probing/",
         "image": "https://tanmayhinge.com/og/tissue.png",
         "datePublished": "2026-08-06",
@@ -69,7 +76,48 @@
           "attribution faithfulness",
           "GNNExplainer"
         ],
-        "author": { "@type": "Person", "name": "Tanmay Hinge", "url": "https://tanmayhinge.com/" }
+        "author": {
+          "@type": "Person",
+          "@id": "https://tanmayhinge.com/#person",
+          "name": "Tanmay Hinge",
+          "url": "https://tanmayhinge.com/"
+        },
+        "publisher": {
+          "@type": "Person",
+          "@id": "https://tanmayhinge.com/#person",
+          "name": "Tanmay Hinge",
+          "url": "https://tanmayhinge.com/"
+        },
+        "mainEntityOfPage": {
+          "@type": "WebPage",
+          "@id": "https://tanmayhinge.com/research/tissue-graph-probing/"
+        },
+        "isPartOf": {
+          "@id": "https://tanmayhinge.com/#website"
+        }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Tanmay Hinge",
+            "item": "https://tanmayhinge.com/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Research",
+            "item": "https://tanmayhinge.com/#research"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "A synthetic tissue benchmark for evaluating graph attribution methods in spatial biology",
+            "item": "https://tanmayhinge.com/research/tissue-graph-probing/"
+          }
+        ]
       }
     ]
   }
@@ -78,8 +126,9 @@
 <body>
   <main class="container reading">
     <!-- nav:start -->
-    <nav class="topnav">
-      <button class="theme-toggle" type="button" aria-label="Switch to dark theme" aria-pressed="false">◐</button>
+    <a class="skip" href="#content">Skip to content</a>
+    <nav class="topnav" aria-label="Main">
+      <button class="theme-toggle" type="button" aria-label="Switch to dark theme">◐</button>
       <a class="brand" href="/">Tanmay Hinge</a>
       <span class="navlinks">
         <a href="/#research">Research</a>
@@ -90,11 +139,11 @@
     </nav>
     <!-- nav:end -->
 
-    <p class="kicker">interpretability &middot; spatial biology &middot; 2026 &middot; report</p>
-    <h1 class="ptitle">Auditing attribution methods on synthetic tissue</h1>
-    <p class="dek">If you cannot check an explanation, you cannot call it faithful. So I built tissue where checking is possible.</p>
+    <h1 class="ptitle" id="content" tabindex="-1">A synthetic tissue benchmark for evaluating graph attribution methods in spatial biology</h1>
+    <p class="dek">Graph attribution methods are evaluated on real tissue, where the cells that actually drive the outcome are unknown, so faithfulness gets asserted rather than measured. This builds tissue where the driver cells are recorded at generation time as a signed attribution vector, with 96 acceptance tests guarding the generator against shortcuts and cell overlap. Against that ground truth most standard methods score no better than random, and a marker heuristic that never consults the model matches the best learned one.</p>
 
     <dl class="meta">
+      <dt>Date</dt><dd>2026</dd>
       <dt>Code</dt><dd><a href="https://github.com/tanmayhinge/tissue-graph-probing" target="_blank" rel="noopener noreferrer">github.com/tanmayhinge/tissue-graph-probing</a></dd>
       <dt>Stack</dt><dd>Python, PyTorch, PyTorch&nbsp;Geometric</dd>
     </dl>
@@ -130,7 +179,7 @@
         cells.
       </p>
       <div class="table-wrap">
-        <table>
+        <table class="data">
           <thead><tr><th>Recorded per sample</th><th>What it is</th></tr></thead>
           <tbody>
             <tr><td>constructive drivers</td><td>engaged tumour cells and the T cells enabling them</td></tr>
@@ -299,7 +348,7 @@
         tested.
       </p>
       <div class="table-wrap">
-        <table>
+        <table class="data">
           <thead><tr><th>method</th><th>AP</th><th>randomisation &rho;<br><span class="tnote">across both modes</span></th><th>decoy mass</th></tr></thead>
           <tbody>
             <tr><td>integrated gradients (mean)</td><td>0.144</td><td>&minus;0.39 to +0.60</td><td>0.156</td></tr>
@@ -462,18 +511,20 @@
       </p>
 
     </article>
-    <nav class="prevnext">
-      <a href="/research/spectral-disentangling/">&larr; Previous: Disentangling mixed spectra</a>
-      <a href="/work/model-serving/">Next work: Distributed model serving &rarr;</a>
+    <nav class="prevnext" aria-label="Article">
+      <a href="/research/excitonic-coupling/">&larr; Previous: Learning curves for excitonic coupling prediction with product-kernel ridge regression</a>
+      <a href="/research/spectral-disentangling/">Next: Probing masked-sequence pretraining on synthetic mixed spectra &rarr;</a>
     </nav>
 
-    <footer class="foot">
+    <footer class="foot" role="contentinfo">
+      <!-- foot:start -->
       <span class="foot-links">
         <a href="https://github.com/tanmayhinge" rel="me noopener noreferrer" target="_blank">GitHub</a>
         <a href="https://www.linkedin.com/in/tanmayhinge/" rel="me noopener noreferrer" target="_blank">LinkedIn</a>
         <a href="https://scholar.google.com/citations?user=YFUWK9gAAAAJ" rel="me noopener noreferrer" target="_blank">Google&nbsp;Scholar</a>
         <a href="mailto:hingetanmay@gmail.com">Email</a>
       </span>
+      <!-- foot:end -->
       <span>Last updated <time datetime="2026-08-06">6 August 2026</time></span>
     </footer>
   </main>
