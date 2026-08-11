@@ -297,7 +297,9 @@ a:focus-visible {
 .row.minimal { grid-template-columns: 1fr auto; }
 .row:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; border-radius: 3px; }
 
-.row-year { font-family: var(--mono); font-size: var(--t-small); color: var(--muted); }
+/* the right-hand metadata column: a year on the index, an author on the reading list */
+.row-year,
+.row-by   { font-family: var(--mono); font-size: var(--t-small); color: var(--muted); }
 
 .row-title {
   font-family: var(--display);
