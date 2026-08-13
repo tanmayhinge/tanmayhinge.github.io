@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Benchmarking an AI SOC analyst · Tanmay Hinge</title>
+  <meta name="description" content="Synthetic network telemetry with a planted intrusion, so an AI analyst's incident report can actually be checked. It reported an intrusion in 23 of 24 windows that contained none." />
+  <meta name="author" content="Tanmay Hinge" />
+  <link rel="canonical" href="https://tanmayhinge.com/research/incident-ground-truth/" />
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="Tanmay Hinge" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:title" content="Benchmarking an AI SOC analyst on synthetic intrusion telemetry" />
+  <meta property="og:description" content="It reported an intrusion in 23 of 24 windows that had none, and never found a quieter attack it could reconstruct perfectly when handed its events." />
+  <meta property="og:url" content="https://tanmayhinge.com/research/incident-ground-truth/" />
+  <meta property="og:image" content="https://tanmayhinge.com/og/incident.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="A synthetic telemetry benchmark with a planted intrusion" />
+  <meta property="article:published_time" content="2026-08-13" />
+  <meta property="article:modified_time" content="2026-08-13" />
+  <meta property="article:author" content="https://tanmayhinge.com/" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://tanmayhinge.com/og/incident.png" />
+
+  <!-- head:start -->
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="192x192" href="/circle_favicon.png">
+  <link rel="apple-touch-icon" sizes="192x192" href="/circle_favicon.png">
+
+  <!-- matches --bg in each mode, so the browser chrome does not fight the page -->
+  <meta name="theme-color" content="#EAEDF2" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#10141A" media="(prefers-color-scheme: dark)" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..600&family=Girassol&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="/styles.css?v=44" />
+
+  <!-- stamp the stored theme before first paint; blocking on purpose -->
+  <script>(function(){try{var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <script src="/theme.js" defer></script>
+  <!-- head:end -->
+
+  <style>
+
+    .tp-ref    { stroke: var(--hair); stroke-width: 1; stroke-dasharray: 3 3; }
+    .ln-a      { fill: none; stroke: var(--ink);   stroke-width: 2.5; }
+    .ln-b      { fill: none; stroke: var(--accent); stroke-width: 2.5; }
+    .ln-false  { fill: none; stroke: color-mix(in srgb, var(--muted) 70%, var(--bg));
+                 stroke-width: 2.5; stroke-dasharray: 6 4; }
+    .dt-a      { fill: var(--ink); }
+    .dt-b      { fill: var(--accent); }
+    .dt-false  { fill: color-mix(in srgb, var(--muted) 70%, var(--bg)); }
+    .c-lab     { font: 500 12px var(--mono); }
+    .lb-a      { fill: var(--ink); }
+    .lb-b      { fill: var(--accent); }
+    .lb-false  { fill: var(--muted); }
+    .c-bar.tp-rand { fill: color-mix(in srgb, var(--muted) 25%, var(--bg)); }
+
+    /* the model's own words, quoted verbatim from a run file */
+    .quote-run { border-left: 2px solid var(--accent); padding-left: calc(var(--u) * 2);
+                 margin: calc(var(--u) * 3) 0; }
+    .quote-run ol { margin: 0; padding-left: calc(var(--u) * 3); }
+    .quote-run li { font: 400 14px/1.6 var(--mono); color: var(--ink); margin: 0 0 6px; }
+    .quote-run figcaption { font: 400 12px var(--mono); color: var(--muted);
+                            margin-top: calc(var(--u) * 1.5); }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "ScholarlyArticle",
+        "@id": "https://tanmayhinge.com/research/incident-ground-truth/#article",
+        "headline": "Benchmarking an AI SOC analyst on synthetic intrusion telemetry",
+        "description": "Synthetic network telemetry where the intrusion is known by construction, used to measure whether an AI analyst reconstructs it or writes something that reads as though it did.",
+        "url": "https://tanmayhinge.com/research/incident-ground-truth/",
+        "image": "https://tanmayhinge.com/og/incident.png",
+        "datePublished": "2026-08-13",
+        "dateModified": "2026-08-13",
+        "inLanguage": "en-US",
+        "keywords": [
+          "AI agents",
+          "security operations",
+          "hallucination",
+          "evaluation",
+          "synthetic benchmarks",
+          "incident response",
+          "grounding"
+        ],
+        "author": {
+          "@type": "Person",
+          "@id": "https://tanmayhinge.com/#person",
+          "name": "Tanmay Hinge",
+          "url": "https://tanmayhinge.com/"
+        },
+        "publisher": {
+          "@type": "Person",
+          "@id": "https://tanmayhinge.com/#person",
+          "name": "Tanmay Hinge",
+          "url": "https://tanmayhinge.com/"
+        },
+        "mainEntityOfPage": {
+          "@type": "WebPage",
+          "@id": "https://tanmayhinge.com/research/incident-ground-truth/"
+        },
+        "isPartOf": {
+          "@id": "https://tanmayhinge.com/#website"
+        }
+      },
+      {
+        "@type": "BreadcrumbList",
+        "itemListElement": [
+          {
+            "@type": "ListItem",
+            "position": 1,
+            "name": "Tanmay Hinge",
+            "item": "https://tanmayhinge.com/"
+          },
+          {
+            "@type": "ListItem",
+            "position": 2,
+            "name": "Research",
+            "item": "https://tanmayhinge.com/#research"
+          },
+          {
+            "@type": "ListItem",
+            "position": 3,
+            "name": "Benchmarking an AI SOC analyst on synthetic intrusion telemetry",
+            "item": "https://tanmayhinge.com/research/incident-ground-truth/"
+          }
+        ]
+      }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <main class="container reading">
+    <!-- nav:start -->
+    <a class="skip" href="#content">Skip to content</a>
+    <nav class="topnav" aria-label="Main">
+      <button class="theme-toggle" type="button" aria-label="Switch to dark theme">◐</button>
+      <a class="brand" href="/">Tanmay Hinge</a>
+      <span class="navlinks">
+        <a href="/#research">Research</a>
+        <a href="/photowall/">Photowall</a>
+        <a href="/reading/">Reading</a>
+        <a href="https://github.com/tanmayhinge" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.youtube.com/@tanmayhinge" target="_blank" rel="noopener noreferrer">YouTube</a>
+      </span>
+    </nav>
+    <!-- nav:end -->
+
+    <h1 class="ptitle" id="content" tabindex="-1">Benchmarking an AI SOC analyst on synthetic intrusion telemetry</h1>
+    <p class="dek">Nobody can check an AI incident report against real logs, because nobody knows what actually happened in them. So I generated the telemetry myself and planted the intrusion, which makes the answer checkable. The analyst reported an intrusion in 23 of 24 windows that contained none, and never once found a second, quieter attack it could reconstruct perfectly when handed its events.</p>
+
+    <article class="report prose">
+
+      <h2 class="h-label">The problem</h2>
+      <p>
+        Point a language model at a few days of network logs and it will hand you an incident
+        report, complete with an ordered chain of stages, named accounts and machines and a
+        confident summary. Whether any of it is true is a different question, and on real telemetry
+        there is no way to settle it, because nobody has a list of which log lines were the
+        intrusion. The only way I could think of to get that list was to write the logs myself.
+      </p>
+
+      <h2 class="h-label">How it works</h2>
+      <p>
+        The generator produces three log sources over a fixed window in a world of about fifty
+        machines and sixty accounts, covering authentication attempts, process launches and network
+        connections. A six-stage intrusion sits somewhere inside it, deliberately split so that no
+        one source carries the whole story. The failed logins are in the auth log, the lateral
+        movement shows up only in process ancestry, and the exfiltration is visible only in the
+        network flows.
+      </p>
+      <p>
+        Most of the effort went into the background traffic rather than into the attack. A
+        vulnerability scanner sweeps the network, people mistype passwords, nightly jobs archive the
+        same shares the attacker steals from, and large uploads leave legitimately all day, so none
+        of the attack's individual steps look unusual on their own. There is also a decoy, an
+        innocent account and machine made to look busy at exactly the wrong moment, which is there
+        to catch anything that mistakes coincidence for a chain.
+      </p>
+      <p>
+        The agent answers in JSON, and every claim has to cite the event ids it rests on, which is
+        what makes grading mechanical rather than a matter of opinion. Two separate graders then ask
+        two questions that usually get collapsed into one.
+      </p>
+      <div class="table-wrap">
+        <table class="data">
+          <thead><tr><th>Grader</th><th>Question</th><th>How</th></tr></thead>
+          <tbody>
+            <tr><td>reconstruction</td><td>did it recover the planted chain</td><td>stages matched by evidence overlap, never by text, with key and supporting events scored apart</td></tr>
+            <tr><td>grounding</td><td>is the report honest about its own evidence</td><td>six mechanical checks per claim: the event exists, was read, the entities named appear in it, the numbers are supported, it is not the decoy, the ordering matches the timestamps</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        I never average them together, because a report can recover the attack while citing the
+        wrong events for it, or cite impeccably while describing something that never happened, and
+        a single number would hide both cases.
+      </p>
+
+      <h2 class="h-label">It reports an intrusion whether or not there is one</h2>
+      <div class="table-wrap">
+        <table class="data">
+          <thead><tr><th>Condition</th><th>Runs</th><th>Reported an intrusion</th></tr></thead>
+          <tbody>
+            <tr><td>no attack, across the size range</td><td>15</td><td>14</td></tr>
+            <tr><td>no attack, decoy present</td><td>3</td><td>3</td></tr>
+            <tr><td>no attack, neutral prompt</td><td>3</td><td>3</td></tr>
+            <tr><td>no attack, decoy present, neutral prompt</td><td>3</td><td>3</td></tr>
+            <tr><td><strong>total</strong></td><td><strong>24</strong></td><td><strong>23</strong></td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        Mean confidence when it reported one was 0.95. The prompt seemed the obvious thing to
+        blame, since the original version is essentially a form with slots waiting to be filled in
+        with attack stages. So I rewrote it as a neutral shift-triage task that gave both outcomes
+        equal weight, added a control with the attack present to make sure the rewrite had not
+        simply blinded it, and ran the whole thing again on the same seeds. The numbers came back
+        the same.
+      </p>
+      <p>
+        What surprised me was where on the range this happens. I had assumed the invention was a
+        symptom of being overwhelmed, but at <strong>800 events</strong>, the smallest window and
+        the one where the analyst is otherwise at its most accurate, clean data still produced an
+        intrusion in all three runs.
+      </p>
+
+      <figure class="fig">
+        <svg viewBox="0 0 700 300" role="img" aria-labelledby="f1t f1d">
+          <title id="f1t">Detection of two planted attacks, and the rate of reporting one that is not there</title>
+          <desc id="f1d">As the window grows from about 800 to about 200,000 events, recovery of attack A falls from 0.74 to zero. Recovery of attack B is at or near zero at every size. The rate at which an intrusion is reported in windows containing none stays at 1.0 across the whole range, dipping to 0.67 at one point.</desc>
+          <line class="c-axis" x1="52" y1="248.0" x2="684" y2="248.0"/>
+<line class="tp-ref" x1="52" y1="132.0" x2="684" y2="132.0"/>
+<text class="c-tick" x="44" y="136.0" text-anchor="end">0.5</text>
+<line class="tp-ref" x1="52" y1="16.0" x2="684" y2="16.0"/>
+<text class="c-tick" x="44" y="20.0" text-anchor="end">1</text>
+<text class="c-tick" x="44" y="252.0" text-anchor="end">0</text>
+<text class="c-tick" x="52.0" y="266.0" text-anchor="middle">1</text>
+<text class="c-tick" x="210.0" y="266.0" text-anchor="middle">4</text>
+<text class="c-tick" x="368.0" y="266.0" text-anchor="middle">16</text>
+<text class="c-tick" x="526.0" y="266.0" text-anchor="middle">64</text>
+<text class="c-tick" x="684.0" y="266.0" text-anchor="middle">256</text>
+<path class="ln-false" d="M52.0,16.0 L210.0,16.0 L368.0,16.0 L526.0,93.3 L684.0,16.0"/>
+<path class="ln-a" d="M52.0,75.6 L210.0,87.2 L368.0,183.6 L526.0,248.0 L684.0,248.0"/>
+<path class="ln-b" d="M52.0,248.0 L210.0,241.5 L368.0,248.0 L526.0,248.0 L684.0,248.0"/>
+<circle class="dt-false" cx="52.0" cy="16.0" r="4"/>
+<circle class="dt-a" cx="52.0" cy="75.6" r="4"/>
+<circle class="dt-b" cx="52.0" cy="248.0" r="4"/>
+<circle class="dt-false" cx="210.0" cy="16.0" r="4"/>
+<circle class="dt-a" cx="210.0" cy="87.2" r="4"/>
+<circle class="dt-b" cx="210.0" cy="241.5" r="4"/>
+<circle class="dt-false" cx="368.0" cy="16.0" r="4"/>
+<circle class="dt-a" cx="368.0" cy="183.6" r="4"/>
+<circle class="dt-b" cx="368.0" cy="248.0" r="4"/>
+<circle class="dt-false" cx="526.0" cy="93.3" r="4"/>
+<circle class="dt-a" cx="526.0" cy="248.0" r="4"/>
+<circle class="dt-b" cx="526.0" cy="248.0" r="4"/>
+<circle class="dt-false" cx="684.0" cy="16.0" r="4"/>
+<circle class="dt-a" cx="684.0" cy="248.0" r="4"/>
+<circle class="dt-b" cx="684.0" cy="248.0" r="4"/>
+<text class="c-lab lb-false" x="60.0" y="36.0">reports an intrusion in clean data</text>
+<text class="c-lab lb-a" x="60.0" y="61.6">finds attack A</text>
+<text class="c-lab lb-b" x="218.0" y="236.0">finds attack B</text>
+<text class="c-axis-title" x="52" y="294">events in the window (multiplier, log scale)</text>
+        </svg>
+        <figcaption>Fig 1. Three seeds per point. The dashed line is the false-positive rate on windows with nothing planted in them, which stays flat across the whole range.</figcaption>
+      </figure>
+
+      <h2 class="h-label">A quieter attack is never found</h2>
+      <p>
+        All of that rested on a single planted chain, which left it ambiguous whether I was
+        measuring the analyst or my own generator, so I built a second intrusion that inverts
+        everything the first one relies on. Attack B begins on an ordinary workstation rather than
+        the perimeter, involves <strong>no failed logins at all</strong>, uses a stolen
+        administrator account instead of a guessed service account, writes no archive, and takes the
+        data out as a drip of small flows rather than one bulk transfer. As a check on how different
+        the two really are, a threshold detector that fires on failed-login bursts and outbound
+        volume scores 0.128 on attack A and <strong>0.000</strong> on attack B.
+      </p>
+      <p>
+        Attack B was never found in any of the fifteen runs, at any window size, including the one
+        where it makes up 3.7&nbsp;% of an 899-event file.
+      </p>
+      <p>
+        That is not a reasoning failure, though. Handed attack B&rsquo;s 33 events on their own,
+        with the search taken out of the problem, the same model reconstructs the chain almost
+        perfectly.
+      </p>
+
+      <figure class="fig">
+        <svg viewBox="0 0 700 210" role="img" aria-labelledby="f2t f2d">
+          <title id="f2t">Reconstruction when the events are handed over, against reconstruction unaided</title>
+          <desc id="f2d">Handed only its own events, attack A scores 0.95 and attack B scores 0.97. Searching an eight hundred event window unaided, attack A scores 0.74 and attack B scores zero.</desc>
+          <line class="c-axis" x1="300" y1="10" x2="300" y2="182"/>
+<rect class="c-bar hl" x="300" y="14" width="324.5" height="24" rx="2"/>
+<text class="c-cat" x="290" y="30" text-anchor="end">attack A, handed only its 50 events</text>
+<text class="c-val" x="632.5" y="30">0.95</text>
+<rect class="c-bar hl" x="300" y="58" width="331.1" height="24" rx="2"/>
+<text class="c-cat" x="290" y="74" text-anchor="end">attack B, handed only its 33 events</text>
+<text class="c-val" x="639.1" y="74">0.97</text>
+<rect class="c-bar" x="300" y="102" width="252.6" height="24" rx="2"/>
+<text class="c-cat" x="290" y="118" text-anchor="end">attack A, found unaided at 900 events</text>
+<text class="c-val" x="560.6" y="118">0.74</text>
+<rect class="c-bar" x="300" y="146" width="1.2" height="24" rx="2"/>
+<text class="c-cat" x="290" y="162" text-anchor="end">attack B, found unaided at 900 events</text>
+<text class="c-val" x="309.2" y="162">0.00</text>
+<text class="c-axis-title" x="300" y="206">reconstruction F1</text>
+        </svg>
+        <figcaption>Fig 2. The top two bars are the same model on the same chains with the search taken out of the problem, which is the difference between a chain being reconstructable and being findable.</figcaption>
+      </figure>
+
+      <h2 class="h-label">What it reported instead</h2>
+      <p>
+        Here is one run at the easiest setting, on those same 899 events. It came back with five
+        stages at 0.95 confidence and 62 citations, every one of them pointing at a real event.
+      </p>
+      <figure class="quote-run">
+        <ol>
+          <li>&ldquo;Brute force attack on administrative account adm.rivera&rdquo;</li>
+          <li>&ldquo;Second attacker conducting brute force against i.keller&rdquo;</li>
+          <li>&ldquo;Port scanning across internal hosts from 10.20.50.2&rdquo;</li>
+          <li>&ldquo;Massive data exfiltration, approximately 1GB, to 192.0.2.135&rdquo;</li>
+          <li>&ldquo;Large-scale exfiltration, over 2GB, to multiple external addresses&rdquo;</li>
+        </ol>
+        <figcaption>Verbatim stage labels from one report. Overlap with the planted intrusion: zero events.</figcaption>
+      </figure>
+      <p>
+        All five are the background traffic I wrote to be unremarkable. The first two are people
+        mistyping passwords, the third is the vulnerability scanner on its rounds, and the last two
+        are the nightly cloud sync. What it never mentioned at any point was the mail client
+        spawning a script host, the beacon leaving the workstation, the credential dump, the
+        administrator account reaching a domain controller from a finance machine belonging to
+        somebody else, or the slow drip of data going out.
+      </p>
+      <p>
+        That changes how I read the attack A numbers. Whatever competence showed up there seems to
+        have been resting on a loud signature, twenty-four failed logins and a 434&nbsp;MB transfer,
+        and once the signature goes the detection goes with it at every scale, even though the
+        reasoning is demonstrably unaffected.
+      </p>
+
+      <h2 class="h-label">The citations are real; the claims are not</h2>
+      <p>
+        Across all 69 runs the fabrication rate came out at <strong>0.00</strong>, with every cited
+        event id real and genuinely retrieved. I had expected invented citations to be the main
+        failure and they never happened once. What happens instead is harder to catch, because the
+        events do exist and simply do not say what the claim says they say. Hosts and accounts get
+        named in the prose that appear in none of the cited events, and counts run past what the
+        evidence can support. Anyone spot-checking three citations from a report like that would
+        find all three genuine and conclude it was sound.
+      </p>
+
+      <h2 class="h-label">Baselines</h2>
+      <div class="table-wrap">
+        <table class="data">
+          <thead><tr><th>Baseline</th><th>Reconstruction</th><th>Grounding</th><th>What it establishes</th></tr></thead>
+          <tbody>
+            <tr><td>oracle, attack events only</td><td>0.955</td><td>0.838</td><td>the ceiling</td></tr>
+            <tr><td>threshold detector</td><td>0.121</td><td>0.877</td><td>the two axes come apart</td></tr>
+            <tr><td>random citer</td><td>0.000</td><td><strong>1.000</strong></td><td>grounding alone means nothing</td></tr>
+            <tr><td>null, no attack planted</td><td>0.000</td><td>0.278</td><td>96&nbsp;% false positive rate</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        The random citer is worth dwelling on. Fluent prose written over randomly chosen events
+        passes every grounding check and scores a perfect 1.000, which is arguably the right result,
+        since the check asks whether a claim is honest about its evidence rather than whether it is
+        true, and a vague claim has nothing in it to contradict. The consequence is that a grounding
+        score means very little on its own. The analyst managed 0.639 at the easiest setting, which
+        puts it below a baseline that is not reading the data at all. The threshold detector sits in
+        the opposite corner, barely reconstructing anything while being almost perfectly honest
+        about the little it does claim.
+      </p>
+
+      <h2 class="h-label">Scope</h2>
+      <p>
+        None of this is realistic traffic, and I traded realism for an answer key on purpose, so
+        the results should not be read as transferring directly to production logs. The generator
+        and both graders also share an author, which for grounding is partly answered by a frozen
+        set of 40 hand-labelled claims that the grader agrees with 95&nbsp;% of the time at
+        &kappa;&nbsp;0.77, and for reconstruction is not answered at all. With only three seeds per
+        point most of the intervals are wide, so the two numbers I would actually stand behind are
+        the ones that need no interval: 23 of 24, and no fabricated citations in 69 runs. Code, run files and the frozen validation set are in the
+        <a href="https://github.com/tanmayhinge/incident-ground-truth" target="_blank" rel="noopener noreferrer">repository</a>.
+      </p>
+
+    </article>
+    <nav class="prevnext" aria-label="Article">
+      <a href="/research/tissue-graph-probing/">&larr; Previous: Benchmarking graph neural network attribution on synthetic tissue graphs</a>
+      <a href="/research/spectral-disentangling/">Next: Probing masked-sequence pretraining on synthetic mixed spectra &rarr;</a>
+    </nav>
+
+    <footer class="foot" role="contentinfo">
+      <!-- foot:start -->
+      <span class="foot-links">
+        <a href="https://github.com/tanmayhinge" rel="me noopener noreferrer" target="_blank">GitHub</a>
+        <a href="https://www.linkedin.com/in/tanmayhinge/" rel="me noopener noreferrer" target="_blank">LinkedIn</a>
+        <a href="https://scholar.google.com/citations?user=YFUWK9gAAAAJ" rel="me noopener noreferrer" target="_blank">Google&nbsp;Scholar</a>
+        <a href="mailto:hingetanmay@gmail.com">Email</a>
+      </span>
+      <!-- foot:end -->
+      <span>Last updated <time datetime="2026-08-13">13 August 2026</time></span>
+    </footer>
+  </main>
+</body>
+</html>
