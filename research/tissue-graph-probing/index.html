@@ -61,9 +61,9 @@
     .tp-dot.hl  { fill: var(--ink); }
     .tp-ref { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 3 3; }
     .c-bar.tp-rand { fill: color-mix(in srgb, var(--muted) 25%, var(--bg)); }
-    /* link to the paper, under the title. A hairline mono label rather than a filled
-       control: the site's only real button is the theme toggle and that reads as a link,
-       so a solid CTA here would be the loudest thing on the page. */
+    /* link to the paper, under the title. Outlined in --hot at rest and filled with it
+       on highlight; --bg for the label there, which clears 4.8:1 on the light ground and
+       7.1:1 on the dark one. */
     .paperlink { text-align: center; margin-top: calc(3 * var(--u)); }
     .paperlink a {
       display: inline-block;
@@ -73,14 +73,15 @@
       text-transform: uppercase;
       text-decoration: none;
       color: var(--ink);
-      border: 1px solid var(--hair);
+      background: transparent;
+      border: 1px solid var(--hot);
       border-radius: 3px;
       padding: calc(1.25 * var(--u)) calc(2.5 * var(--u));
-      transition: color .15s ease, border-color .15s ease;
+      transition: color .15s ease, background-color .15s ease;
     }
-    .paperlink a:hover { color: var(--hot); border-color: currentColor; }
+    .paperlink a:hover,
+    .paperlink a:focus-visible { background: var(--hot); color: var(--bg); }
     .paperlink a:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
-    .paperlink .pmeta { color: var(--muted); letter-spacing: 0; text-transform: none; }
   </style>
 
   <script type="application/ld+json">
@@ -178,7 +179,7 @@
 
     <p class="paperlink">
       <a href="/research/tissue-graph-probing/measuring-attribution-faithfulness-cell-graphs.pdf"
-         target="_blank" rel="noopener">Research paper <span class="pmeta">(PDF, 33 pp)</span></a>
+         target="_blank" rel="noopener">Research Paper (PDF)</a>
     </p>
     <p class="dek">Graph attribution methods are evaluated on real tissue, where the cells that actually drive the outcome are unknown, so faithfulness gets asserted rather than measured. This builds tissue where the driver cells are recorded at generation time as a signed attribution vector, with 93 acceptance tests guarding the generator against shortcuts and cell overlap. Against that ground truth most standard methods score no better than random, and one scores below it. Pooled, a marker heuristic that never consults the model appears to match the best learned method &mdash; but the two label classes pose structurally different problems, and split by class integrated gradients wins.</p>
 
