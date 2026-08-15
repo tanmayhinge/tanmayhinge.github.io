@@ -27,11 +27,12 @@ described different work and are out of date.
 
 - [Home](https://tanmayhinge.com/): biography and an index of work and research
 - [Learning curves for kernel ridge regression on molecular excitonic couplings](https://tanmayhinge.com/research/excitonic-coupling/): kernel regression on Coulomb-matrix descriptors for excitonic couplings between molecules. The learning curve turned out to have a knee in it, and the knee was the finding: the data pins down the molecules it already contains while saying almost nothing about an unseen one. Includes a Gaussian process variant and a kernel-width analysis showing no interior optimum
-- [Benchmarking graph neural network attribution on synthetic tissue graphs](https://tanmayhinge.com/research/tissue-graph-probing/): a synthetic tissue testbed where the cells driving the label are known by construction, built to measure whether graph interpretability methods recover them. Most scored no better than random and GNNExplainer scored below it, while a marker heuristic that never consults the model matched the best learned method. A weight-randomisation control showed two of the tools were describing graph structure rather than the model, and that control's verdict turned out to depend on optimisation budget
+- [Benchmarking graph neural network attribution on synthetic tissue graphs](https://tanmayhinge.com/research/tissue-graph-probing/): a synthetic tissue testbed where the cells driving the label are known by construction, built to measure whether graph interpretability methods recover them. Most scored no better than random and GNNExplainer scored below it. Pooled, a marker heuristic that never consults the model appears to match the best learned method, but the two label classes pose structurally different problems and split by class integrated gradients wins. A weight-randomisation control showed two of the tools were describing graph structure rather than the model, and that control's verdict turned out to depend on optimisation budget
 - [Probing masked-sequence pretraining on synthetic mixed spectra](https://tanmayhinge.com/research/spectral-disentangling/): does masked-sequence pretraining learn physical structure from 1D mixed spectra, or the noise? A fine-tuning comparison came back close to null while linear probes on the same frozen encoder said the opposite. A harder regime then showed the representation failing long before the task does, and an oracle ablation refuted the obvious explanation for why
+- [Benchmarking classifiers for hiring decision support](https://tanmayhinge.com/research/employability-classifiers/): two survey instruments elicited what candidates and hiring managers actually weight when screening, those criteria were encoded as a simulation with a known generative process, and five supervised classifiers were measured on whether they recover it. Both groups rank GPA first and disagree below it; candidates over-weight coding assessments and under-weight recommender scores. Master's capstone at California State University, Chico, completed May 2024
 - [Reading](https://tanmayhinge.com/reading/): what he is reading now, what he has finished, and what is queued up next
 - [Photowall](https://tanmayhinge.com/photowall/): photographs outside the research — motorcycles, national parks, Halloween costumes, a childhood in Mumbai
-- [Distributed model serving](https://tanmayhinge.com/research/model-serving/): inference across shared lab machines, for students without hardware
+- [A shared GPU cloud for student machine learning](https://tanmayhinge.com/research/model-serving/): an OpenStack private cloud built on a college lab server so students who could not buy GPU hardware were allocated instances and reached them remotely through Jupyter over an ngrok tunnel. Joint undergraduate work, published in IRJET volume 9 issue 4 (April 2022)
 
 ## Roles
 
@@ -42,7 +43,7 @@ described different work and are out of date.
 ## Education
 
 - M.S. Computer Science, California State University, Chico (2024)
-- B.E. Computer Engineering, University of Mumbai, Pillai College of Engineering (2022)
+- B.E. Computer Engineering, University of Mumbai (2022)
 
 ## Contact
 

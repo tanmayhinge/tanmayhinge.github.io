@@ -3,22 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Distributed model serving · Tanmay Hinge</title>
-  <meta name="description" content="2022. Job scheduling and inference serving across shared department machines, so students without dedicated hardware could run models." />
+  <title>A shared GPU cloud for students · Tanmay Hinge</title>
+  <meta name="description" content="2022. An OpenStack cloud on a college lab server, so students who could not buy a GPU machine could be allocated a slice of one and reach it from anywhere." />
   <meta name="author" content="Tanmay Hinge" />
   <link rel="canonical" href="https://tanmayhinge.com/research/model-serving/" />
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Tanmay Hinge" />
   <meta property="og:locale" content="en_US" />
-  <meta property="og:title" content="Distributed model serving" />
-  <meta property="og:description" content="Inference across shared lab machines, for students without hardware. The earliest thing I built that was infrastructure for other people's research." />
+  <meta property="og:title" content="A shared GPU cloud for student machine learning" />
+  <meta property="og:description" content="Nobody needs a whole GPU machine all the time, and most students cannot buy one at all. So we pooled the lab hardware and handed out slices of it. The earliest thing I built that was infrastructure for other people's research." />
   <meta property="og:url" content="https://tanmayhinge.com/research/model-serving/" />
   <meta property="og:image" content="https://tanmayhinge.com/og/home.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
-  <meta property="og:image:alt" content="Tanmay Hinge — machine learning researcher" />
-  <meta property="article:published_time" content="2022-01-01" />
-  <meta property="article:modified_time" content="2026-08-10" />
+  <meta property="og:image:alt" content="Tanmay Hinge, machine learning researcher" />
+  <meta property="article:published_time" content="2022-04-01" />
+  <meta property="article:modified_time" content="2026-08-15" />
   <meta property="article:author" content="https://tanmayhinge.com/" />
   <meta name="twitter:card" content="summary_large_image" />
   <meta name="twitter:image" content="https://tanmayhinge.com/og/home.png" />
@@ -36,7 +36,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..600&family=Girassol&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="/styles.css?v=44" />
+  <link rel="stylesheet" href="/styles.css?v=45" />
 
   <!-- stamp the stored theme before first paint; blocking on purpose -->
   <script>(function(){try{var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
@@ -48,19 +48,21 @@
     "@context": "https://schema.org",
     "@graph": [
       {
-        "@type": "BlogPosting",
+        "@type": "ScholarlyArticle",
         "@id": "https://tanmayhinge.com/research/model-serving/#article",
-        "headline": "Distributed model serving",
-        "description": "Inference across shared lab machines, for students without dedicated hardware.",
+        "headline": "A shared GPU cloud for student machine learning",
+        "description": "An OpenStack cloud built on a college lab server so students without their own hardware could be allocated GPU instances and reach them remotely through Jupyter.",
         "url": "https://tanmayhinge.com/research/model-serving/",
         "image": "https://tanmayhinge.com/og/home.png",
-        "datePublished": "2022-01-01",
-        "dateModified": "2026-08-10",
+        "datePublished": "2022-04-01",
+        "dateModified": "2026-08-15",
         "inLanguage": "en-US",
         "keywords": [
-          "distributed systems",
-          "model serving",
-          "ML infrastructure"
+          "cloud computing",
+          "OpenStack",
+          "GPU infrastructure",
+          "research infrastructure",
+          "higher education"
         ],
         "author": {
           "@type": "Person",
@@ -100,7 +102,7 @@
           {
             "@type": "ListItem",
             "position": 3,
-            "name": "Distributed model serving",
+            "name": "A shared GPU cloud for student machine learning",
             "item": "https://tanmayhinge.com/research/model-serving/"
           }
         ]
@@ -127,20 +129,64 @@
     </nav>
     <!-- nav:end -->
 
-    <h1 class="ptitle" id="content" tabindex="-1">Distributed model serving</h1>
-    <p class="dek">Inference across shared lab machines, for students without hardware.</p>
+    <h1 class="ptitle" id="content" tabindex="-1">A shared GPU cloud for student machine learning</h1>
+
+    <p class="paperlink">
+      <a href="/research/model-serving/cloud-architecture-for-ml-and-ai.pdf"
+         target="_blank" rel="noopener">Research Paper (PDF)</a>
+    </p>
+    <p class="dek">Machine learning coursework needs a GPU, most students cannot buy one, and nobody needs a whole machine all the time. So we pooled the lab hardware into an OpenStack cloud and handed out slices of it, reachable from anywhere through a browser. Undergraduate work, published in April 2022.</p>
 
     <article class="report prose">
+
+      <h2 class="h-label">The problem</h2>
       <p>
-        2022. Job scheduling and inference serving across shared
-        department machines, so students without dedicated hardware could run models. It is the
-        earliest thing I built that was infrastructure for other people's research rather than for a
-        grade.
+        Anything interesting in machine learning wants a GPU, and a machine with one costs more
+        than most undergraduates have. The demand is also lumpy. A student needs the whole machine
+        for an afternoon, or a small slice of it for a fortnight, and almost never the thing they
+        would have had to buy outright. That argues for pooling the hardware and handing out
+        allocations that can be resized and given back.
       </p>
+
+      <h2 class="h-label">What we built</h2>
+      <p>
+        A private cloud on a departmental server running OpenStack, brought up with DevStack on
+        Ubuntu. The hardware underneath was Nvidia 3000-series GPUs, 128&nbsp;GB of RAM and a
+        terabyte of disk. OpenStack handles the plumbing: Nova for compute, Glance for images,
+        Keystone for identity, Neutron for networking, Cinder for block storage, and Horizon for
+        the dashboard an administrator actually clicks. A student gets an instance sized to what
+        they asked for, reached over SSH with a key pair, with security groups and a floating IP
+        in front of it.
+      </p>
+      <p>
+        Reaching any of it from outside was the awkward part. The server sat behind the college
+        NAT, so an instance with a perfectly good address on the internal network was invisible
+        from a dorm room. We ran Jupyter on the instance and exposed it through an ngrok tunnel,
+        which gives you a public URL without anyone having to reconfigure the campus network. The
+        student opens that link and enters a token the administrator hands out.
+      </p>
+
+      <h2 class="h-label">What it is, and what it is not</h2>
+      <p>
+        This is a systems paper. It documents a build in enough detail to repeat it, down to the
+        <code>local.conf</code> settings and the IP-forwarding rules that made the tunnel work. It
+        is not an evaluation. There are no throughput numbers, no measurement of utilisation
+        against the dedicated machines it was meant to replace, and no scheduling policy beyond an
+        administrator deciding who gets what. Scheduling is the part I would build next, and the
+        part worth measuring.
+      </p>
+      <p>
+        It is also the earliest thing I built that was infrastructure for other people's research
+        rather than for a grade, which is why it stays on this list. The work was joint, with four
+        collaborators, and appeared in the
+        <em>International Research Journal of Engineering and Technology</em>, volume 9, issue 4
+        (April 2022), pages 1045 to 1055.
+      </p>
+
     </article>
 
     <nav class="prevnext" aria-label="Article">
-      <a href="/research/spectral-disentangling/">&larr; Previous: Probing masked-sequence pretraining on synthetic mixed spectra</a>
+      <a href="/research/employability-classifiers/">&larr; Previous: Benchmarking classifiers for hiring decision support</a>
       <span class="spacer" aria-hidden="true">&rarr;</span>
     </nav>
 
@@ -153,7 +199,7 @@
         <a href="mailto:hingetanmay@gmail.com">Email</a>
       </span>
       <!-- foot:end -->
-      <span>Last updated <time datetime="2026-08-10">10 August 2026</time></span>
+      <span>Last updated <time datetime="2026-08-15">15 August 2026</time></span>
     </footer>
   </main>
 </body>

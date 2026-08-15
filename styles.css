@@ -370,6 +370,28 @@ a:focus-visible {
   hyphens: auto;
 }
 
+/* Link to a paper's PDF, sat under the title. Outlined in --hot at rest and filled
+   with it on highlight; --bg for the label there, which clears 4.8:1 on the light
+   ground and 7.1:1 on the dark one. */
+.paperlink { text-align: center; margin-top: calc(3 * var(--u)); }
+.paperlink a {
+  display: inline-block;
+  font-family: var(--mono);
+  font-size: var(--t-small);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  text-decoration: none;
+  color: var(--ink);
+  background: transparent;
+  border: 1px solid var(--hot);
+  border-radius: 3px;
+  padding: calc(1.25 * var(--u)) calc(2.5 * var(--u));
+  transition: color .15s ease, background-color .15s ease;
+}
+.paperlink a:hover,
+.paperlink a:focus-visible { background: var(--hot); color: var(--bg); }
+.paperlink a:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+
 .meta {
   display: grid;
   grid-template-columns: max-content 1fr;
