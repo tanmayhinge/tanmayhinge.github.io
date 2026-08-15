@@ -237,7 +237,7 @@ a:focus-visible {
    so the whole frame is visible, sized as a share of the column. */
 .headshot {
   display: block;
-  width: var(--col-w);
+  width: calc(var(--col-w) * 0.6);   /* 40% smaller than the text column it sits above */
   height: auto;
   margin-inline: auto;
   margin-bottom: calc(3 * var(--u));   /* breathing room before the lead paragraph */
