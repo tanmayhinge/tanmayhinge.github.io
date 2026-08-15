@@ -11,7 +11,7 @@
   <meta property="og:site_name" content="Tanmay Hinge" />
   <meta property="og:locale" content="en_US" />
   <meta property="og:title" content="Benchmarking graph neural network attribution on synthetic tissue graphs" />
-  <meta property="og:description" content="Most attribution methods did not recover the driver cells, and one scored below random. A marker heuristic that never consults the model matched the best of them." />
+  <meta property="og:description" content="Most attribution methods did not recover the driver cells, and one scored below random. Pooled against a marker heuristic the comparison reads as a tie; split by label class it is not." />
   <meta property="og:url" content="https://tanmayhinge.com/research/tissue-graph-probing/" />
   <meta property="og:image" content="https://tanmayhinge.com/og/tissue.png" />
   <meta property="og:image:width" content="1200" />
@@ -61,6 +61,26 @@
     .tp-dot.hl  { fill: var(--ink); }
     .tp-ref { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 3 3; }
     .c-bar.tp-rand { fill: color-mix(in srgb, var(--muted) 25%, var(--bg)); }
+    /* link to the paper, under the title. A hairline mono label rather than a filled
+       control: the site's only real button is the theme toggle and that reads as a link,
+       so a solid CTA here would be the loudest thing on the page. */
+    .paperlink { text-align: center; margin-top: calc(3 * var(--u)); }
+    .paperlink a {
+      display: inline-block;
+      font-family: var(--mono);
+      font-size: var(--t-small);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      text-decoration: none;
+      color: var(--ink);
+      border: 1px solid var(--hair);
+      border-radius: 3px;
+      padding: calc(1.25 * var(--u)) calc(2.5 * var(--u));
+      transition: color .15s ease, border-color .15s ease;
+    }
+    .paperlink a:hover { color: var(--hot); border-color: currentColor; }
+    .paperlink a:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+    .paperlink .pmeta { color: var(--muted); letter-spacing: 0; text-transform: none; }
   </style>
 
   <script type="application/ld+json">
@@ -155,7 +175,12 @@
     </div>
 
     <h1 class="ptitle" id="content" tabindex="-1">Benchmarking graph neural network attribution on synthetic tissue graphs</h1>
-    <p class="dek">Graph attribution methods are evaluated on real tissue, where the cells that actually drive the outcome are unknown, so faithfulness gets asserted rather than measured. This builds tissue where the driver cells are recorded at generation time as a signed attribution vector, with 96 acceptance tests guarding the generator against shortcuts and cell overlap. Against that ground truth most standard methods score no better than random, and a marker heuristic that never consults the model matches the best learned one.</p>
+
+    <p class="paperlink">
+      <a href="/research/tissue-graph-probing/measuring-attribution-faithfulness-cell-graphs.pdf"
+         target="_blank" rel="noopener">Research paper <span class="pmeta">(PDF, 33 pp)</span></a>
+    </p>
+    <p class="dek">Graph attribution methods are evaluated on real tissue, where the cells that actually drive the outcome are unknown, so faithfulness gets asserted rather than measured. This builds tissue where the driver cells are recorded at generation time as a signed attribution vector, with 93 acceptance tests guarding the generator against shortcuts and cell overlap. Against that ground truth most standard methods score no better than random, and one scores below it. Pooled, a marker heuristic that never consults the model appears to match the best learned method &mdash; but the two label classes pose structurally different problems, and split by class integrated gradients wins.</p>
 
     <article class="report prose">
 
@@ -232,7 +257,7 @@
       <p>
         Both were caught by acceptance tests written before the implementation, and the fixes are
         matched aggregate density between driver and decoy T cells, and hard-core placement with an
-        8&nbsp;&micro;m minimum separation. The suite now runs 96 tests across five gated phases, including
+        8&nbsp;&micro;m minimum separation. The suite now runs 93 tests across five gated phases, including
         shortcut probes that must sit at chance and a check that the label recomputes exactly from
         the serialised record.
       </p>
@@ -315,55 +340,66 @@
 
       <h2 class="h-label">Results</h2>
       <figure class="fig">
-        <svg viewBox="0 0 700 268" role="img" aria-labelledby="f3t f3d">
+        <svg viewBox="-32 0 700 276" role="img" aria-labelledby="f3t f3d">
           <title id="f3t">Average precision at recovering the driver cells, by method</title>
-          <desc id="f3d">Random guessing scores 0.058. GNNExplainer scores 0.044, below guessing. Attention rollout 0.090, saliency 0.095, integrated gradients 0.153. A marker heuristic that never consults the model scores 0.169, and CNN integrated gradients 0.189.</desc>
+          <desc id="f3d">Random guessing scores 0.058. GNNExplainer scores 0.047, below guessing. Saliency 0.087, attention rollout 0.090, integrated gradients 0.147 for the zero baseline and 0.159 for the dataset-mean one. A marker heuristic that never consults the model scores 0.169, the highest of these pooled scores.</desc>
 <line class="c-axis" x1="176" y1="14" x2="176" y2="246"/>
-<rect class="c-bar" x="176" y="14" width="444.1" height="22" rx="2"/>
-<text class="c-cat" x="166" y="29" text-anchor="end">CNN integrated gradients</text>
-<text class="c-val" x="628.1" y="29">0.189</text>
-<rect class="c-bar hl" x="176" y="48" width="397.2" height="22" rx="2"/>
-<text class="c-cat" x="166" y="63" text-anchor="end">marker heuristic (no model)</text>
-<text class="c-val" x="581.2" y="63">0.169</text>
-<rect class="c-bar" x="176" y="82" width="359.6" height="22" rx="2"/>
-<text class="c-cat" x="166" y="97" text-anchor="end">integrated gradients</text>
-<text class="c-val" x="543.6" y="97">0.153</text>
-<rect class="c-bar" x="176" y="116" width="223.2" height="22" rx="2"/>
-<text class="c-cat" x="166" y="131" text-anchor="end">saliency</text>
-<text class="c-val" x="407.2" y="131">0.095</text>
-<rect class="c-bar" x="176" y="150" width="211.5" height="22" rx="2"/>
-<text class="c-cat" x="166" y="165" text-anchor="end">attention rollout</text>
-<text class="c-val" x="395.5" y="165">0.090</text>
+<rect class="c-bar hl" x="176" y="14" width="397.2" height="22" rx="2"/>
+<text class="c-cat" x="166" y="29" text-anchor="end">marker heuristic (no model)</text>
+<text class="c-val" x="581.2" y="29">0.169</text>
+<rect class="c-bar" x="176" y="48" width="373.7" height="22" rx="2"/>
+<text class="c-cat" x="166" y="63" text-anchor="end">integrated gradients (mean)</text>
+<text class="c-val" x="557.7" y="63">0.159</text>
+<rect class="c-bar" x="176" y="82" width="345.4" height="22" rx="2"/>
+<text class="c-cat" x="166" y="97" text-anchor="end">integrated gradients (zero)</text>
+<text class="c-val" x="529.4" y="97">0.147</text>
+<rect class="c-bar" x="176" y="116" width="211.5" height="22" rx="2"/>
+<text class="c-cat" x="166" y="131" text-anchor="end">attention rollout</text>
+<text class="c-val" x="395.5" y="131">0.090</text>
+<rect class="c-bar" x="176" y="150" width="204.4" height="22" rx="2"/>
+<text class="c-cat" x="166" y="165" text-anchor="end">saliency</text>
+<text class="c-val" x="388.4" y="165">0.087</text>
 <rect class="c-bar tp-rand" x="176" y="184" width="136.3" height="22" rx="2"/>
 <text class="c-cat" x="166" y="199" text-anchor="end">random guess</text>
 <text class="c-val" x="320.3" y="199">0.058</text>
-<rect class="c-bar" x="176" y="218" width="103.4" height="22" rx="2"/>
+<rect class="c-bar" x="176" y="218" width="110.4" height="22" rx="2"/>
 <text class="c-cat" x="166" y="233" text-anchor="end">GNNExplainer</text>
-<text class="c-val" x="287.4" y="233">0.044</text>
+<text class="c-val" x="294.4" y="233">0.047</text>
 <line class="tp-ref" x1="312.3" y1="8" x2="312.3" y2="246"/>
 <text class="c-axis-title" x="176" y="268">average precision at finding the driver cells</text>
         </svg>
         <figcaption>Fig 3. Higher is better. The dashed line is random guessing.</figcaption>
       </figure>
       <p>
-        GNNExplainer, the most widely used of these tools, lands at 0.044 against a random baseline
+        GNNExplainer, the most widely used of these tools, lands at 0.047 against a random baseline
         of 0.058. It is worse than guessing, and stays worse across every optimisation budget I
-        tested. Attention rollout reaches 0.090. The best graph method is integrated gradients, at 0.153 for
-        the zero-baseline variant and 0.144 for the dataset-mean one.
+        tested. Attention rollout reaches 0.090. The best graph method is integrated gradients, at 0.159 for
+        the dataset-mean variant and 0.147 for the zero-baseline one.
       </p>
       <p>
         The awkward line is the highlighted one. A heuristic that projects the marker vector onto the
         tumour mean and consults no model at all scores 0.169, above every graph explanation method
         tested.
       </p>
+      <p>
+        That reading does not survive splitting the two label classes, and the split is the more
+        useful result. A positive sample flips by removing the T cells that engage tumour, a negative
+        one by removing unengaged tumour cells until the ratio crosses the threshold, so the two
+        classes pose structurally different targets: 92&percnt; of the variance in a pooled paired
+        difference lies between them rather than within, and averaging the two hides two large
+        opposite effects. Integrated gradients beats the heuristic by 0.302 average precision on
+        positive samples and loses by 0.237 on negatives; weighted to the test split&rsquo;s own class
+        balance it wins overall, by 0.018. On the positive class, the one where the ground truth is a
+        genuine minimal sufficient cause, the heuristic scores about a third of chance.
+      </p>
       <div class="table-wrap">
         <table class="data">
           <thead><tr><th>method</th><th>AP</th><th>randomisation &rho;<br><span class="tnote">across both modes</span></th><th>decoy mass</th></tr></thead>
           <tbody>
-            <tr><td>integrated gradients (mean)</td><td>0.144</td><td>&minus;0.39 to +0.60</td><td>0.156</td></tr>
-            <tr><td>saliency</td><td>0.095</td><td>&minus;0.21 to +0.60</td><td>0.214</td></tr>
+            <tr><td>integrated gradients (mean)</td><td>0.159</td><td>&minus;0.39 to +0.60</td><td>0.156</td></tr>
             <tr><td>attention rollout</td><td>0.090</td><td>+0.17 to +0.99</td><td>0.224</td></tr>
-            <tr><td>GNNExplainer</td><td>0.044</td><td>+0.37 to +0.86</td><td>0.149</td></tr>
+            <tr><td>saliency</td><td>0.087</td><td>&minus;0.21 to +0.60</td><td>0.214</td></tr>
+            <tr><td>GNNExplainer</td><td>0.047</td><td>+0.37 to +0.86</td><td>0.149</td></tr>
             <tr><td>random baseline</td><td>0.058</td><td>&mdash;</td><td>0.156</td></tr>
           </tbody>
         </table>
@@ -378,7 +414,7 @@
       <figure class="fig">
         <svg viewBox="0 0 740 318" role="img" aria-labelledby="f4t f4d">
           <title id="f4t">Share of attribution landing on causally inert decoy cells</title>
-          <desc id="f4d">Local CTL density places 42.3 percent of its attribution on decoys, the highest of any method. CNN integrated gradients 26.2, attention rollout 22.4, saliency 21.4. Random sits at 15.6 percent. Tumour-likeness is lowest at 5.6 percent.</desc>
+          <desc id="f4d">Local CTL density places 42.3 percent of its attribution on decoys, the highest of any method. Integrated gradients on the CNN 26.2, attention rollout 22.4, saliency 21.4. Random sits at 15.6 percent. Tumour-likeness is lowest at 5.6 percent.</desc>
 <line class="c-axis" x1="208" y1="10" x2="208" y2="286"/>
 <rect class="c-bar" x="208" y="14" width="53.5" height="20" rx="2"/>
 <text class="c-cat" x="198" y="28" text-anchor="end">tumour-likeness</text>
@@ -402,7 +438,7 @@
 <text class="c-cat" x="198" y="214" text-anchor="end">attention rollout</text>
 <text class="c-val" x="429.6" y="214">0.224</text>
 <rect class="c-bar" x="208" y="231" width="250.1" height="20" rx="2"/>
-<text class="c-cat" x="198" y="245" text-anchor="end">CNN integrated gradients</text>
+<text class="c-cat" x="198" y="245" text-anchor="end">integrated gradients (CNN)</text>
 <text class="c-val" x="466.1" y="245">0.262</text>
 <rect class="c-bar hl" x="208" y="262" width="404.5" height="20" rx="2"/>
 <text class="c-cat" x="198" y="276" text-anchor="end">local CTL density</text>
@@ -598,6 +634,13 @@
         Both corrections are in the repository rather than tidied away. The sequence 0.93 to 0.29 to
         0.38&ndash;0.86 is more informative than any single number from it.
       </p>
+      <p>
+        The larger error was in the headline. I reported that nothing learned beat the best
+        model-free baseline, which was an artefact of averaging over two label classes whose ground
+        truths are structurally different, drawn from a sample I had not stratified by label.
+        Ninety-two per cent of the variance I was treating as noise was that class split. Conditioned
+        on class the conclusion reverses, and the pooled version is withdrawn.
+      </p>
 
       <h2 class="h-label">Scope</h2>
       <p>
@@ -616,8 +659,8 @@
       </p>
       <p>
         What does hold is narrower and still worth saying. When the answer is checkable, most of
-        these methods did not recover it, a heuristic with no model access matched the best of them,
-        and the control that exposes this costs minutes to run. Code, figures and the gated test
+        these methods did not recover it, the most widely used one scored below chance, and the
+        control that exposes this costs minutes to run. Code, figures and the gated test
         suite are in the
         <a href="https://github.com/tanmayhinge/tissue-graph-probing" target="_blank" rel="noopener noreferrer">repository</a>.
       </p>
