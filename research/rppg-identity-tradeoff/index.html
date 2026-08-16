@@ -5,19 +5,19 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>Probing a frozen rPPG encoder for identity under input degradation · Tanmay Hinge</title>
-  <meta name="description" content="A frozen rPPG encoder, probed for what its embedding carries besides a pulse as the input is destroyed one rung at a time. It identifies 120 subjects from a face block-averaged to 4x4 pixels." />
+  <meta name="description" content="Blurring a face does not anonymise it. Probing a frozen rPPG encoder as its input is destroyed one rung at a time, identity survives every level of block averaging, and only collapses when the outline of the skin region is removed as well." />
   <meta name="author" content="Tanmay Hinge" />
   <link rel="canonical" href="https://tanmayhinge.com/research/rppg-identity-tradeoff/" />
   <meta property="og:type" content="article" />
   <meta property="og:site_name" content="Tanmay Hinge" />
   <meta property="og:locale" content="en_US" />
   <meta property="og:title" content="Probing a frozen rPPG encoder for identity under input degradation" />
-  <meta property="og:description" content="A frozen rPPG encoder, probed for what its embedding carries besides a pulse as the input is destroyed one rung at a time. It identifies 120 subjects from a face block-averaged to 4x4 pixels." />
+  <meta property="og:description" content="Blurring a face does not anonymise it. Probing a frozen rPPG encoder as its input is destroyed one rung at a time, identity survives every level of block averaging, and only collapses when the outline of the skin region is removed as well." />
   <meta property="og:url" content="https://tanmayhinge.com/research/rppg-identity-tradeoff/" />
   <meta property="og:image" content="https://tanmayhinge.com/og/rppg.png" />
   <meta property="og:image:width" content="1200" />
   <meta property="og:image:height" content="630" />
-  <meta property="og:image:alt" content="One synthetic face shown five times, progressively block-averaged until it is a flat silhouette, under the headline: identified 100% of the time, at every step." />
+  <meta property="og:image:alt" content="One synthetic face shown five times, progressively block-averaged until it is a flat silhouette, under the headline: blurring a face does not anonymise it." />
   <meta property="article:published_time" content="2026-08-16" />
   <meta property="article:modified_time" content="2026-08-16" />
   <meta property="article:author" content="https://tanmayhinge.com/" />
@@ -91,6 +91,12 @@
     .titlestrip { display: block; width: 100%; height: auto; border-radius: 6px;
                   margin: 0 0 calc(var(--u) * 4); background: #000;
                   border: 1px solid var(--hair); }
+    /* an aside, not a box: plain italic text with no ground, rule or padding, so it
+       reads as a change of voice rather than as a piece of interface */
+    .callout { margin: calc(var(--u) * 4) 0; font-style: italic; }
+    .callout .clabel { display: block; color: var(--muted); }
+    .callout p { margin: 0; }
+    .callout p + p { margin-top: calc(var(--u) * 2); }
     .keynum { font-family: var(--mono); color: var(--ink); font-weight: 500; }
   </style>
 
@@ -100,7 +106,7 @@
     "@type": "ScholarlyArticle",
     "@id": "https://tanmayhinge.com/research/rppg-identity-tradeoff/#article",
     "headline": "Probing a frozen rPPG encoder for identity under input degradation",
-    "description": "A frozen remote-photoplethysmography encoder identifies 120 synthetic subjects perfectly even when the face is block-averaged to four by four pixels, while the heart-rate signal in the same embedding barely beats guessing the dataset average.",
+    "description": "Blurring a face does not anonymise it. Probing a frozen remote-photoplethysmography encoder across a degradation ladder, identity survives every level of block averaging and collapses only when the outline of the skin region is removed as well. A raw-pixel control matches the encoder throughout the ladder and overtakes it at the bottom, and the heart-rate arm is null.",
     "url": "https://tanmayhinge.com/research/rppg-identity-tradeoff/",
     "image": "https://tanmayhinge.com/og/rppg.png",
     "datePublished": "2026-08-16",
@@ -145,14 +151,21 @@
          alt="" aria-hidden="true" decoding="async" />
 
     <h1 class="ptitle" id="content" tabindex="-1">Probing a frozen rPPG encoder for identity under input degradation</h1>
+    <p class="paperlink">
+      <a href="https://github.com/tanmayhinge/rppg-identity-tradeoff"
+         target="_blank" rel="noopener noreferrer">Code (GitHub)</a>
+    </p>
+
     <p class="dek">
       A camera pointed at your face can measure your heart rate, because your skin
       brightens and dims very slightly with each beat. The pitch for this technology is
       that only a number comes out. I took a published heart-rate model, froze it, and
       started destroying its input one step at a time to find out what else it was
-      carrying. It identified 120 people perfectly from a face blurred down to
-      sixteen pixels.
+      carrying. Blurring the face away never cost anything in re-identifiability.
+      Identity only collapsed when I removed the outline of the skin region as well, and
+      that turned out to be the thing that was leaking all along.
     </p>
+
 
     <article class="report prose">
 
@@ -194,6 +207,20 @@
         gets cached, batched, sent to a server, or logged for debugging. Nobody in the
         applied literature reports what is in them. That is the gap this is about.
       </p>
+      <p>
+        Three things are worth knowing before you invest in the rest of it. The
+        heart-rate half did not work: the probe lands at
+        <span class="keynum">25.3</span> bpm against
+        <span class="keynum">28.8</span> for ignoring the video and guessing the
+        dataset average, and its interval reaches that floor, so I cannot separate it from
+        guessing. The identity half is measured across clips of one recording, so every
+        number here is a ceiling on re-identification rather than an estimate of it, and
+        none of them carries a confidence interval. And the encoder deserves less credit
+        than the headline implies: raw pixels with no model behind them match it at every
+        rung of the blurring. Each gets its own section below. What stays open is whether
+        pulse and identity are genuinely coupled, or whether this encoder simply never
+        transferred to synthetic faces.
+      </p>
 
       <h2 class="h-label">Faces that belong to nobody</h2>
       <p>
@@ -209,13 +236,26 @@
       <p>
         Getting the data was the first surprise. SCAMPS ships a spreadsheet of per-file
         download links, and every one of them points at a storage account that no longer
-        exists. The only working route is a single 593&nbsp;GB compressed archive. Since
-        the archive is gzipped, and gzip cannot be skipped into, you cannot ask for file
-        number 400; you can only start reading from the beginning and stop when you have
-        enough. So the ingest is literally a download piped into an extractor with a byte
-        budget attached: it streams until it has taken 16&nbsp;GB and then the pipe
-        closes. That got me 122 videos in about an hour and a half.
+        exists. The only working route is a single 593&nbsp;GB compressed archive, and you
+        almost certainly do not want all of it.
       </p>
+      <div class="callout">
+        <span class="clabel">If you are trying to use SCAMPS yourself</span>
+        <p>
+          The per-file download links in the distributed spreadsheet are dead. The only
+          live route is one 593&nbsp;GB gzipped tar, and because gzip cannot be seeked
+          into, there is no way to ask for file number 400: you can only read from the
+          start and stop when you have enough.
+        </p>
+        <p>
+          So take a prefix on purpose. Pipe the download straight into an extractor with a
+          byte budget attached and close the pipe when the budget is spent. At
+          16&nbsp;GB that yields 122 videos in about an hour and a
+          half instead of a multi-day transfer. The catch is that a prefix of the archive
+          is not a random sample of the dataset, so check what you actually got before
+          treating it as one.
+        </p>
+      </div>
 
       <h2 class="h-label">How you break a face on purpose</h2>
       <p>
@@ -242,6 +282,33 @@
         layout is destroyed. <em>Untouched</em> keeps hair, clothing and background, as a
         reference point. And the last one I only added halfway through, for a reason that
         turns out to be the most interesting part of the result.
+      </p>
+      <p>
+        Those two are not arbitrary. Blurring and pixel shuffling are the ingredients of a
+        published privacy method for exactly this setting: Gupta and Etemad's
+        <a href="https://arxiv.org/abs/2306.01141"><em>Privacy-Preserving Remote Heart Rate
+        Estimation from Facial Videos</em></a> (IEEE SMC, 2023) crops the face to cheek and
+        forehead patches, shuffles the pixels under a per-video key, blurs the result with a
+        3&times;3 kernel, and reports that facial recognition accuracy falls by over 60%
+        while heart-rate error barely moves. Their shuffle holds one key across every frame
+        of a video, which is how the shuffle condition here is built too.
+      </p>
+      <p>
+        Their evaluation and this one measure different attackers, and that is the whole
+        reason to run this. They take the <em>perturbed image</em>, embed it with ArcFace,
+        reduce to 32 dimensions and classify. That is the right test for someone who
+        intercepts the video. It says nothing about someone who gets the rPPG network's own
+        embedding, which is the thing that actually gets cached and shipped off-device, and
+        which is what the probes here read. A defence can be sound against the first
+        attacker and untested against the second.
+      </p>
+      <p>
+        One more detail from their results is worth carrying: blurring is not a monotone
+        privacy dial even on their own measurement. They select a 3&times;3 kernel because
+        their sweep shows it is the <em>optimal</em> size for suppressing identification,
+        which means larger kernels recover identity rather than removing it. On the ladder
+        here, blurring never suppresses identity at any size to begin with. Neither result
+        supports treating "blur it more" as a privacy control.
       </p>
 
       <h2 class="h-label">Two questions, one set of numbers</h2>
@@ -415,10 +482,12 @@
 <text class="c-cat" x="789.3" y="490.0" text-anchor="middle">unmasked</text>
 <text class="c-axis-title" x="92" y="528">← LESS OF THE SKIN REGION LEFT</text>
 <text class="c-axis-title" x="542.4" y="510.0">DIFFERENT MANIPULATIONS, NOT FURTHER RUNGS</text>
-<text class="lg-id" x="826" y="32" text-anchor="end">the frozen model</text>
-<path class="ln-id" d="M680.8,28 l24,0" />
-<text class="lg-floor" x="826" y="46" text-anchor="end">raw pixels, no model</text>
-<path class="ln-floor" d="M652.0,42 l24,0" />
+<text class="lg-id" x="826" y="18" text-anchor="end">the frozen model</text>
+<path class="ln-id" d="M680.8,14 l24,0" />
+<text class="lg-floor" x="826" y="32" text-anchor="end">raw pixels, no model</text>
+<path class="ln-floor" d="M652.0,28 l24,0" />
+<text class="lg-floor" x="826" y="46" text-anchor="end">POS, a formula from 2013</text>
+<path class="ln-pos" d="M623.2,42 l24,0" />
 </svg>
         <figcaption>Fig 4. Both quantities read off the same embedding, on a shared axis. Identity, above, does not move until the very bottom of the ladder. Heart-rate error, below, never gets far from the line you would achieve by ignoring the video and always guessing the dataset's average heart rate.</figcaption>
       </figure>
@@ -428,7 +497,18 @@
         block average. Sixteen coloured squares per frame, one of
         120 possible people, and the probe does not make a single mistake. The
         entire ordered ladder, every rung from a full-resolution face down to sixteen
-        blocks, costs essentially nothing in re-identifiability.
+        blocks, costs essentially nothing in re-identifiability. These are point estimates
+        over 120 videos with no confidence intervals attached, which is a real gap
+        and one I come back to at the end.
+      </p>
+      <p>
+        The encoder should not take the credit for that, though, and the control that says
+        so is in the same table. Fit the identical probe on the raw degraded pixels, with no
+        network anywhere in the loop, and it also scores
+        <span class="keynum">100%</span> at that rung. Block averaging is simply
+        not an anonymisation operation, and the encoder inherits an image that was never
+        anonymous. That distinction gets its own section shortly, because at the bottom of
+        the ladder the two come apart in the direction nobody expects.
       </p>
       <p>
         Shuffling the pixels does not help either: <span class="keynum">99.2%</span>.
@@ -479,8 +559,11 @@
         <span class="keynum">15×</span> what you would get by guessing.
       </p>
       <p>
-        There is a wrinkle here worth sitting with. On the verification metric (given two
-        clips, are they the same person?), the untrained network, the one with random
+        There is a wrinkle here worth sitting with. It shows up on the verification
+        metric, which asks a different question from the one above: shown one matching and
+        one mismatched pair of clips, how often does the embedding rank the true match
+        higher? That is an AUC, so 0.5 is a coin flip and 1.0 is never wrong. On it, the
+        untrained network, the one with random
         weights that was never trained on anything at all, scores
         <span class="keynum">0.942</span> on this condition, against
         the trained model's <span class="keynum">0.726</span>. A randomly
@@ -488,6 +571,57 @@
         that spent its training learning to read pulses. Whatever survives here is a
         property of the input, not something the heart-rate objective went looking for.
         You do not escape it by choosing a different model.
+      </p>
+
+      <h2 class="h-label">The encoder throws away what its input keeps</h2>
+      <p>
+        There is a control running underneath all of this that deserves its own section,
+        because it decides how much of the result above the encoder can be credited with.
+        The raw-pixel floor fits the same probe directly on the degraded image, with no
+        model in the loop at all. Down the whole ordered ladder it is pinned at
+        <span class="keynum">100%</span>, exactly level with the embedding.
+        Every rung of blurring is matched by a probe that never saw the network. So the
+        headline finding of this study is not that the encoder is unusually leaky. It is
+        that block averaging does not remove identity from an image, and any model fed
+        that image inherits the problem.
+      </p>
+      <p>
+        At the bottom of the ladder the two come apart, and they come apart the wrong way
+        round. With the outline deleted, the embedding falls to
+        <span class="keynum">12.5%</span> while raw pixels on the
+        <em>identical input</em> stay at <span class="keynum">98.3%</span>.
+        On the verification metric it is 0.726 against
+        1.000. The encoder is discarding identity that is still plainly
+        sitting in what it was handed, and it replicates on the second checkpoint:
+        24.2% against the same 98.3%.
+      </p>
+      <div class="callout">
+        <span class="clabel">The one place the encoder helps</span>
+        <p>
+          Same input, two readers. A linear probe on the raw degraded pixels identifies
+          <span class="keynum">98.3%</span> of 120 people. The
+          same probe on the frozen encoder's embedding of those pixels gets
+          <span class="keynum">12.5%</span>. Passing the image through the
+          network destroyed identity that survived the degradation itself.
+        </p>
+      </div>
+      <p>
+        The likely reason is mundane and worth stating as a guess rather than a result,
+        because nothing here isolates it. Both checkpoints are the
+        <code>DiffNormalized</code> variants, which means the network is fed frame
+        differences rather than frames. A flat coloured frame has almost no
+        frame-to-frame difference, so the constant skin tone is normalised away before the
+        first convolution. Raw pixels keep that absolute colour, and on
+        120 rendered avatars a mean RGB triple is very nearly a
+        fingerprint. Testing that properly means comparing against the non-normalised
+        checkpoints, which is a separate run.
+      </p>
+      <p>
+        Either way it cuts against the tidy version of the privacy story. Encoders are not
+        uniformly worse than the pixels they consume, and a defence that reports what an
+        image-space attacker can recover is not measuring the same thing as one that
+        reports what survives in the representation. Both numbers are needed, and this
+        study is the only place in the article where they disagree.
       </p>
 
       <h2 class="h-label">It is not one checkpoint being strange</h2>
@@ -682,6 +816,35 @@
         produced: on this dataset, with this encoder, there is no amount of blurring that
         hides the person while keeping the pulse. You are not trading one for the other.
         You are losing the pulse first and keeping the person all the way down.
+      </p>
+      <p>
+        Before that gets quoted as a result, here is the reading that would undo it. An
+        empty target region is consistent with two very different worlds. In the first,
+        pulse and identity really are entangled in this representation, and no degradation
+        separates them. In the second, this encoder never worked on these faces at all, the
+        heart-rate axis was dead on arrival, and "the pulse does not survive degradation" is
+        just a restatement of the fact that there was no pulse in the embedding to begin
+        with. The heart-rate numbers are equally consistent with both, which is exactly what
+        makes it worth saying out loud.
+      </p>
+      <p>
+        One piece of evidence already separates them partway. POS, a formula from 2013 with
+        no parameters and no training, recovers heart rate from these same videos at
+        <span class="keynum">15.8</span> bpm. So the pulse is genuinely present in
+        the pixels; nothing about SCAMPS makes it unrecoverable. What failed is the frozen
+        encoders' transfer onto synthetic faces, not the data. That narrows the second
+        world without closing it, because an encoder that cannot read the pulse in the
+        first place cannot be asked to trade it away.
+      </p>
+      <p>
+        The experiment that settles it is a real-data arm, where these checkpoints are
+        in-domain rather than being asked to cross from real training faces to rendered
+        ones: PURE, with ten subjects across six sessions, and MMPD, with thirty-three
+        subjects across four lighting conditions. If the target region is still empty when
+        the heart-rate axis is alive, the coupling claim stands. If a rung opens up, this
+        study measured a broken encoder and said something about the ladder. That run has
+        not happened yet, and until it does the honest summary is that the identity result
+        stands on its own and the tradeoff claim is provisional.
       </p>
 
       <h2 class="h-label">What I would not claim from this</h2>
