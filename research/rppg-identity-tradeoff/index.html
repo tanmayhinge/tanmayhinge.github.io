@@ -67,15 +67,14 @@
     .tp-div    { stroke: var(--hair);  stroke-width: 1; }
     .qt-tick   { stroke: var(--muted); stroke-width: 1.5; }
     .qt-true   { stroke: var(--hot);   stroke-width: 2; }
-    /* the operating-point plane: the box is the result, so it is the only filled shape */
-    .op-box   { fill: color-mix(in srgb, var(--accent) 9%, transparent);
-                stroke: var(--accent); stroke-width: 1.2; stroke-dasharray: 5 4; }
-    .op-box-label { fill: var(--accent); font: 500 11px var(--mono); letter-spacing: 0.06em; }
-    .op-box-empty { fill: var(--muted);  font: 400 12px var(--mono); }
-    .op-dot     { fill: var(--hot); }
-    .op-dot-off { fill: var(--bg); stroke: var(--hot); stroke-width: 1.8; }
-    .op-lab     { fill: var(--muted); font: 400 11px var(--mono); }
-    .op-leader  { stroke: var(--hair); stroke-width: 1; }
+    /* how far each condition sits from the target: the target is the narrow band, and
+       every bar crossing it is the finding, so the bars carry the weight */
+    .op-zone   { fill: color-mix(in srgb, var(--accent) 14%, transparent); }
+    .op-target { stroke: var(--accent); stroke-width: 1.4; stroke-dasharray: 5 4; }
+    .op-target-lab { fill: var(--accent); font: 500 11px var(--mono); letter-spacing: 0.05em; }
+    .op-bar     { fill: var(--hot); }
+    .op-bar-off { fill: color-mix(in srgb, var(--hot) 42%, transparent); }
+    .op-note    { fill: var(--muted); font: 400 11.5px var(--mono); }
     /* the pipeline diagram: boxes for stages, and one bracket for what is never trained */
     .pl-box    { fill: var(--tint); stroke: var(--hair); stroke-width: 1; }
     .pl-box-fit{ fill: color-mix(in srgb, var(--hot) 10%, transparent);
@@ -614,69 +613,67 @@
         1.0 is never wrong.
       </p>
       <p>
-        That target is a box in the corner of a plane. Here is the plane.
+        Here is the part that decides it. Every condition in the study, ladder and
+        off-ladder alike, comes in under the heart-rate tolerance: the pulse never got
+        appreciably worse, because there was not much of it there to lose. So the whole
+        question reduces to the second criterion, and that one is not close.
       </p>
       <figure class="fig">
-        <svg viewBox="0 0 860 470" role="img" aria-labelledby="ot od" xmlns="http://www.w3.org/2000/svg">
-<title id="ot">Every condition plotted as heart-rate error against re-identifiability</title>
-<desc id="od">The target region, meaning heart-rate error no more than 2 beats per minute worse than the full-resolution crop together with identity verification AUC at or below 0.55, is drawn as a box in the lower left. All ten conditions sit well above it: the lowest identity AUC reached anywhere is 0.73, against a target of 0.55. The box is empty.</desc>
-<text class="c-axis-title" x="92" y="22">RE-IDENTIFIABILITY (AUC) AGAINST HEART-RATE ERROR</text>
-<line class="c-grid" x1="92" y1="357.0" x2="710" y2="357.0" />
-<text class="c-tick" x="82" y="361.0" text-anchor="end">0.50</text>
-<line class="c-grid" x1="92" y1="298.4" x2="710" y2="298.4" />
-<text class="c-tick" x="82" y="302.4" text-anchor="end">0.60</text>
-<line class="c-grid" x1="92" y1="239.7" x2="710" y2="239.7" />
-<text class="c-tick" x="82" y="243.7" text-anchor="end">0.70</text>
-<line class="c-grid" x1="92" y1="181.0" x2="710" y2="181.0" />
-<text class="c-tick" x="82" y="185.0" text-anchor="end">0.80</text>
-<line class="c-grid" x1="92" y1="122.3" x2="710" y2="122.3" />
-<text class="c-tick" x="82" y="126.3" text-anchor="end">0.90</text>
-<line class="c-grid" x1="92" y1="63.6" x2="710" y2="63.6" />
-<text class="c-tick" x="82" y="67.6" text-anchor="end">1.00</text>
-<line class="c-axis" x1="92" y1="404" x2="710" y2="404" />
-<text class="c-tick" x="135.2" y="422" text-anchor="middle">17</text>
-<text class="c-tick" x="246.9" y="422" text-anchor="middle">19</text>
-<text class="c-tick" x="358.5" y="422" text-anchor="middle">21</text>
-<text class="c-tick" x="470.2" y="422" text-anchor="middle">23</text>
-<text class="c-tick" x="581.8" y="422" text-anchor="middle">25</text>
-<text class="c-tick" x="693.5" y="422" text-anchor="middle">27</text>
-<rect class="op-box" x="92.0" y="327.7" width="617.3" height="76.3" />
-<text class="op-box-label" x="106.0" y="351.7">THE SETTING THIS STUDY WENT LOOKING FOR</text>
-<text class="op-box-empty" x="106.0" y="373.7">pulse preserved, person hidden. Nothing lands here.</text>
-<circle class="op-dot-off" cx="598.3" cy="63.6" r="5" />
-<text class="op-lab" x="608.3" y="67.6">unmasked</text>
-<circle class="op-dot" cx="574.9" cy="63.7" r="5" />
-<line class="op-leader" x1="580.9" y1="63.7" x2="581.9" y2="78.7" />
-<text class="op-lab" x="584.9" y="82.7">32²</text>
-<circle class="op-dot" cx="597.7" cy="63.8" r="5" />
-<line class="op-leader" x1="603.7" y1="63.8" x2="604.7" y2="93.8" />
-<text class="op-lab" x="607.7" y="97.8">full</text>
-<circle class="op-dot-off" cx="319.8" cy="64.0" r="5" />
-<text class="op-lab" x="329.8" y="68.0">green</text>
-<circle class="op-dot" cx="384.7" cy="64.1" r="5" />
-<line class="op-leader" x1="390.7" y1="64.1" x2="391.7" y2="79.1" />
-<text class="op-lab" x="394.7" y="83.1">16²</text>
-<circle class="op-dot" cx="425.0" cy="65.4" r="5" />
-<line class="op-leader" x1="431.0" y1="65.4" x2="432.0" y2="95.4" />
-<text class="op-lab" x="435.0" y="99.4">8²</text>
-<circle class="op-dot" cx="581.0" cy="68.0" r="5" />
-<line class="op-leader" x1="587.0" y1="68.0" x2="588.0" y2="113.0" />
-<text class="op-lab" x="591.0" y="117.0">4²</text>
-<circle class="op-dot-off" cx="585.7" cy="70.0" r="5" />
-<line class="op-leader" x1="591.7" y1="70.0" x2="592.7" y2="130.0" />
-<text class="op-lab" x="595.7" y="134.0">shuffle</text>
-<circle class="op-dot" cx="231.6" cy="123.5" r="5" />
-<text class="op-lab" x="241.6" y="127.5">1×1</text>
-<circle class="op-dot-off" cx="347.0" cy="224.2" r="5" />
-<text class="op-lab" x="357.0" y="228.2">no shape</text>
-<text class="c-axis-title" x="92" y="458">HEART-RATE ERROR, BPM (LOWER IS BETTER) →</text>
-<text class="lg-id" x="720" y="42">● on the ladder</text>
-<text class="lg-floor" x="720" y="60">○ off it</text>
+        <svg viewBox="0 0 860 436" role="img" aria-labelledby="ot od" xmlns="http://www.w3.org/2000/svg">
+<title id="ot">Re-identifiability of every condition against the target the study set</title>
+<desc id="od">One bar per condition, showing identity verification AUC measured up from 0.5, a coin flip. The target was 0.55 or below, drawn as a narrow shaded band at the left. Every one of the 10 conditions overshoots it by a wide margin; the closest, with the outline removed, still reaches 0.726. All 10 of them already satisfy the heart-rate criterion, so identity is the only reason no operating point exists.</desc>
+<text class="c-axis-title" x="0" y="24">RE-IDENTIFIABILITY OF EACH CONDITION (AUC), AGAINST THE TARGET</text>
+<text class="op-note" x="0" y="44">every condition already meets the heart-rate criterion, so this is the only axis that decides it</text>
+<rect class="op-zone" x="176.0" y="92" width="62.6" height="286" />
+<line class="c-grid" x1="301.2" y1="92" x2="301.2" y2="378" />
+<text class="c-tick" x="301.2" y="398" text-anchor="middle">0.6</text>
+<line class="c-grid" x1="426.4" y1="92" x2="426.4" y2="378" />
+<text class="c-tick" x="426.4" y="398" text-anchor="middle">0.7</text>
+<line class="c-grid" x1="551.6" y1="92" x2="551.6" y2="378" />
+<text class="c-tick" x="551.6" y="398" text-anchor="middle">0.8</text>
+<line class="c-grid" x1="676.8" y1="92" x2="676.8" y2="378" />
+<text class="c-tick" x="676.8" y="398" text-anchor="middle">0.9</text>
+<line class="c-grid" x1="802.0" y1="92" x2="802.0" y2="378" />
+<text class="c-tick" x="802.0" y="398" text-anchor="middle">1.0</text>
+<text class="c-tick" x="176.0" y="398" text-anchor="middle">0.5</text>
+<text class="c-cat" x="162" y="117" text-anchor="end">full</text>
+<rect class="op-bar" x="176.0" y="105" width="625.7" height="14" />
+<text class="c-val" x="810.7" y="117">1.000</text>
+<text class="c-cat" x="162" y="144" text-anchor="end">32²</text>
+<rect class="op-bar" x="176.0" y="132" width="625.7" height="14" />
+<text class="c-val" x="810.7" y="144">1.000</text>
+<text class="c-cat" x="162" y="171" text-anchor="end">16²</text>
+<rect class="op-bar" x="176.0" y="159" width="625.0" height="14" />
+<text class="c-val" x="810.0" y="171">0.999</text>
+<text class="c-cat" x="162" y="198" text-anchor="end">8²</text>
+<rect class="op-bar" x="176.0" y="186" width="622.1" height="14" />
+<text class="c-val" x="807.1" y="198">0.997</text>
+<text class="c-cat" x="162" y="225" text-anchor="end">4²</text>
+<rect class="op-bar" x="176.0" y="213" width="616.6" height="14" />
+<text class="c-val" x="801.6" y="225">0.992</text>
+<text class="c-cat" x="162" y="252" text-anchor="end">1×1</text>
+<rect class="op-bar" x="176.0" y="240" width="498.3" height="14" />
+<text class="c-val" x="683.3" y="252">0.898</text>
+<text class="c-cat" x="162" y="279" text-anchor="end">green</text>
+<rect class="op-bar-off" x="176.0" y="267" width="625.2" height="14" />
+<text class="c-val" x="810.2" y="279">0.999</text>
+<text class="c-cat" x="162" y="306" text-anchor="end">shuffle</text>
+<rect class="op-bar-off" x="176.0" y="294" width="612.4" height="14" />
+<text class="c-val" x="797.4" y="306">0.989</text>
+<text class="c-cat" x="162" y="333" text-anchor="end">no shape</text>
+<rect class="op-bar-off" x="176.0" y="321" width="283.4" height="14" />
+<text class="c-val" x="468.4" y="333">0.726</text>
+<text class="c-cat" x="162" y="360" text-anchor="end">unmasked</text>
+<rect class="op-bar-off" x="176.0" y="348" width="626.0" height="14" />
+<text class="c-val" x="811.0" y="360">1.000</text>
+<line class="op-target" x1="238.6" y1="80" x2="238.6" y2="378" />
+<text class="op-target-lab" x="246.6" y="76">TARGET: 0.55 OR BELOW. NOTHING REACHES IT.</text>
+<text class="c-axis-title" x="176" y="422">IDENTITY VERIFICATION AUC. 0.5 IS A COIN FLIP, 1.0 IS NEVER WRONG. →</text>
 </svg>
-        <figcaption>Fig 7. Every condition placed by what it costs and what it buys. The dashed box is the region the study was built to find a point in. It is empty, and not narrowly: the closest anything comes on the ladder is 0.898, against a ceiling of 0.55. Note also how little horizontal spread there is: destroying the face barely moves the heart-rate error, because there was not much heart rate in there to lose.</figcaption>
+        <figcaption>Fig 7. How re-identifiable each condition still is, measured up from a coin flip. The shaded sliver on the left is the target the study set itself, 0.55 or below. Solid bars are rungs of the ladder, faded ones are the off-ladder manipulations, and every single bar runs clean past the target: the closest on the ladder is 0.898, and even deleting the outline only gets to 0.726. The gap is not marginal, it is most of the axis.</figcaption>
       </figure>
       <p>
-        Nothing lands in the box. The best any rung of the ordered ladder manages is
+        Nothing comes near it. The best any rung of the ordered ladder manages is
         <span class="keynum">0.898</span>, and even going off the ladder
         entirely, deleting the outline down to three numbers per frame, only reaches
         <span class="keynum">0.726</span>. The target was
