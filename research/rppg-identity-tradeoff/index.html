@@ -67,6 +67,26 @@
     .tp-div    { stroke: var(--hair);  stroke-width: 1; }
     .qt-tick   { stroke: var(--muted); stroke-width: 1.5; }
     .qt-true   { stroke: var(--hot);   stroke-width: 2; }
+    /* the operating-point plane: the box is the result, so it is the only filled shape */
+    .op-box   { fill: color-mix(in srgb, var(--accent) 9%, transparent);
+                stroke: var(--accent); stroke-width: 1.2; stroke-dasharray: 5 4; }
+    .op-box-label { fill: var(--accent); font: 500 11px var(--mono); letter-spacing: 0.06em; }
+    .op-box-empty { fill: var(--muted);  font: 400 12px var(--mono); }
+    .op-dot     { fill: var(--hot); }
+    .op-dot-off { fill: var(--bg); stroke: var(--hot); stroke-width: 1.8; }
+    .op-lab     { fill: var(--muted); font: 400 11px var(--mono); }
+    .op-leader  { stroke: var(--hair); stroke-width: 1; }
+    /* the pipeline diagram: boxes for stages, and one bracket for what is never trained */
+    .pl-box    { fill: var(--tint); stroke: var(--hair); stroke-width: 1; }
+    .pl-box-fit{ fill: color-mix(in srgb, var(--hot) 10%, transparent);
+                 stroke: var(--hot); stroke-width: 1.2; }
+    .pl-t      { fill: var(--ink);   font: 500 12px var(--mono); }
+    .pl-s      { fill: var(--muted); font: 400 10.5px var(--mono); }
+    .pl-arrow  { stroke: var(--muted); stroke-width: 1.4; fill: none; }
+    .pl-head   { fill: var(--muted); }
+    .pl-brace  { stroke: var(--accent); stroke-width: 1.4; fill: none; }
+    .pl-note   { fill: var(--accent); font: 500 11.5px var(--mono); }
+    .pl-note-fit { fill: var(--hot); font: 500 11.5px var(--mono); }
     .keynum { font-family: var(--mono); color: var(--ink); font-weight: 500; }
   </style>
 
@@ -228,6 +248,73 @@
         the embedding contains it. This is called probing, and its whole appeal is that a
         linear model is too weak to invent structure that is not there.
       </p>
+      <figure class="fig">
+        <svg viewBox="0 0 860 300" role="img" aria-labelledby="plt pld" xmlns="http://www.w3.org/2000/svg">
+          <title id="plt">What happens to one four-second clip</title>
+          <desc id="pld">A clip of a face is cropped to 72 by 72 pixels, a skin mask is
+            applied, and one rung of the degradation ladder is applied inside that mask.
+            The result goes through a frozen PhysNet, whose weights never change; three
+            layers inside it are tapped and pooled into 1,536 numbers. That single
+            embedding then feeds two separate probes fitted on top of it: a ridge
+            regression predicting heart rate, and a linear classifier predicting which of
+            120 people it is. Everything up to the embedding is frozen; only the two
+            probes are ever fitted.</desc>
+
+          <!-- the frozen half -->
+          <rect class="pl-box" x="12"  y="86" width="118" height="54" rx="3" />
+          <text class="pl-t" x="71" y="108" text-anchor="middle">the clip</text>
+          <text class="pl-s" x="71" y="126" text-anchor="middle">128 frames</text>
+
+          <rect class="pl-box" x="162" y="86" width="130" height="54" rx="3" />
+          <text class="pl-t" x="227" y="108" text-anchor="middle">crop + mask</text>
+          <text class="pl-s" x="227" y="126" text-anchor="middle">72×72, skin only</text>
+
+          <rect class="pl-box" x="324" y="86" width="130" height="54" rx="3" />
+          <text class="pl-t" x="389" y="108" text-anchor="middle">one rung</text>
+          <text class="pl-s" x="389" y="126" text-anchor="middle">full … 4×4 … trace</text>
+
+          <rect class="pl-box" x="486" y="86" width="140" height="54" rx="3" />
+          <text class="pl-t" x="556" y="108" text-anchor="middle">frozen PhysNet</text>
+          <text class="pl-s" x="556" y="126" text-anchor="middle">tapped at 3 layers</text>
+
+          <rect class="pl-box" x="658" y="86" width="126" height="54" rx="3" />
+          <text class="pl-t" x="721" y="108" text-anchor="middle">1,536 numbers</text>
+          <text class="pl-s" x="721" y="126" text-anchor="middle">mean + std pooled</text>
+
+          <path class="pl-arrow" d="M130,113 L156,113" />
+          <path class="pl-head"  d="M162,113 l-8,-4 l0,8 z" />
+          <path class="pl-arrow" d="M292,113 L318,113" />
+          <path class="pl-head"  d="M324,113 l-8,-4 l0,8 z" />
+          <path class="pl-arrow" d="M454,113 L480,113" />
+          <path class="pl-head"  d="M486,113 l-8,-4 l0,8 z" />
+          <path class="pl-arrow" d="M626,113 L652,113" />
+          <path class="pl-head"  d="M658,113 l-8,-4 l0,8 z" />
+
+          <!-- the bracket that is the point of the whole diagram -->
+          <path class="pl-brace" d="M12,72 L12,60 L784,60 L784,72" />
+          <text class="pl-note" x="398" y="48" text-anchor="middle">NOTHING IN HERE IS EVER TRAINED — THE WEIGHTS NEVER MOVE</text>
+
+          <!-- the fork: one embedding, two questions -->
+          <path class="pl-arrow" d="M721,140 L721,168 L560,168 L560,196" />
+          <path class="pl-head"  d="M560,202 l-4,-8 l8,0 z" />
+          <path class="pl-arrow" d="M721,140 L721,168 L790,168 L790,196" />
+          <path class="pl-head"  d="M790,202 l-4,-8 l8,0 z" />
+
+          <rect class="pl-box-fit" x="452" y="202" width="216" height="56" rx="3" />
+          <text class="pl-t" x="560" y="224" text-anchor="middle">ridge regression</text>
+          <text class="pl-s" x="560" y="242" text-anchor="middle">→ heart rate, in bpm</text>
+
+          <rect class="pl-box-fit" x="684" y="202" width="176" height="56" rx="3" />
+          <text class="pl-t" x="772" y="224" text-anchor="middle">linear classifier</text>
+          <text class="pl-s" x="772" y="242" text-anchor="middle">→ which of 120</text>
+
+          <text class="pl-note-fit" x="440" y="230" text-anchor="end">the only two things</text>
+          <text class="pl-note-fit" x="440" y="246" text-anchor="end">ever fitted →</text>
+
+          <text class="pl-s" x="12" y="286">One embedding, read twice. Both probes see exactly the same 1,536 numbers, so the two results sit on one axis.</text>
+        </svg>
+        <figcaption>Fig 3. The whole study in one picture. A clip is degraded, pushed through a model whose weights never change, and reduced to 1,536 numbers — and then those same numbers are asked two different questions. Because it is one embedding rather than two pipelines, "how much privacy buys how much signal" finally has a common x.</figcaption>
+      </figure>
       <p>
         The catch with probing is that a number on its own is meaningless. Ninety percent
         accuracy sounds excellent until you learn that ninety percent of the examples were
@@ -324,7 +411,7 @@
 <text class="lg-id" x="826" y="32" text-anchor="end">— the frozen model</text>
 <text class="lg-floor" x="826" y="46" text-anchor="end">— — raw pixels, no model</text>
 </svg>
-        <figcaption>Fig 3. Both quantities read off the same embedding, on a shared axis. Identity, above, does not move until the very bottom of the ladder. Heart-rate error, below, never gets far from the line you would achieve by ignoring the video and always guessing the dataset's average heart rate.</figcaption>
+        <figcaption>Fig 4. Both quantities read off the same embedding, on a shared axis. Identity, above, does not move until the very bottom of the ladder. Heart-rate error, below, never gets far from the line you would achieve by ignoring the video and always guessing the dataset's average heart rate.</figcaption>
       </figure>
       <p>
         Identity is <span class="keynum">100%</span> at the full crop, which is
@@ -339,6 +426,13 @@
         Scrambling where everything sits on the face leaves the person just as identifiable,
         which already hints that the model is not relying on facial features in the way you
         might picture.
+      </p>
+      <p>
+        Before going further, the shuffled-label control: run the identical probe with the
+        identities randomly reassigned, and it scores
+        <span class="keynum">0.8%</span> — chance, to three decimals. So the
+        100% is not a probe with enough capacity to memorise its way to any answer you like.
+        Give it nothing, and it finds nothing.
       </p>
 
       <h2 class="h-label">The outline was giving it away</h2>
@@ -361,6 +455,13 @@
         the entire frame, no outline at all. Three numbers per frame, and nothing else.
         Identity falls to <span class="keynum">12.5%</span>.
       </p>
+      <figure class="fig">
+        <div class="fig-img">
+          <img src="fig/silhouette.png" width="1222" height="784" loading="lazy" decoding="async"
+               alt="Two panels side by side. Left, labelled the outline kept: a single flat brown colour in the silhouette of a face, complete with gaps where the eyes and eyebrows are, on black; underneath it, 75.8 per cent identified correctly. Right, labelled the outline gone: the identical brown filling the entire square; underneath it, 12.5 per cent. An arrow between them reads delete the silhouette, nothing else changes." />
+        </div>
+        <figcaption>Fig 5. The same colour, twice. The only difference between these two images is whether the shape of the person's face is still drawn around it — and that difference is worth 75.8% versus 12.5%. Every pixel value in the left panel is either the person's average skin colour or black; the identifying information is in <em>where</em> the boundary between them falls.</figcaption>
+      </figure>
       <p>
         That is the actual finding, and it is a more useful one than the tidy curve I set
         out to draw. Blurring does not anonymise a face. Blurring plus deleting the shape
@@ -368,10 +469,54 @@
         12.5% out of 120 people is about
         <span class="keynum">15×</span> what you would get by guessing.
       </p>
+      <p>
+        There is a wrinkle here worth sitting with. On the verification metric — given two
+        clips, are they the same person? — the untrained network, the one with random
+        weights that was never trained on anything at all, scores
+        <span class="keynum">0.942</span> on this condition, against
+        the trained model's <span class="keynum">0.726</span>. A randomly
+        initialised encoder is <em>better</em> at telling these people apart than the one
+        that spent its training learning to read pulses. Whatever survives here is a
+        property of the input, not something the heart-rate objective went looking for.
+        You do not escape it by choosing a different model.
+      </p>
+
+      <h2 class="h-label">It is not one checkpoint being strange</h2>
+      <p>
+        A result this lopsided invites the obvious objection: maybe this particular set of
+        weights is peculiar. So the whole sweep also ran on a second released checkpoint —
+        the same architecture trained by the same people on UBFC-rPPG, a
+        different dataset of real subjects, with no shared training data and no shared
+        fitting. If the collapse at the last rung were an artefact of one model, the two
+        would not agree about where it happens.
+      </p>
+      <div class="table-wrap">
+        <table class="data">
+          <caption>Identity, top-1 out of 120, on two independently trained encoders. Chance is 0.83%.</caption>
+          <thead>
+            <tr><th>condition</th><th>PURE</th><th>UBFC-rPPG</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>full 72&times;72</td><td>100%</td><td>100%</td></tr>
+            <tr><td>8&times;8</td><td>100%</td><td>100%</td></tr>
+            <tr><td>4&times;4</td><td>100%</td><td>96.7%</td></tr>
+            <tr><td>1&times;1, the trace</td><td>75.8%</td><td>62.5%</td></tr>
+            <tr class="hl"><td>trace, no outline</td><td>12.5%</td><td>24.2%</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p>
+        They agree. Both hold at a perfect score through the coarse block averages, both
+        slip at the single trace, and both fall off a cliff at exactly the same place — the
+        moment the silhouette goes. The two disagree on the depth of the fall
+        (12.5% against 24.2%) but not on where it happens or
+        what causes it. Two models, trained on different people, degrade the same way,
+        because what is being destroyed is in the input rather than in either of them.
+      </p>
 
       <h2 class="h-label">The heart rate, meanwhile, was never really there</h2>
       <p>
-        Now the part that does not flatter the experiment. The bottom panel of Fig 3 is
+        Now the part that does not flatter the experiment. The bottom panel of Fig 4 is
         nearly flat, which I could present as "heart rate survives the degradation." It
         would be a fair description of the shape and a misleading description of the
         result, because the line is flat at a level that is not much of an achievement.
@@ -394,15 +539,24 @@
 <rect class="c-bar" x="300" y="160" width="205.4" height="20" />
 <text class="c-val" x="515.4" y="175">15.8</text>
 </svg>
-        <figcaption>Fig 4. Heart-rate error at full resolution, against the things it has to beat. Lower is better. The frozen model's embedding is better than nothing and worse than a formula from 2013.</figcaption>
+        <figcaption>Fig 6. Heart-rate error at full resolution, against the things it has to beat. Lower is better. The frozen model's embedding is better than nothing and worse than a formula from 2013.</figcaption>
       </figure>
       <p>
         If you ignore the video entirely and always answer with the dataset's average heart
         rate, you are wrong by <span class="keynum">28.8</span> beats per minute.
         The probe on the frozen embedding manages <span class="keynum">25.3</span>.
         POS, the 2013 formula, gets <span class="keynum">15.8</span> on the same
-        clips. So on this data the embedding carries the person's identity completely and
-        their pulse only faintly.
+        clips, and CHROM, its 2016 successor, gets
+        <span class="keynum">21.5</span>. So on this data the embedding carries the
+        person's identity completely and their pulse only faintly.
+      </p>
+      <p>
+        And the 25.3 should not be quoted without its interval. Bootstrapped over
+        videos, it runs from <span class="keynum">22.1</span> to
+        <span class="keynum">28.7</span> beats per minute. The top of that range is
+        28.8 — the number you get for free by ignoring the video. The model's
+        advantage over guessing is not something this study can distinguish from zero.
+        That sentence is less satisfying than a curve, and it is what the data supports.
       </p>
       <p>
         The likely reason is that this particular model was trained on videos of real
@@ -435,6 +589,94 @@
         </table>
       </div>
 
+      <h2 class="h-label">The setting that does not exist</h2>
+      <p>
+        All of that was in service of one question, and it is worth stating in the form it
+        was asked, before any of the numbers existed. If you are shipping a camera that
+        reads pulses and you want it to be honest about privacy, you need a rung of this
+        ladder you can actually run at: one that keeps the heart rate roughly as good as
+        the full-resolution crop, and pushes re-identification down to something close to a
+        coin flip. Written down in advance, that was <em>within
+        <span class="keynum">2</span> beats per minute of the full crop, and
+        verification AUC at or below <span class="keynum">0.55</span></em>.
+        AUC here is the probability that, shown one matching and one mismatched pair of
+        clips, the embedding ranks the true match higher — 0.5 is a coin flip, 1.0 is
+        never wrong.
+      </p>
+      <p>
+        That target is a box in the corner of a plane. Here is the plane.
+      </p>
+      <figure class="fig">
+        <svg viewBox="0 0 860 470" role="img" aria-labelledby="ot od" xmlns="http://www.w3.org/2000/svg">
+<title id="ot">Every condition plotted as heart-rate error against re-identifiability</title>
+<desc id="od">The target region — heart-rate error no more than 2 beats per minute worse than the full-resolution crop, and identity verification AUC at or below 0.55 — is drawn as a box in the lower left. All ten conditions sit well above it: the lowest identity AUC reached anywhere is 0.73, against a target of 0.55. The box is empty.</desc>
+<text class="c-axis-title" x="92" y="22">RE-IDENTIFIABILITY (AUC) AGAINST HEART-RATE ERROR</text>
+<line class="c-grid" x1="92" y1="357.0" x2="710" y2="357.0" />
+<text class="c-tick" x="82" y="361.0" text-anchor="end">0.50</text>
+<line class="c-grid" x1="92" y1="298.4" x2="710" y2="298.4" />
+<text class="c-tick" x="82" y="302.4" text-anchor="end">0.60</text>
+<line class="c-grid" x1="92" y1="239.7" x2="710" y2="239.7" />
+<text class="c-tick" x="82" y="243.7" text-anchor="end">0.70</text>
+<line class="c-grid" x1="92" y1="181.0" x2="710" y2="181.0" />
+<text class="c-tick" x="82" y="185.0" text-anchor="end">0.80</text>
+<line class="c-grid" x1="92" y1="122.3" x2="710" y2="122.3" />
+<text class="c-tick" x="82" y="126.3" text-anchor="end">0.90</text>
+<line class="c-grid" x1="92" y1="63.6" x2="710" y2="63.6" />
+<text class="c-tick" x="82" y="67.6" text-anchor="end">1.00</text>
+<line class="c-axis" x1="92" y1="404" x2="710" y2="404" />
+<text class="c-tick" x="135.2" y="422" text-anchor="middle">17</text>
+<text class="c-tick" x="246.9" y="422" text-anchor="middle">19</text>
+<text class="c-tick" x="358.5" y="422" text-anchor="middle">21</text>
+<text class="c-tick" x="470.2" y="422" text-anchor="middle">23</text>
+<text class="c-tick" x="581.8" y="422" text-anchor="middle">25</text>
+<text class="c-tick" x="693.5" y="422" text-anchor="middle">27</text>
+<rect class="op-box" x="92.0" y="327.7" width="617.3" height="76.3" />
+<text class="op-box-label" x="106.0" y="351.7">THE SETTING THIS STUDY WENT LOOKING FOR</text>
+<text class="op-box-empty" x="106.0" y="373.7">pulse preserved, person hidden. Nothing lands here.</text>
+<circle class="op-dot-off" cx="598.3" cy="63.6" r="5" />
+<text class="op-lab" x="608.3" y="67.6">unmasked</text>
+<circle class="op-dot" cx="574.9" cy="63.7" r="5" />
+<line class="op-leader" x1="580.9" y1="63.7" x2="581.9" y2="78.7" />
+<text class="op-lab" x="584.9" y="82.7">32²</text>
+<circle class="op-dot" cx="597.7" cy="63.8" r="5" />
+<line class="op-leader" x1="603.7" y1="63.8" x2="604.7" y2="93.8" />
+<text class="op-lab" x="607.7" y="97.8">full</text>
+<circle class="op-dot-off" cx="319.8" cy="64.0" r="5" />
+<text class="op-lab" x="329.8" y="68.0">green</text>
+<circle class="op-dot" cx="384.7" cy="64.1" r="5" />
+<line class="op-leader" x1="390.7" y1="64.1" x2="391.7" y2="79.1" />
+<text class="op-lab" x="394.7" y="83.1">16²</text>
+<circle class="op-dot" cx="425.0" cy="65.4" r="5" />
+<line class="op-leader" x1="431.0" y1="65.4" x2="432.0" y2="95.4" />
+<text class="op-lab" x="435.0" y="99.4">8²</text>
+<circle class="op-dot" cx="581.0" cy="68.0" r="5" />
+<line class="op-leader" x1="587.0" y1="68.0" x2="588.0" y2="113.0" />
+<text class="op-lab" x="591.0" y="117.0">4²</text>
+<circle class="op-dot-off" cx="585.7" cy="70.0" r="5" />
+<line class="op-leader" x1="591.7" y1="70.0" x2="592.7" y2="130.0" />
+<text class="op-lab" x="595.7" y="134.0">shuffle</text>
+<circle class="op-dot" cx="231.6" cy="123.5" r="5" />
+<text class="op-lab" x="241.6" y="127.5">1×1</text>
+<circle class="op-dot-off" cx="347.0" cy="224.2" r="5" />
+<text class="op-lab" x="357.0" y="228.2">no shape</text>
+<text class="c-axis-title" x="92" y="458">HEART-RATE ERROR, BPM (LOWER IS BETTER) →</text>
+<text class="lg-id" x="720" y="42">● on the ladder</text>
+<text class="lg-floor" x="720" y="60">○ off it</text>
+</svg>
+        <figcaption>Fig 7. Every condition placed by what it costs and what it buys. The dashed box is the region the study was built to find a point in. It is empty, and not narrowly: the closest anything comes on the ladder is 0.898, against a ceiling of 0.55. Note also how little horizontal spread there is — destroying the face barely moves the heart-rate error, because there was not much heart rate in there to lose.</figcaption>
+      </figure>
+      <p>
+        Nothing lands in the box. The best any rung of the ordered ladder manages is
+        <span class="keynum">0.898</span>, and even going off the ladder
+        entirely — deleting the outline, three numbers per frame — only reaches
+        <span class="keynum">0.726</span>. The target was
+        0.55. <code>reports/operating_point.json</code> in the repository
+        records the answer as <code>null</code>, which is the most useful thing this study
+        produced: on this dataset, with this encoder, there is no amount of blurring that
+        hides the person while keeping the pulse. You are not trading one for the other.
+        You are losing the pulse first and keeping the person all the way down.
+      </p>
+
       <h2 class="h-label">What I would not claim from this</h2>
       <p>
         The identity task here is easier than real re-identification. SCAMPS gives no
@@ -448,12 +690,14 @@
         against an interface with those two in mind.
       </p>
       <p>
-        The untrained-model floor also deserves stating plainly: a randomly initialised
-        network of the same shape identifies these clips nearly as well as the trained one.
-        So the identity information is not something the heart-rate training specifically
-        learned. It is in the input, and essentially any encoder would pass it along. That
-        is arguably worse news for the privacy pitch rather than better — it means you do
-        not get anonymity by picking a different model.
+        The headline identity numbers are also bare point estimates. The heart-rate results
+        carry bootstrap intervals over videos — that is where the 22.1 to
+        28.7 above comes from — and the identity results do not, which is the wrong
+        way round: the claim I am leaning on is the one without an interval, and the weaker
+        claim is the one that has it. A 100% out of 120 and a
+        12.5% are far enough from their floors that an interval would not
+        change the reading, but "far enough that it would not matter" is a judgement, not a
+        measurement, and it should be a measurement.
       </p>
       <p>
         And SCAMPS is synthetic. Skin tones in it are whatever the renderer produces, not
@@ -501,7 +745,7 @@
 <text class="lg-floor" x="674.3" y="232" text-anchor="middle">reported as 127</text>
 <text class="c-axis-title" x="70" y="244">BEATS PER MINUTE</text>
 </svg>
-        <figcaption>Fig 5. Every heart rate the original estimator can return on a four-second clip. A true rate of 122 has nowhere to land except one of the ticks.</figcaption>
+        <figcaption>Fig 8. Every heart rate the original estimator can return on a four-second clip. A true rate of 122 has nowhere to land except one of the ticks.</figcaption>
       </figure>
       <p>
         <strong>One avatar was wearing a VR headset.</strong> The face detector, a
@@ -518,7 +762,7 @@
           <img src="fig/wallpaper.png" width="1428" height="511" loading="lazy" decoding="async"
                alt="Three panels. Left, a synthetic avatar wearing a white VR headset that covers the eyes, with a red box drawn around a patch of ornamental wallpaper to its left. Middle, the true skin mask for that frame, showing only the forehead strip and the neck in white. Right, the resulting 72 by 72 crop, which contains only the gold wallpaper pattern and no face at all." />
         </div>
-        <figcaption>Fig 6. The detector reported a face. The red box is what it found. The right panel is what the model was then asked to measure a heart rate from.</figcaption>
+        <figcaption>Fig 9. The detector reported a face. The red box is what it found. The right panel is what the model was then asked to measure a heart rate from.</figcaption>
       </figure>
       <p>
         <strong>The machine spent an hour swapping.</strong> The sweep held every clip's
