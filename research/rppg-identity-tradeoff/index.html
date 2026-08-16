@@ -1,0 +1,585 @@
+<!DOCTYPE html>
+<!-- generated: rppg-identity-tradeoff/scripts/render_article.py from reports/results.csv; charts by scripts/make_site_figures.py -->
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>What a heart-rate model knows about your face · Tanmay Hinge</title>
+  <meta name="description" content="A camera can read your pulse off your face. I checked what else the model that does it is carrying, by blurring the face away one step at a time." />
+  <meta name="author" content="Tanmay Hinge" />
+  <link rel="canonical" href="https://tanmayhinge.com/research/rppg-identity-tradeoff/" />
+  <meta property="og:type" content="article" />
+  <meta property="og:site_name" content="Tanmay Hinge" />
+  <meta property="og:locale" content="en_US" />
+  <meta property="og:title" content="What a heart-rate model knows about your face" />
+  <meta property="og:description" content="A camera can read your pulse off your face. I checked what else the model that does it is carrying, by blurring the face away one step at a time." />
+  <meta property="og:url" content="https://tanmayhinge.com/research/rppg-identity-tradeoff/" />
+  <meta property="og:image" content="https://tanmayhinge.com/og/rppg.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt" content="One synthetic face shown five times, progressively block-averaged until it is a flat silhouette, under the headline: identified 100% of the time, at every step." />
+  <meta property="article:published_time" content="2026-08-16" />
+  <meta property="article:modified_time" content="2026-08-16" />
+  <meta property="article:author" content="https://tanmayhinge.com/" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:image" content="https://tanmayhinge.com/og/rppg.png" />
+  <!-- head:start -->
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <link rel="icon" type="image/png" sizes="192x192" href="/circle_favicon.png">
+  <link rel="apple-touch-icon" sizes="192x192" href="/circle_favicon.png">
+
+  <!-- matches --bg in each mode, so the browser chrome does not fight the page -->
+  <meta name="theme-color" content="#EAEDF2" media="(prefers-color-scheme: light)" />
+  <meta name="theme-color" content="#10141A" media="(prefers-color-scheme: dark)" />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..600&family=Girassol&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
+
+  <link rel="stylesheet" href="/styles.css?v=45" />
+
+  <!-- stamp the stored theme before first paint; blocking on purpose -->
+  <script>(function(){try{var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
+  <script src="/theme.js" defer></script>
+  <!-- head:end -->
+
+  <style>
+    /* study figures are matplotlib PNGs on white; seat them on a light card so they
+       read as intentional in dark mode instead of as a bare bright rectangle */
+    .fig-img { background: #fff; border-radius: 6px; padding: calc(var(--u) * 1.5);
+               border: 1px solid var(--hair); }
+    .fig-img img { width: 100%; height: auto; display: block; }
+    /* the two curves: identity is the subject, heart rate the counterpoint */
+    .ln-id    { fill: none; stroke: var(--hot);    stroke-width: 2.5; }
+    .ln-hr    { fill: none; stroke: var(--accent); stroke-width: 2.5; }
+    .dt-id    { fill: var(--hot); }
+    .dt-hr    { fill: var(--accent); }
+    .ln-floor { fill: none; stroke: color-mix(in srgb, var(--muted) 70%, var(--bg));
+                stroke-width: 2; stroke-dasharray: 6 4; }
+    .ln-unt   { fill: none; stroke: color-mix(in srgb, var(--muted) 45%, var(--bg));
+                stroke-width: 2; stroke-dasharray: 2 3; }
+    .ln-pos   { fill: none; stroke: color-mix(in srgb, var(--muted) 70%, var(--bg));
+                stroke-width: 2; stroke-dasharray: 6 4; }
+    .lg-id    { fill: var(--hot);   font: 500 12px var(--mono); }
+    .lg-floor { fill: var(--muted); font: 500 12px var(--mono); }
+    /* the floor a probe has to beat before its number means anything */
+    .tp-chance { stroke: var(--muted); stroke-width: 1; stroke-dasharray: 3 3; }
+    .tp-div    { stroke: var(--hair);  stroke-width: 1; }
+    .qt-tick   { stroke: var(--muted); stroke-width: 1.5; }
+    .qt-true   { stroke: var(--hot);   stroke-width: 2; }
+    .keynum { font-family: var(--mono); color: var(--ink); font-weight: 500; }
+  </style>
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "ScholarlyArticle",
+    "@id": "https://tanmayhinge.com/research/rppg-identity-tradeoff/#article",
+    "headline": "What a heart-rate model knows about your face",
+    "description": "A frozen remote-photoplethysmography encoder identifies 120 synthetic subjects perfectly even when the face is block-averaged to four by four pixels, while the heart-rate signal in the same embedding barely beats guessing the dataset average.",
+    "url": "https://tanmayhinge.com/research/rppg-identity-tradeoff/",
+    "image": "https://tanmayhinge.com/og/rppg.png",
+    "datePublished": "2026-08-16",
+    "dateModified": "2026-08-16",
+    "keywords": ["remote photoplethysmography", "rPPG", "privacy", "linear probing", "re-identification", "PhysNet", "SCAMPS"],
+    "author": { "@id": "https://tanmayhinge.com/#person" },
+    "publisher": { "@id": "https://tanmayhinge.com/#person" },
+    "mainEntityOfPage": "https://tanmayhinge.com/research/rppg-identity-tradeoff/",
+    "isPartOf": { "@id": "https://tanmayhinge.com/#website" }
+  }
+  </script>
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    "itemListElement": [
+      { "@type": "ListItem", "position": 1, "name": "Home", "item": "https://tanmayhinge.com/" },
+      { "@type": "ListItem", "position": 2, "name": "Research", "item": "https://tanmayhinge.com/#research" },
+      { "@type": "ListItem", "position": 3, "name": "What a heart-rate model knows about your face", "item": "https://tanmayhinge.com/research/rppg-identity-tradeoff/" }
+    ]
+  }
+  </script>
+</head>
+<body>
+  <main class="container reading">
+    <!-- nav:start -->
+    <a class="skip" href="#content">Skip to content</a>
+    <nav class="topnav" aria-label="Main">
+      <button class="theme-toggle" type="button" aria-label="Switch to dark theme">◐</button>
+      <a class="brand" href="/">Tanmay Hinge</a>
+      <span class="navlinks">
+        <a href="/#research">Research</a>
+        <a href="/photowall/">Photowall</a>
+        <a href="/reading/">Reading</a>
+        <a href="https://github.com/tanmayhinge" target="_blank" rel="noopener noreferrer">GitHub</a>
+        <a href="https://www.youtube.com/@tanmayhinge" target="_blank" rel="noopener noreferrer">YouTube</a>
+      </span>
+    </nav>
+    <!-- nav:end -->
+
+    <h1 class="ptitle" id="content" tabindex="-1">What a heart-rate model knows about your face</h1>
+    <p class="dek">
+      A camera pointed at your face can measure your heart rate, because your skin
+      brightens and dims very slightly with each beat. The pitch for this technology is
+      that only a number comes out. I took a published heart-rate model, froze it, and
+      started destroying its input one step at a time to find out what else it was
+      carrying. It identified 120 people perfectly from a face blurred down to
+      sixteen pixels.
+    </p>
+
+    <article class="report prose">
+
+      <h2 class="h-label">Your face is blinking, very faintly</h2>
+      <p>
+        Every time your heart beats, it pushes a little more blood into the capillaries
+        just under your skin. Blood absorbs green light more than the surrounding tissue
+        does, so with each beat your face gets very slightly darker, then very slightly
+        brighter again. Your eyes cannot see it. A camera can.
+      </p>
+      <p>
+        The technique is called <em>remote photoplethysmography</em>, usually shortened to
+        rPPG. Take a video of a face, average the colour of the skin pixels in each frame,
+        and you get a wobbly line that rises and falls at the rate of the heartbeat. That
+        is genuinely all there is to the classical version of it. The wobble is tiny — in
+        the video below, the average green value of the skin swings by about
+        <span class="keynum">1.0</span> of the 255 brightness levels a camera
+        records, which is roughly a third of one percent — but it is periodic, and periodic
+        signals are easy to pull out of noise.
+      </p>
+      <figure class="fig">
+        <div class="fig-img">
+          <img src="fig/pulse.png" width="1380" height="519" loading="lazy" decoding="async"
+               alt="Three panels. Left, a frame of a synthetic face. Middle, the same frame with everything except the skin darkened, labelled thirty-four percent of pixels. Right, two traces over six seconds: the true pulse from the dataset above, and the average green value of the skin pixels below, both rising and falling about thirteen times, in step with each other." />
+        </div>
+        <figcaption>Fig 1. The entire signal. Average the green channel over the skin pixels and you get the lower trace, which rises and falls in step with the true pulse above it. Thirteen beats in six seconds is about 130 beats per minute.</figcaption>
+      </figure>
+      <p>
+        Modern rPPG uses a neural network instead of an average, and it works better. You
+        feed in a short clip of a cropped face and it outputs a pulse waveform. The selling
+        point, when this gets built into a fitness app or a driver-monitoring system or a
+        telehealth call, is that it is unobtrusive and privacy-preserving: no contact, no
+        wearable, and the only thing that comes out is a heart rate.
+      </p>
+      <p>
+        That last claim is about the <em>output</em>. It is not a claim about the model's
+        internal representation — the few hundred numbers the network computes on its way
+        to producing the waveform. Those internal numbers, not the heart rate, are what
+        gets cached, batched, sent to a server, or logged for debugging. Nobody in the
+        applied literature reports what is in them. That is the gap this is about.
+      </p>
+
+      <h2 class="h-label">Faces that belong to nobody</h2>
+      <p>
+        To ask the question you need face videos with known heart rates, which is
+        normally an access-request-and-wait-three-weeks situation. I used
+        <a href="https://github.com/danmcduff/scampsdataset">SCAMPS</a> instead: 2,800
+        videos of computer-generated avatars, rendered with a synthetic pulse driving the
+        skin colour, so the true heart rate is known exactly rather than measured with a
+        finger clip. Every face in this article is one of those avatars. None of them is a
+        person. That is what makes it possible to publish the pictures at all, which is a
+        slightly funny thing to have to say in an article about faces being identifiable.
+      </p>
+      <p>
+        Getting the data was the first surprise. SCAMPS ships a spreadsheet of per-file
+        download links, and every one of them points at a storage account that no longer
+        exists. The only working route is a single 593&nbsp;GB compressed archive. Since
+        the archive is gzipped, and gzip cannot be skipped into, you cannot ask for file
+        number 400 — you can only start reading from the beginning and stop when you have
+        enough. So the ingest is literally a download piped into an extractor with a byte
+        budget attached: it streams until it has taken 16&nbsp;GB and then the pipe
+        closes. That got me 122 videos in about an hour and a half.
+      </p>
+
+      <h2 class="h-label">How you break a face on purpose</h2>
+      <p>
+        The experiment is a ladder. At the top, the model sees the full face crop, 72×72
+        pixels, with everything that is not skin blanked out. At each rung down, the skin
+        region is averaged into progressively coarser blocks — 32×32, then 16×16, 8×8, 4×4
+        — until at the bottom there is a single average colour for the entire face, one
+        number per colour channel per frame. Nothing about the pulse is deliberately
+        removed on the way down. Averaging pixels together does not weaken a signal that
+        every pixel shares; if anything it cleans it up.
+      </p>
+      <figure class="fig">
+        <div class="fig-img">
+          <img src="fig/ladder.png" width="1668" height="798" loading="lazy" decoding="async"
+               alt="Ten panels of the same synthetic face. Top row, outlined in blue: the full 72 by 72 crop, then block averages at 32, 16, 8 and 4 squares across, each blockier than the last. Bottom row: a single flat colour in the shape of the face; the same face in green only; the face with its pixels randomly shuffled inside the skin outline; a completely flat brown square; and the original untouched frame including hair and background." />
+        </div>
+        <figcaption>Fig 2. The ladder, top row, and four conditions that are not on it, bottom. Note the fifth panel down the ladder: a 4×4 block average is sixteen coloured squares, and it is still recognisably a face-shaped thing.</figcaption>
+      </figure>
+      <p>
+        Four more conditions sit off the ladder because they are not degrees of the same
+        thing. <em>Green only</em> throws away the red and blue channels. <em>Pixels
+        shuffled</em> scrambles the positions of the skin pixels, using the same shuffle for
+        every frame in a clip — so each pixel keeps its own history intact while the face's
+        layout is destroyed. <em>Untouched</em> keeps hair, clothing and background, as a
+        reference point. And the last one I only added halfway through, for a reason that
+        turns out to be the most interesting part of the result.
+      </p>
+
+      <h2 class="h-label">Two questions, one set of numbers</h2>
+      <p>
+        Here is the whole method. Take a released heart-rate model. Freeze it — no
+        training, no fine-tuning, the weights never move. Push a clip through it and grab
+        the activations from three layers inside, which gives 1,536 numbers per clip. Then
+        fit the simplest possible thing on top of those numbers, twice: once to predict the
+        heart rate, and once to predict <em>which person this is</em>, from a fixed set of
+        120. If a plain linear classifier can read something off the embedding,
+        the embedding contains it. This is called probing, and its whole appeal is that a
+        linear model is too weak to invent structure that is not there.
+      </p>
+      <p>
+        The catch with probing is that a number on its own is meaningless. Ninety percent
+        accuracy sounds excellent until you learn that ninety percent of the examples were
+        the same class. So every result here is reported against four floors, and none of
+        them is optional:
+      </p>
+      <p>
+        An <strong>untrained model</strong> — the identical architecture with random
+        weights, never trained on anything — tells you what you would get from any
+        arbitrary projection of the input. <strong>Raw pixels</strong> — the same probe
+        fitted straight onto the degraded image, with no model at all — tells you whether
+        the model was needed. <strong>Shuffled labels</strong> tell you what the probe
+        scores when there is definitionally nothing to learn. And <strong>POS and
+        CHROM</strong>, two hand-derived formulas from 2013 and 2016 that involve no
+        learning whatsoever, tell you whether a decade of deep learning bought anything.
+      </p>
+
+      <h2 class="h-label">The face survives being destroyed</h2>
+      <p>
+        120 people, 480 clips. Guessing at random gets you
+        <span class="keynum">0.83%</span>.
+      </p>
+      <figure class="fig">
+        <svg viewBox="0 0 860 540" role="img" aria-labelledby="tt td" xmlns="http://www.w3.org/2000/svg">
+<title id="tt">Identity accuracy and heart-rate error against how much of the skin region is left</title>
+<desc id="td">Top panel: identity stays at 100 per cent from the full 72 by 72 crop all the way down to a 4 by 4 block average, against a chance level of 0.008. It falls only at a single averaged trace, and collapses when the outline of the skin region is removed as well. Bottom panel: heart-rate error stays roughly flat across the whole ladder and never beats the handcrafted POS baseline.</desc>
+<text class="c-axis-title" x="92" y="36">IDENTIFIED CORRECTLY, OUT OF 120 PEOPLE</text>
+<line class="c-grid" x1="92" y1="236.0" x2="826" y2="236.0" />
+<text class="c-tick" x="82" y="240.0" text-anchor="end">0%</text>
+<line class="c-grid" x1="92" y1="191.5" x2="826" y2="191.5" />
+<text class="c-tick" x="82" y="195.5" text-anchor="end">25%</text>
+<line class="c-grid" x1="92" y1="147.0" x2="826" y2="147.0" />
+<text class="c-tick" x="82" y="151.0" text-anchor="end">50%</text>
+<line class="c-grid" x1="92" y1="102.5" x2="826" y2="102.5" />
+<text class="c-tick" x="82" y="106.5" text-anchor="end">75%</text>
+<line class="c-grid" x1="92" y1="58.0" x2="826" y2="58.0" />
+<text class="c-tick" x="82" y="62.0" text-anchor="end">100%</text>
+<line class="c-axis" x1="92" y1="236" x2="826" y2="236" />
+<line class="tp-chance" x1="92" y1="234.5" x2="826" y2="234.5" />
+<text class="c-tick" x="826" y="228.5" text-anchor="end">guessing = 0.8%</text>
+<path class="ln-floor" d="M128.7,58.0 L202.1,58.0 L275.5,58.0 L348.9,58.0 L422.3,58.0 L495.7,61.0" />
+<path class="ln-floor" d="M569.1,58.0 L642.5,69.9 L715.9,61.0 L789.3,58.0" />
+<path class="ln-unt" d="M128.7,59.5 L202.1,61.5 L275.5,58.0 L348.9,58.0 L422.3,58.0 L495.7,65.9" />
+<path class="ln-unt" d="M569.1,59.5 L642.5,99.0 L715.9,157.4 L789.3,59.5" />
+<path class="ln-id" d="M128.7,58.0 L202.1,58.0 L275.5,58.0 L348.9,58.0 L422.3,58.0 L495.7,101.0" />
+<path class="ln-id" d="M569.1,58.0 L642.5,59.5 L715.9,213.8 L789.3,58.0" />
+<circle class="dt-id" cx="128.7" cy="58.0" r="4" />
+<circle class="dt-id" cx="202.1" cy="58.0" r="4" />
+<circle class="dt-id" cx="275.5" cy="58.0" r="4" />
+<circle class="dt-id" cx="348.9" cy="58.0" r="4" />
+<circle class="dt-id" cx="422.3" cy="58.0" r="4" />
+<circle class="dt-id" cx="495.7" cy="101.0" r="4" />
+<circle class="dt-id" cx="569.1" cy="58.0" r="4" />
+<circle class="dt-id" cx="642.5" cy="59.5" r="4" />
+<circle class="dt-id" cx="715.9" cy="213.8" r="4" />
+<circle class="dt-id" cx="789.3" cy="58.0" r="4" />
+<text class="c-axis-title" x="92" y="278">HEART-RATE ERROR, BEATS PER MINUTE (LOWER IS BETTER)</text>
+<line class="c-grid" x1="92" y1="470.0" x2="826" y2="470.0" />
+<text class="c-tick" x="82" y="474.0" text-anchor="end">0</text>
+<line class="c-grid" x1="92" y1="385.0" x2="826" y2="385.0" />
+<text class="c-tick" x="82" y="389.0" text-anchor="end">29</text>
+<line class="c-grid" x1="92" y1="300.0" x2="826" y2="300.0" />
+<text class="c-tick" x="82" y="304.0" text-anchor="end">58</text>
+<line class="c-axis" x1="92" y1="470" x2="826" y2="470" />
+<line class="tp-chance" x1="92" y1="385.6" x2="826" y2="385.6" />
+<text class="c-tick" x="826" y="379.6" text-anchor="end">always guess the average = 28.8</text>
+<path class="ln-pos" d="M128.7,423.8 L202.1,423.8 L275.5,423.8 L348.9,423.8 L422.3,423.8 L495.7,423.8" />
+<path class="ln-pos" d="M569.1,322.2 L642.5,423.8 L715.9,423.8 L789.3,415.6" />
+<path class="ln-hr" d="M128.7,395.9 L202.1,397.1 L275.5,407.1 L348.9,405.0 L422.3,396.8 L495.7,415.1" />
+<path class="ln-hr" d="M569.1,410.5 L642.5,396.5 L715.9,409.1 L789.3,395.9" />
+<circle class="dt-hr" cx="128.7" cy="395.9" r="4" />
+<circle class="dt-hr" cx="202.1" cy="397.1" r="4" />
+<circle class="dt-hr" cx="275.5" cy="407.1" r="4" />
+<circle class="dt-hr" cx="348.9" cy="405.0" r="4" />
+<circle class="dt-hr" cx="422.3" cy="396.8" r="4" />
+<circle class="dt-hr" cx="495.7" cy="415.1" r="4" />
+<circle class="dt-hr" cx="569.1" cy="410.5" r="4" />
+<circle class="dt-hr" cx="642.5" cy="396.5" r="4" />
+<circle class="dt-hr" cx="715.9" cy="409.1" r="4" />
+<circle class="dt-hr" cx="789.3" cy="395.9" r="4" />
+<line class="tp-div" x1="532.4" y1="44" x2="532.4" y2="470" />
+<text class="c-cat" x="128.7" y="490.0" text-anchor="middle">full</text>
+<text class="c-cat" x="202.1" y="490.0" text-anchor="middle">32²</text>
+<text class="c-cat" x="275.5" y="490.0" text-anchor="middle">16²</text>
+<text class="c-cat" x="348.9" y="490.0" text-anchor="middle">8²</text>
+<text class="c-cat" x="422.3" y="490.0" text-anchor="middle">4²</text>
+<text class="c-cat" x="495.7" y="490.0" text-anchor="middle">1×1</text>
+<text class="c-cat" x="569.1" y="490.0" text-anchor="middle">green</text>
+<text class="c-cat" x="642.5" y="490.0" text-anchor="middle">shuffle</text>
+<text class="c-cat" x="715.9" y="490.0" text-anchor="middle">no shape</text>
+<text class="c-cat" x="789.3" y="490.0" text-anchor="middle">unmasked</text>
+<text class="c-axis-title" x="92" y="528">← LESS OF THE SKIN REGION LEFT</text>
+<text class="c-axis-title" x="542.4" y="510.0">DIFFERENT MANIPULATIONS, NOT FURTHER RUNGS</text>
+<text class="lg-id" x="826" y="32" text-anchor="end">— the frozen model</text>
+<text class="lg-floor" x="826" y="46" text-anchor="end">— — raw pixels, no model</text>
+</svg>
+        <figcaption>Fig 3. Both quantities read off the same embedding, on a shared axis. Identity, above, does not move until the very bottom of the ladder. Heart-rate error, below, never gets far from the line you would achieve by ignoring the video and always guessing the dataset's average heart rate.</figcaption>
+      </figure>
+      <p>
+        Identity is <span class="keynum">100%</span> at the full crop, which is
+        not surprising. It is still <span class="keynum">100%</span> at a 4×4
+        block average. Sixteen coloured squares per frame, one of
+        120 possible people, and the probe does not make a single mistake. The
+        entire ordered ladder — every rung from a full-resolution face down to sixteen
+        blocks — costs essentially nothing in re-identifiability.
+      </p>
+      <p>
+        Shuffling the pixels does not help either: <span class="keynum">99.2%</span>.
+        Scrambling where everything sits on the face leaves the person just as identifiable,
+        which already hints that the model is not relying on facial features in the way you
+        might picture.
+      </p>
+
+      <h2 class="h-label">The outline was giving it away</h2>
+      <p>
+        Look again at the bottom-left panel of Fig 2 — the 1×1 condition, one flat colour
+        for the whole face. Identity there drops to
+        <span class="keynum">75.8%</span>, which is a real drop, but it is
+        still a hundred times chance. From one colour? That made no sense until I looked at
+        the picture properly.
+      </p>
+      <p>
+        It is not one colour. It is one colour <em>in the shape of that person's face</em>,
+        with holes where their eyes and eyebrows are, because everything outside the skin
+        region gets blanked to black and the skin region is a silhouette of them. I had
+        built a condition that removed all the texture and left a perfect stencil of the
+        subject. The mask was leaking the identity the pixels no longer could.
+      </p>
+      <p>
+        So I added one more condition: take that single average colour and paint it across
+        the entire frame, no outline at all. Three numbers per frame, and nothing else.
+        Identity falls to <span class="keynum">12.5%</span>.
+      </p>
+      <p>
+        That is the actual finding, and it is a more useful one than the tidy curve I set
+        out to draw. Blurring does not anonymise a face. Blurring plus deleting the shape
+        of the face gets you most of the way there — and even then,
+        12.5% out of 120 people is about
+        <span class="keynum">15×</span> what you would get by guessing.
+      </p>
+
+      <h2 class="h-label">The heart rate, meanwhile, was never really there</h2>
+      <p>
+        Now the part that does not flatter the experiment. The bottom panel of Fig 3 is
+        nearly flat, which I could present as "heart rate survives the degradation." It
+        would be a fair description of the shape and a misleading description of the
+        result, because the line is flat at a level that is not much of an achievement.
+      </p>
+      <figure class="fig">
+        <svg viewBox="0 0 860 228" role="img" aria-labelledby="ft fd" xmlns="http://www.w3.org/2000/svg">
+<title id="ft">Heart-rate error compared with its floors</title>
+<desc id="fd">Four bars. The frozen model reaches 25.3 beats per minute of error, barely better than always guessing the dataset average, and worse than POS.</desc>
+<text class="c-axis-title" x="0" y="16">MEAN ERROR IN BEATS PER MINUTE, AT FULL RESOLUTION</text>
+<text class="c-cat" x="286" y="49" text-anchor="end">always guess the average</text>
+<rect class="c-bar" x="300" y="34" width="375.0" height="20" />
+<text class="c-val" x="685.0" y="49">28.8</text>
+<text class="c-cat" x="286" y="91" text-anchor="end">raw pixels, no model</text>
+<rect class="c-bar" x="300" y="76" width="343.7" height="20" />
+<text class="c-val" x="653.7" y="91">26.4</text>
+<text class="c-cat" x="286" y="133" text-anchor="end">the frozen model's embedding</text>
+<rect class="c-bar hl" x="300" y="118" width="329.0" height="20" />
+<text class="c-val" x="639.0" y="133">25.3</text>
+<text class="c-cat" x="286" y="175" text-anchor="end">POS, a formula from 2013</text>
+<rect class="c-bar" x="300" y="160" width="205.4" height="20" />
+<text class="c-val" x="515.4" y="175">15.8</text>
+</svg>
+        <figcaption>Fig 4. Heart-rate error at full resolution, against the things it has to beat. Lower is better. The frozen model's embedding is better than nothing and worse than a formula from 2013.</figcaption>
+      </figure>
+      <p>
+        If you ignore the video entirely and always answer with the dataset's average heart
+        rate, you are wrong by <span class="keynum">28.8</span> beats per minute.
+        The probe on the frozen embedding manages <span class="keynum">25.3</span>.
+        POS, the 2013 formula, gets <span class="keynum">15.8</span> on the same
+        clips. So on this data the embedding carries the person's identity completely and
+        their pulse only faintly.
+      </p>
+      <p>
+        The likely reason is that this particular model was trained on videos of real
+        people and I ran it on synthetic renders. Faces built by a graphics engine are not
+        the same distribution as faces lit by a real room, and the pulse is the part that
+        would suffer first — it is a sub-one-percent colour fluctuation, and a renderer
+        approximates it. Identity, which lives in gross appearance, transfers fine. The
+        honest summary is that this is a strong result about re-identification and a weak
+        one about heart rate, and the fix is real datasets, which is where this goes next.
+      </p>
+
+      <div class="table-wrap">
+        <table class="data">
+          <caption>Every condition, PURE PhysNet DiffNormalized. Identity is top-1 accuracy over held-out clips; chance is 0.83%.</caption>
+          <thead>
+            <tr><th>condition</th><th>identity</th><th>identity, raw pixels</th><th>heart-rate error</th><th>POS</th></tr>
+          </thead>
+          <tbody>
+            <tr class="hl"><td>full 72&times;72</td><td>100.0%</td><td>100.0%</td><td>25.3</td><td>15.8</td></tr>
+            <tr><td>32&times;32</td><td>100.0%</td><td>100.0%</td><td>24.9</td><td>15.8</td></tr>
+            <tr><td>16&times;16</td><td>100.0%</td><td>100.0%</td><td>21.5</td><td>15.8</td></tr>
+            <tr><td>8&times;8</td><td>100.0%</td><td>100.0%</td><td>22.2</td><td>15.8</td></tr>
+            <tr class="hl"><td>4&times;4</td><td>100.0%</td><td>100.0%</td><td>25.0</td><td>15.8</td></tr>
+            <tr><td>1&times;1, the trace</td><td>75.8%</td><td>98.3%</td><td>18.7</td><td>15.8</td></tr>
+            <tr><td>green only</td><td>100.0%</td><td>100.0%</td><td>20.3</td><td>50.4</td></tr>
+            <tr><td>pixels shuffled</td><td>99.2%</td><td>93.3%</td><td>25.1</td><td>15.8</td></tr>
+            <tr class="hl"><td>trace, no outline</td><td>12.5%</td><td>98.3%</td><td>20.8</td><td>15.8</td></tr>
+            <tr><td>untouched</td><td>100.0%</td><td>100.0%</td><td>25.3</td><td>18.6</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2 class="h-label">What I would not claim from this</h2>
+      <p>
+        The identity task here is easier than real re-identification. SCAMPS gives no
+        indication of which avatar is which across videos, so "the same person" means "a
+        different four-second clip of the same twenty-second recording." Same avatar, same
+        lighting, same camera. A probe that tells those apart has done something easier
+        than recognising someone who walked back in on a different day. The number is an
+        upper bound, and the datasets that would make it a fair estimate — PURE, with ten
+        subjects recorded in six sessions each, and MMPD, with thirty-three subjects across
+        four lighting conditions — are the obvious next step. The code is already written
+        against an interface with those two in mind.
+      </p>
+      <p>
+        The untrained-model floor also deserves stating plainly: a randomly initialised
+        network of the same shape identifies these clips nearly as well as the trained one.
+        So the identity information is not something the heart-rate training specifically
+        learned. It is in the input, and essentially any encoder would pass it along. That
+        is arguably worse news for the privacy pitch rather than better — it means you do
+        not get anonymity by picking a different model.
+      </p>
+      <p>
+        And SCAMPS is synthetic. Skin tones in it are whatever the renderer produces, not
+        whatever the world contains, so nothing here says anything about how this behaves
+        across real skin tones. That question needs MMPD, which labels Fitzpatrick group,
+        and the analysis code refuses to pool heart-rate error across those groups when
+        they are present — reporting one average across skin tones is exactly how you hide
+        that a method works for some people and not others.
+      </p>
+
+      <h2 class="h-label">Three things that were wrong first</h2>
+      <p>
+        <strong>Every heart rate was a multiple of 14.06.</strong> The toolbox's own
+        frequency estimator sizes its transform to the length of the clip, which for a
+        four-second clip at 30 frames per second gives bins 14.06 beats per minute apart.
+        Every value it returned was 126.56, or 98.44, or 70.31 — which are 9, 7 and 5 times
+        14.0625. A study about a few beats per minute cannot be measured on a grid that
+        coarse, and it took plotting the numbers and noticing they were suspiciously round
+        to catch it. Padding the transform fixes it; the test suite now asserts that the
+        padded version still reproduces the original exactly when the padding is switched
+        off.
+      </p>
+      <figure class="fig">
+        <svg viewBox="0 0 860 250" role="img" aria-labelledby="qt qd" xmlns="http://www.w3.org/2000/svg">
+<title id="qt">Heart rates the unpadded estimator can return</title>
+<desc id="qd">Every value the toolbox estimator can report on a 128-frame clip is a multiple of 14.06 beats per minute, so a true rate anywhere between two ticks is reported as one of them.</desc>
+<text class="c-axis-title" x="70" y="18">WHAT THE ORIGINAL ESTIMATOR CAN REPORT ON A 4-SECOND CLIP</text>
+<line class="c-axis" x1="70" y1="190" x2="830" y2="190" />
+<line class="qt-tick" x1="80.6" y1="48" x2="80.6" y2="190" />
+<text class="c-tick" x="80.6" y="210" text-anchor="middle">56</text>
+<line class="qt-tick" x1="199.3" y1="48" x2="199.3" y2="190" />
+<text class="c-tick" x="199.3" y="210" text-anchor="middle">70</text>
+<line class="qt-tick" x1="318.1" y1="48" x2="318.1" y2="190" />
+<text class="c-tick" x="318.1" y="210" text-anchor="middle">84</text>
+<line class="qt-tick" x1="436.8" y1="48" x2="436.8" y2="190" />
+<text class="c-tick" x="436.8" y="210" text-anchor="middle">98</text>
+<line class="qt-tick" x1="555.6" y1="48" x2="555.6" y2="190" />
+<text class="c-tick" x="555.6" y="210" text-anchor="middle">112</text>
+<line class="qt-tick" x1="674.3" y1="48" x2="674.3" y2="190" />
+<text class="c-tick" x="674.3" y="210" text-anchor="middle">127</text>
+<line class="qt-tick" x1="793.1" y1="48" x2="793.1" y2="190" />
+<text class="c-tick" x="793.1" y="210" text-anchor="middle">141</text>
+<line class="qt-true" x1="635.8" y1="36" x2="635.8" y2="190" />
+<text class="lg-id" x="635.8" y="30" text-anchor="middle">a true rate of 122</text>
+<text class="lg-floor" x="674.3" y="232" text-anchor="middle">reported as 127</text>
+<text class="c-axis-title" x="70" y="244">BEATS PER MINUTE</text>
+</svg>
+        <figcaption>Fig 5. Every heart rate the original estimator can return on a four-second clip. A true rate of 122 has nowhere to land except one of the ticks.</figcaption>
+      </figure>
+      <p>
+        <strong>One avatar was wearing a VR headset.</strong> The face detector, a
+        twenty-year-old cascade classifier, found no face — reasonably — and then instead
+        of failing, locked onto a 60×60 patch of ornamental wallpaper on the back wall and
+        reported success. The pipeline dutifully cropped the wallpaper, resized it to 72×72
+        and fed it in. Its skin mask was empty, so nothing downstream would have crashed:
+        the averages would have been zeros and the probe would have quietly fitted on a row
+        of blanks. It is now caught by a check that the crop actually contains skin, and
+        that video is excluded with its reason recorded.
+      </p>
+      <figure class="fig">
+        <div class="fig-img">
+          <img src="fig/wallpaper.png" width="1428" height="511" loading="lazy" decoding="async"
+               alt="Three panels. Left, a synthetic avatar wearing a white VR headset that covers the eyes, with a red box drawn around a patch of ornamental wallpaper to its left. Middle, the true skin mask for that frame, showing only the forehead strip and the neck in white. Right, the resulting 72 by 72 crop, which contains only the gold wallpaper pattern and no face at all." />
+        </div>
+        <figcaption>Fig 6. The detector reported a face. The red box is what it found. The right panel is what the model was then asked to measure a heart rate from.</figcaption>
+      </figure>
+      <p>
+        <strong>The machine spent an hour swapping.</strong> The sweep held every clip's
+        frames in memory at once — about a gigabyte, on a laptop with eight — and drove
+        itself four gigabytes into swap. The fix was one line: keep the frames as views
+        into the memory-mapped files on disk instead of copying them out. The stage that
+        had been running at 1.4 seconds per clip dropped to 45 milliseconds. It is a
+        reminder that "why is this slow" is worth thirty seconds of measurement before it
+        is worth any redesign.
+      </p>
+
+      <h2 class="h-label">Reproducing it</h2>
+      <p>
+        The code is at
+        <a href="https://github.com/tanmayhinge/rppg-identity-tradeoff">tanmayhinge/rppg-identity-tradeoff</a>.
+        It is config-driven and seeded, it runs on an M2 laptop in about two hours once the
+        data is down, and the test suite is 107 tests with the degradation ladder
+        and the probing logic as the two acceptance gates. The preprocessing is checked to
+        be bit-identical to the reference toolbox's, so "we reimplemented it" never quietly
+        became "we changed it".
+      </p>
+      <p>
+        My favourite test is the cheapest one. POS and CHROM only ever see the average
+        colour of the skin, and every rung of the ladder is built to preserve that average
+        exactly. So both must return <em>identical</em> heart rates at every rung. They do,
+        to the digit, on real data. If the masking, the block partition, the alignment
+        between mask and frame, or the clip assembly is wrong anywhere, that equality
+        breaks — one assertion covering most of the pipeline.
+      </p>
+
+      <h2 class="h-label">Credit</h2>
+      <p>
+        The avatar images are from SCAMPS: D. McDuff, M. Wander, X. Liu, B. L. Hill,
+        J. Hernandez, J. Lester and T. Baltrusaitis, <em>SCAMPS: Synthetics for Camera
+        Measurement of Physiological Signals</em>, NeurIPS 2022, used under the
+        <a href="https://github.com/danmcduff/scampsdataset/blob/main/LICENSE.txt">Research
+        Use of Data Agreement v1.0</a>, which permits the small excerpts of the data needed
+        to explain work done with it. The frozen models, the preprocessing and the POS and
+        CHROM implementations come from
+        <a href="https://github.com/ubicomplab/rPPG-Toolbox">rPPG-Toolbox</a>: X. Liu et
+        al., <em>rPPG-Toolbox: Deep Remote PPG Toolbox</em>, NeurIPS 2023. This is
+        non-commercial research use.
+      </p>
+    </article>
+
+    <nav class="prevnext" aria-label="Article">
+      <span class="spacer" aria-hidden="true">&larr;</span>
+      <a href="/research/excitonic-coupling/">Next: Learning curves for kernel ridge regression on molecular excitonic couplings &rarr;</a>
+    </nav>
+
+    <footer class="foot" role="contentinfo">
+      <!-- foot:start -->
+      <span class="foot-links">
+        <a href="https://github.com/tanmayhinge" rel="me noopener noreferrer" target="_blank">GitHub</a>
+        <a href="https://www.linkedin.com/in/tanmayhinge/" rel="me noopener noreferrer" target="_blank">LinkedIn</a>
+        <a href="https://scholar.google.com/citations?user=YFUWK9gAAAAJ" rel="me noopener noreferrer" target="_blank">Google&nbsp;Scholar</a>
+        <a href="mailto:hingetanmay@gmail.com">Email</a>
+      </span>
+      <!-- foot:end -->
+      <span>Last updated <time datetime="2026-08-16">16 August 2026</time></span>
+    </footer>
+  </main>
+</body>
+</html>
