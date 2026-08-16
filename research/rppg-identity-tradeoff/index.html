@@ -288,27 +288,18 @@
         published privacy method for exactly this setting: Gupta and Etemad's
         <a href="https://arxiv.org/abs/2306.01141"><em>Privacy-Preserving Remote Heart Rate
         Estimation from Facial Videos</em></a> (IEEE SMC, 2023) crops the face to cheek and
-        forehead patches, shuffles the pixels under a per-video key, blurs the result with a
-        3&times;3 kernel, and reports that facial recognition accuracy falls by over 60%
-        while heart-rate error barely moves. Their shuffle holds one key across every frame
-        of a video, which is how the shuffle condition here is built too.
-      </p>
-      <p>
-        Their evaluation and this one measure different attackers, and that is the whole
-        reason to run this. They take the <em>perturbed image</em>, embed it with ArcFace,
-        reduce to 32 dimensions and classify. That is the right test for someone who
-        intercepts the video. It says nothing about someone who gets the rPPG network's own
-        embedding, which is the thing that actually gets cached and shipped off-device, and
-        which is what the probes here read. A defence can be sound against the first
-        attacker and untested against the second.
-      </p>
-      <p>
-        One more detail from their results is worth carrying: blurring is not a monotone
-        privacy dial even on their own measurement. They select a 3&times;3 kernel because
-        their sweep shows it is the <em>optimal</em> size for suppressing identification,
-        which means larger kernels recover identity rather than removing it. On the ladder
-        here, blurring never suppresses identity at any size to begin with. Neither result
-        supports treating "blur it more" as a privacy control.
+        forehead patches, shuffles the pixels under a per-video key held across frames as
+        the shuffle here is, blurs with a 3&times;3 kernel, and reports facial recognition
+        accuracy falling by over 60% while heart-rate error barely moves. The difference is
+        which attacker gets measured. They embed the <em>perturbed image</em> with ArcFace
+        and classify it, which is the right test for someone who intercepts the video, and
+        no test at all for someone who gets the network's own embedding, the thing that
+        actually gets cached and shipped off-device. A defence can be sound against the
+        first attacker and untested against the second. Their own sweep also picks
+        3&times;3 because it is the <em>optimal</em> size for suppressing identification,
+        meaning larger kernels start recovering identity again; on the ladder here blurring
+        never suppresses it at any size. Neither result supports treating "blur it more" as
+        a privacy control.
       </p>
 
       <h2 class="h-label">Two questions, one set of numbers</h2>
@@ -502,15 +493,6 @@
         and one I come back to at the end.
       </p>
       <p>
-        The encoder should not take the credit for that, though, and the control that says
-        so is in the same table. Fit the identical probe on the raw degraded pixels, with no
-        network anywhere in the loop, and it also scores
-        <span class="keynum">100%</span> at that rung. Block averaging is simply
-        not an anonymisation operation, and the encoder inherits an image that was never
-        anonymous. That distinction gets its own section shortly, because at the bottom of
-        the ladder the two come apart in the direction nobody expects.
-      </p>
-      <p>
         Shuffling the pixels does not help either: <span class="keynum">99.2%</span>.
         Scrambling where everything sits on the face leaves the person just as identifiable,
         which already hints that the model is not relying on facial features in the way you
@@ -575,53 +557,26 @@
 
       <h2 class="h-label">The encoder throws away what its input keeps</h2>
       <p>
-        There is a control running underneath all of this that deserves its own section,
-        because it decides how much of the result above the encoder can be credited with.
-        The raw-pixel floor fits the same probe directly on the degraded image, with no
-        model in the loop at all. Down the whole ordered ladder it is pinned at
-        <span class="keynum">100%</span>, exactly level with the embedding.
-        Every rung of blurring is matched by a probe that never saw the network. So the
-        headline finding of this study is not that the encoder is unusually leaky. It is
-        that block averaging does not remove identity from an image, and any model fed
-        that image inherits the problem.
+        The raw-pixel control has matched the embedding at every rung so far, both of them
+        flat at <span class="keynum">100%</span> the whole way down. At the
+        bottom it stops matching, and it stops in the direction nobody expects. With the outline
+        deleted, the embedding falls to
+        <span class="keynum">12.5%</span> while the same probe on the
+        <em>identical input</em>, with no network in the loop at all, holds
+        <span class="keynum">98.3%</span>. On the verification metric that is
+        0.726 against 1.000. Passing the image through the encoder
+        destroyed identity that survived the degradation itself.
       </p>
       <p>
-        At the bottom of the ladder the two come apart, and they come apart the wrong way
-        round. With the outline deleted, the embedding falls to
-        <span class="keynum">12.5%</span> while raw pixels on the
-        <em>identical input</em> stay at <span class="keynum">98.3%</span>.
-        On the verification metric it is 0.726 against
-        1.000. The encoder is discarding identity that is still plainly
-        sitting in what it was handed, and it replicates on the second checkpoint:
-        24.2% against the same 98.3%.
-      </p>
-      <div class="callout">
-        <span class="clabel">The one place the encoder helps</span>
-        <p>
-          Same input, two readers. A linear probe on the raw degraded pixels identifies
-          <span class="keynum">98.3%</span> of 120 people. The
-          same probe on the frozen encoder's embedding of those pixels gets
-          <span class="keynum">12.5%</span>. Passing the image through the
-          network destroyed identity that survived the degradation itself.
-        </p>
-      </div>
-      <p>
-        The likely reason is mundane and worth stating as a guess rather than a result,
-        because nothing here isolates it. Both checkpoints are the
-        <code>DiffNormalized</code> variants, which means the network is fed frame
-        differences rather than frames. A flat coloured frame has almost no
-        frame-to-frame difference, so the constant skin tone is normalised away before the
-        first convolution. Raw pixels keep that absolute colour, and on
-        120 rendered avatars a mean RGB triple is very nearly a
-        fingerprint. Testing that properly means comparing against the non-normalised
-        checkpoints, which is a separate run.
-      </p>
-      <p>
-        Either way it cuts against the tidy version of the privacy story. Encoders are not
-        uniformly worse than the pixels they consume, and a defence that reports what an
-        image-space attacker can recover is not measuring the same thing as one that
-        reports what survives in the representation. Both numbers are needed, and this
-        study is the only place in the article where they disagree.
+        The likely reason is mundane, and it is a guess rather than a result because nothing
+        here isolates it: both checkpoints are the <code>DiffNormalized</code> variants, so
+        the network is fed frame differences, and a flat coloured frame has almost none. The
+        constant skin tone is normalised away before the first convolution, while raw pixels
+        keep the absolute colour that on 120 rendered avatars is very nearly a
+        fingerprint. Either way it cuts against the tidy version of the privacy story.
+        Encoders are not uniformly worse than the pixels they consume, and a defence that
+        reports what an image-space attacker can recover is not measuring the same thing as
+        one that reports what survives in the representation.
       </p>
 
       <h2 class="h-label">It is not one checkpoint being strange</h2>
@@ -708,7 +663,7 @@
         would suffer first: it is a sub-one-percent colour fluctuation, and a renderer
         approximates it. Identity, which lives in gross appearance, transfers fine. The
         honest summary is that this is a strong result about re-identification and a weak
-        one about heart rate, and the fix is real datasets, which is where this goes next.
+        one about heart rate.
       </p>
 
       <div class="table-wrap">
@@ -741,10 +696,8 @@
         the full-resolution crop, and pushes re-identification down to something close to a
         coin flip. Written down in advance, that was <em>within
         <span class="keynum">2</span> beats per minute of the full crop, and
-        verification AUC at or below <span class="keynum">0.55</span></em>.
-        AUC here is the probability that, shown one matching and one mismatched pair of
-        clips, the embedding ranks the true match higher, where 0.5 is a coin flip and
-        1.0 is never wrong.
+        verification AUC at or below <span class="keynum">0.55</span></em>,
+        which on the scale above is a hair better than a coin flip.
       </p>
       <p>
         Here is the part that decides it. Every condition in the study, ladder and
@@ -828,23 +781,18 @@
         makes it worth saying out loud.
       </p>
       <p>
-        One piece of evidence already separates them partway. POS, a formula from 2013 with
-        no parameters and no training, recovers heart rate from these same videos at
-        <span class="keynum">15.8</span> bpm. So the pulse is genuinely present in
-        the pixels; nothing about SCAMPS makes it unrecoverable. What failed is the frozen
-        encoders' transfer onto synthetic faces, not the data. That narrows the second
-        world without closing it, because an encoder that cannot read the pulse in the
-        first place cannot be asked to trade it away.
-      </p>
-      <p>
-        The experiment that settles it is a real-data arm, where these checkpoints are
-        in-domain rather than being asked to cross from real training faces to rendered
-        ones: PURE, with ten subjects across six sessions, and MMPD, with thirty-three
-        subjects across four lighting conditions. If the target region is still empty when
-        the heart-rate axis is alive, the coupling claim stands. If a rung opens up, this
-        study measured a broken encoder and said something about the ladder. That run has
-        not happened yet, and until it does the honest summary is that the identity result
-        stands on its own and the tradeoff claim is provisional.
+        One piece of evidence separates them partway. POS, a formula from 2013 with no
+        parameters and no training at all, recovers heart rate from these same videos at
+        <span class="keynum">15.8</span> bpm, so the pulse is genuinely present in the
+        pixels and nothing about SCAMPS makes it unrecoverable. What failed is the frozen
+        encoders' transfer onto rendered faces, not the data. That narrows the second world
+        without closing it, because an encoder that cannot read the pulse in the first place
+        cannot be asked to trade it away. Settling it needs a real-data arm where these
+        checkpoints are in-domain: if the target region is still empty once the heart-rate
+        axis is alive, the coupling claim stands, and if a rung opens up then this study
+        measured a broken encoder and said something about the ladder instead. That run has
+        not happened yet. Until it does, the identity result stands on its own and the
+        tradeoff claim is provisional.
       </p>
 
       <h2 class="h-label">What I would not claim from this</h2>
