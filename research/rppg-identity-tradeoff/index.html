@@ -87,6 +87,11 @@
     .pl-brace  { stroke: var(--accent); stroke-width: 1.4; fill: none; }
     .pl-note   { fill: var(--accent); font: 500 11.5px var(--mono); }
     .pl-note-fit { fill: var(--hot); font: 500 11.5px var(--mono); }
+    /* the strip above the title: one face collapsing across the ladder, decorative.
+       Not called .hero -- that name belongs to the homepage's photo block. */
+    .titlestrip { display: block; width: 100%; height: auto; border-radius: 6px;
+                  margin: 0 0 calc(var(--u) * 4); background: #000;
+                  border: 1px solid var(--hair); }
     .keynum { font-family: var(--mono); color: var(--ink); font-weight: 500; }
   </style>
 
@@ -137,6 +142,9 @@
     </nav>
     <!-- nav:end -->
 
+    <img class="titlestrip" src="fig/hero.png" width="1232" height="269"
+         alt="" aria-hidden="true" decoding="async" />
+
     <h1 class="ptitle" id="content" tabindex="-1">Probing a frozen rPPG encoder for identity under input degradation</h1>
     <p class="dek">
       A camera pointed at your face can measure your heart rate, because your skin
@@ -160,10 +168,10 @@
         The technique is called <em>remote photoplethysmography</em>, usually shortened to
         rPPG. Take a video of a face, average the colour of the skin pixels in each frame,
         and you get a wobbly line that rises and falls at the rate of the heartbeat. That
-        is genuinely all there is to the classical version of it. The wobble is tiny — in
+        is genuinely all there is to the classical version of it. The wobble is tiny. In
         the video below, the average green value of the skin swings by about
-        <span class="keynum">1.0</span> of the 255 brightness levels a camera
-        records, which is roughly a third of one percent — but it is periodic, and periodic
+                <span class="keynum">1.0</span> of the 255 brightness levels a camera
+        records, which is roughly a third of one percent. But it is periodic, and periodic
         signals are easy to pull out of noise.
       </p>
       <figure class="fig">
@@ -182,7 +190,7 @@
       </p>
       <p>
         That last claim is about the <em>output</em>. It is not a claim about the model's
-        internal representation — the few hundred numbers the network computes on its way
+        internal representation, the few hundred numbers the network computes on its way
         to producing the waveform. Those internal numbers, not the heart rate, are what
         gets cached, batched, sent to a server, or logged for debugging. Nobody in the
         applied literature reports what is in them. That is the gap this is about.
@@ -204,7 +212,7 @@
         download links, and every one of them points at a storage account that no longer
         exists. The only working route is a single 593&nbsp;GB compressed archive. Since
         the archive is gzipped, and gzip cannot be skipped into, you cannot ask for file
-        number 400 — you can only start reading from the beginning and stop when you have
+        number 400; you can only start reading from the beginning and stop when you have
         enough. So the ingest is literally a download piped into an extractor with a byte
         budget attached: it streams until it has taken 16&nbsp;GB and then the pipe
         closes. That got me 122 videos in about an hour and a half.
@@ -214,8 +222,8 @@
       <p>
         The experiment is a ladder. At the top, the model sees the full face crop, 72×72
         pixels, with everything that is not skin blanked out. At each rung down, the skin
-        region is averaged into progressively coarser blocks — 32×32, then 16×16, 8×8, 4×4
-        — until at the bottom there is a single average colour for the entire face, one
+        region is averaged into progressively coarser blocks (32×32, then 16×16, 8×8, 4×4)
+        until at the bottom there is a single average colour for the entire face, one
         number per colour channel per frame. Nothing about the pulse is deliberately
         removed on the way down. Averaging pixels together does not weaken a signal that
         every pixel shares; if anything it cleans it up.
@@ -231,7 +239,7 @@
         Four more conditions sit off the ladder because they are not degrees of the same
         thing. <em>Green only</em> throws away the red and blue channels. <em>Pixels
         shuffled</em> scrambles the positions of the skin pixels, using the same shuffle for
-        every frame in a clip — so each pixel keeps its own history intact while the face's
+        every frame in a clip, so each pixel keeps its own history intact while the face's
         layout is destroyed. <em>Untouched</em> keeps hair, clothing and background, as a
         reference point. And the last one I only added halfway through, for a reason that
         turns out to be the most interesting part of the result.
@@ -239,7 +247,7 @@
 
       <h2 class="h-label">Two questions, one set of numbers</h2>
       <p>
-        Here is the whole method. Take a released heart-rate model. Freeze it — no
+        Here is the whole method. Take a released heart-rate model. Freeze it: no
         training, no fine-tuning, the weights never move. Push a clip through it and grab
         the activations from three layers inside, which gives 1,536 numbers per clip. Then
         fit the simplest possible thing on top of those numbers, twice: once to predict the
@@ -292,7 +300,7 @@
 
           <!-- the bracket that is the point of the whole diagram -->
           <path class="pl-brace" d="M12,72 L12,60 L784,60 L784,72" />
-          <text class="pl-note" x="398" y="48" text-anchor="middle">NOTHING IN HERE IS EVER TRAINED — THE WEIGHTS NEVER MOVE</text>
+          <text class="pl-note" x="398" y="48" text-anchor="middle">NOTHING IN HERE IS EVER TRAINED. THE WEIGHTS NEVER MOVE</text>
 
           <!-- the fork: one embedding, two questions -->
           <path class="pl-arrow" d="M721,140 L721,168 L560,168 L560,196" />
@@ -313,7 +321,7 @@
 
           <text class="pl-s" x="12" y="286">One embedding, read twice. Both probes see exactly the same 1,536 numbers, so the two results sit on one axis.</text>
         </svg>
-        <figcaption>Fig 3. The whole study in one picture. A clip is degraded, pushed through a model whose weights never change, and reduced to 1,536 numbers — and then those same numbers are asked two different questions. Because it is one embedding rather than two pipelines, "how much privacy buys how much signal" finally has a common x.</figcaption>
+        <figcaption>Fig 3. The whole study in one picture. A clip is degraded, pushed through a model whose weights never change, and reduced to 1,536 numbers, and then those same numbers are asked two different questions. Because it is one embedding rather than two pipelines, "how much privacy buys how much signal" finally has a common x.</figcaption>
       </figure>
       <p>
         The catch with probing is that a number on its own is meaningless. Ninety percent
@@ -322,10 +330,10 @@
         them is optional:
       </p>
       <p>
-        An <strong>untrained model</strong> — the identical architecture with random
-        weights, never trained on anything — tells you what you would get from any
-        arbitrary projection of the input. <strong>Raw pixels</strong> — the same probe
-        fitted straight onto the degraded image, with no model at all — tells you whether
+        An <strong>untrained model</strong> (the identical architecture with random
+        weights, never trained on anything) tells you what you would get from any
+        arbitrary projection of the input. <strong>Raw pixels</strong> (the same probe
+        fitted straight onto the degraded image, with no model at all) tells you whether
         the model was needed. <strong>Shuffled labels</strong> tell you what the probe
         scores when there is definitionally nothing to learn. And <strong>POS and
         CHROM</strong>, two hand-derived formulas from 2013 and 2016 that involve no
@@ -408,8 +416,10 @@
 <text class="c-cat" x="789.3" y="490.0" text-anchor="middle">unmasked</text>
 <text class="c-axis-title" x="92" y="528">← LESS OF THE SKIN REGION LEFT</text>
 <text class="c-axis-title" x="542.4" y="510.0">DIFFERENT MANIPULATIONS, NOT FURTHER RUNGS</text>
-<text class="lg-id" x="826" y="32" text-anchor="end">— the frozen model</text>
-<text class="lg-floor" x="826" y="46" text-anchor="end">— — raw pixels, no model</text>
+<text class="lg-id" x="826" y="32" text-anchor="end">the frozen model</text>
+<path class="ln-id" d="M680.8,28 l24,0" />
+<text class="lg-floor" x="826" y="46" text-anchor="end">raw pixels, no model</text>
+<path class="ln-floor" d="M652.0,42 l24,0" />
 </svg>
         <figcaption>Fig 4. Both quantities read off the same embedding, on a shared axis. Identity, above, does not move until the very bottom of the ladder. Heart-rate error, below, never gets far from the line you would achieve by ignoring the video and always guessing the dataset's average heart rate.</figcaption>
       </figure>
@@ -418,8 +428,8 @@
         not surprising. It is still <span class="keynum">100%</span> at a 4×4
         block average. Sixteen coloured squares per frame, one of
         120 possible people, and the probe does not make a single mistake. The
-        entire ordered ladder — every rung from a full-resolution face down to sixteen
-        blocks — costs essentially nothing in re-identifiability.
+        entire ordered ladder, every rung from a full-resolution face down to sixteen
+        blocks, costs essentially nothing in re-identifiability.
       </p>
       <p>
         Shuffling the pixels does not help either: <span class="keynum">99.2%</span>.
@@ -430,14 +440,14 @@
       <p>
         Before going further, the shuffled-label control: run the identical probe with the
         identities randomly reassigned, and it scores
-        <span class="keynum">0.8%</span> — chance, to three decimals. So the
+        <span class="keynum">0.8%</span>, which is chance to three decimals. So the
         100% is not a probe with enough capacity to memorise its way to any answer you like.
         Give it nothing, and it finds nothing.
       </p>
 
       <h2 class="h-label">The outline was giving it away</h2>
       <p>
-        Look again at the bottom-left panel of Fig 2 — the 1×1 condition, one flat colour
+        Look again at the bottom-left panel of Fig 2: the 1×1 condition, one flat colour
         for the whole face. Identity there drops to
         <span class="keynum">75.8%</span>, which is a real drop, but it is
         still a hundred times chance. From one colour? That made no sense until I looked at
@@ -460,18 +470,18 @@
           <img src="fig/silhouette.png" width="1222" height="784" loading="lazy" decoding="async"
                alt="Two panels side by side. Left, labelled the outline kept: a single flat brown colour in the silhouette of a face, complete with gaps where the eyes and eyebrows are, on black; underneath it, 75.8 per cent identified correctly. Right, labelled the outline gone: the identical brown filling the entire square; underneath it, 12.5 per cent. An arrow between them reads delete the silhouette, nothing else changes." />
         </div>
-        <figcaption>Fig 5. The same colour, twice. The only difference between these two images is whether the shape of the person's face is still drawn around it — and that difference is worth 75.8% versus 12.5%. Every pixel value in the left panel is either the person's average skin colour or black; the identifying information is in <em>where</em> the boundary between them falls.</figcaption>
+        <figcaption>Fig 5. The same colour, twice. The only difference between these two images is whether the shape of the person's face is still drawn around it, and that difference is worth 75.8% versus 12.5%. Every pixel value in the left panel is either the person's average skin colour or black; the identifying information is in <em>where</em> the boundary between them falls.</figcaption>
       </figure>
       <p>
         That is the actual finding, and it is a more useful one than the tidy curve I set
         out to draw. Blurring does not anonymise a face. Blurring plus deleting the shape
-        of the face gets you most of the way there — and even then,
+        of the face gets you most of the way there, and even then,
         12.5% out of 120 people is about
         <span class="keynum">15×</span> what you would get by guessing.
       </p>
       <p>
-        There is a wrinkle here worth sitting with. On the verification metric — given two
-        clips, are they the same person? — the untrained network, the one with random
+        There is a wrinkle here worth sitting with. On the verification metric (given two
+        clips, are they the same person?), the untrained network, the one with random
         weights that was never trained on anything at all, scores
         <span class="keynum">0.942</span> on this condition, against
         the trained model's <span class="keynum">0.726</span>. A randomly
@@ -484,7 +494,7 @@
       <h2 class="h-label">It is not one checkpoint being strange</h2>
       <p>
         A result this lopsided invites the obvious objection: maybe this particular set of
-        weights is peculiar. So the whole sweep also ran on a second released checkpoint —
+        weights is peculiar. So the whole sweep also ran on a second released checkpoint:
         the same architecture trained by the same people on UBFC-rPPG, a
         different dataset of real subjects, with no shared training data and no shared
         fitting. If the collapse at the last rung were an artefact of one model, the two
@@ -507,7 +517,7 @@
       </div>
       <p>
         They agree. Both hold at a perfect score through the coarse block averages, both
-        slip at the single trace, and both fall off a cliff at exactly the same place — the
+        slip at the single trace, and both fall off a cliff at exactly the same place, the
         moment the silhouette goes. The two disagree on the depth of the fall
         (12.5% against 24.2%) but not on where it happens or
         what causes it. Two models, trained on different people, degrade the same way,
@@ -554,7 +564,7 @@
         And the 25.3 should not be quoted without its interval. Bootstrapped over
         videos, it runs from <span class="keynum">22.1</span> to
         <span class="keynum">28.7</span> beats per minute. The top of that range is
-        28.8 — the number you get for free by ignoring the video. The model's
+        28.8, the number you get for free by ignoring the video. The model's
         advantage over guessing is not something this study can distinguish from zero.
         That sentence is less satisfying than a curve, and it is what the data supports.
       </p>
@@ -562,7 +572,7 @@
         The likely reason is that this particular model was trained on videos of real
         people and I ran it on synthetic renders. Faces built by a graphics engine are not
         the same distribution as faces lit by a real room, and the pulse is the part that
-        would suffer first — it is a sub-one-percent colour fluctuation, and a renderer
+        would suffer first: it is a sub-one-percent colour fluctuation, and a renderer
         approximates it. Identity, which lives in gross appearance, transfers fine. The
         honest summary is that this is a strong result about re-identification and a weak
         one about heart rate, and the fix is real datasets, which is where this goes next.
@@ -600,8 +610,8 @@
         <span class="keynum">2</span> beats per minute of the full crop, and
         verification AUC at or below <span class="keynum">0.55</span></em>.
         AUC here is the probability that, shown one matching and one mismatched pair of
-        clips, the embedding ranks the true match higher — 0.5 is a coin flip, 1.0 is
-        never wrong.
+        clips, the embedding ranks the true match higher, where 0.5 is a coin flip and
+        1.0 is never wrong.
       </p>
       <p>
         That target is a box in the corner of a plane. Here is the plane.
@@ -609,7 +619,7 @@
       <figure class="fig">
         <svg viewBox="0 0 860 470" role="img" aria-labelledby="ot od" xmlns="http://www.w3.org/2000/svg">
 <title id="ot">Every condition plotted as heart-rate error against re-identifiability</title>
-<desc id="od">The target region — heart-rate error no more than 2 beats per minute worse than the full-resolution crop, and identity verification AUC at or below 0.55 — is drawn as a box in the lower left. All ten conditions sit well above it: the lowest identity AUC reached anywhere is 0.73, against a target of 0.55. The box is empty.</desc>
+<desc id="od">The target region, meaning heart-rate error no more than 2 beats per minute worse than the full-resolution crop together with identity verification AUC at or below 0.55, is drawn as a box in the lower left. All ten conditions sit well above it: the lowest identity AUC reached anywhere is 0.73, against a target of 0.55. The box is empty.</desc>
 <text class="c-axis-title" x="92" y="22">RE-IDENTIFIABILITY (AUC) AGAINST HEART-RATE ERROR</text>
 <line class="c-grid" x1="92" y1="357.0" x2="710" y2="357.0" />
 <text class="c-tick" x="82" y="361.0" text-anchor="end">0.50</text>
@@ -663,12 +673,12 @@
 <text class="lg-id" x="720" y="42">● on the ladder</text>
 <text class="lg-floor" x="720" y="60">○ off it</text>
 </svg>
-        <figcaption>Fig 7. Every condition placed by what it costs and what it buys. The dashed box is the region the study was built to find a point in. It is empty, and not narrowly: the closest anything comes on the ladder is 0.898, against a ceiling of 0.55. Note also how little horizontal spread there is — destroying the face barely moves the heart-rate error, because there was not much heart rate in there to lose.</figcaption>
+        <figcaption>Fig 7. Every condition placed by what it costs and what it buys. The dashed box is the region the study was built to find a point in. It is empty, and not narrowly: the closest anything comes on the ladder is 0.898, against a ceiling of 0.55. Note also how little horizontal spread there is: destroying the face barely moves the heart-rate error, because there was not much heart rate in there to lose.</figcaption>
       </figure>
       <p>
         Nothing lands in the box. The best any rung of the ordered ladder manages is
         <span class="keynum">0.898</span>, and even going off the ladder
-        entirely — deleting the outline, three numbers per frame — only reaches
+        entirely, deleting the outline down to three numbers per frame, only reaches
         <span class="keynum">0.726</span>. The target was
         0.55. <code>reports/operating_point.json</code> in the repository
         records the answer as <code>null</code>, which is the most useful thing this study
@@ -684,16 +694,16 @@
         different four-second clip of the same twenty-second recording." Same avatar, same
         lighting, same camera. A probe that tells those apart has done something easier
         than recognising someone who walked back in on a different day. The number is an
-        upper bound, and the datasets that would make it a fair estimate — PURE, with ten
+        upper bound, and the datasets that would make it a fair estimate (PURE, with ten
         subjects recorded in six sessions each, and MMPD, with thirty-three subjects across
-        four lighting conditions — are the obvious next step. The code is already written
+        four lighting conditions) are the obvious next step. The code is already written
         against an interface with those two in mind.
       </p>
       <p>
         The headline identity numbers are also bare point estimates. The heart-rate results
-        carry bootstrap intervals over videos — that is where the 22.1 to
-        28.7 above comes from — and the identity results do not, which is the wrong
-        way round: the claim I am leaning on is the one without an interval, and the weaker
+        carry bootstrap intervals over videos (that is where the 22.1 to
+        28.7 above comes from), and the identity results do not, which is the
+        wrong way round: the claim I am leaning on is the one without an interval, and the weaker
         claim is the one that has it. A 100% out of 120 and a
         12.5% are far enough from their floors that an interval would not
         change the reading, but "far enough that it would not matter" is a judgement, not a
@@ -704,7 +714,7 @@
         whatever the world contains, so nothing here says anything about how this behaves
         across real skin tones. That question needs MMPD, which labels Fitzpatrick group,
         and the analysis code refuses to pool heart-rate error across those groups when
-        they are present — reporting one average across skin tones is exactly how you hide
+        they are present. Reporting one average across skin tones is exactly how you hide
         that a method works for some people and not others.
       </p>
 
@@ -713,7 +723,7 @@
         <strong>Every heart rate was a multiple of 14.06.</strong> The toolbox's own
         frequency estimator sizes its transform to the length of the clip, which for a
         four-second clip at 30 frames per second gives bins 14.06 beats per minute apart.
-        Every value it returned was 126.56, or 98.44, or 70.31 — which are 9, 7 and 5 times
+        Every value it returned was 126.56, or 98.44, or 70.31, which are 9, 7 and 5 times
         14.0625. A study about a few beats per minute cannot be measured on a grid that
         coarse, and it took plotting the numbers and noticing they were suspiciously round
         to catch it. Padding the transform fixes it; the test suite now asserts that the
@@ -749,8 +759,8 @@
       </figure>
       <p>
         <strong>One avatar was wearing a VR headset.</strong> The face detector, a
-        twenty-year-old cascade classifier, found no face — reasonably — and then instead
-        of failing, locked onto a 60×60 patch of ornamental wallpaper on the back wall and
+        twenty-year-old cascade classifier, reasonably found no face, and then instead
+        of failing locked onto a 60×60 patch of ornamental wallpaper on the back wall and
         reported success. The pipeline dutifully cropped the wallpaper, resized it to 72×72
         and fed it in. Its skin mask was empty, so nothing downstream would have crashed:
         the averages would have been zeros and the probe would have quietly fitted on a row
@@ -766,7 +776,7 @@
       </figure>
       <p>
         <strong>The machine spent an hour swapping.</strong> The sweep held every clip's
-        frames in memory at once — about a gigabyte, on a laptop with eight — and drove
+        frames in memory at once, about a gigabyte on a laptop with eight, and drove
         itself four gigabytes into swap. The fix was one line: keep the frames as views
         into the memory-mapped files on disk instead of copying them out. The stage that
         had been running at 1.4 seconds per clip dropped to 45 milliseconds. It is a
@@ -790,7 +800,7 @@
         exactly. So both must return <em>identical</em> heart rates at every rung. They do,
         to the digit, on real data. If the masking, the block partition, the alignment
         between mask and frame, or the clip assembly is wrong anywhere, that equality
-        breaks — one assertion covering most of the pipeline.
+        breaks. One assertion covers most of the pipeline.
       </p>
 
       <h2 class="h-label">Credit</h2>
