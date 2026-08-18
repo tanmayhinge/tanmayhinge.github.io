@@ -88,7 +88,11 @@ body {
 /* The homepage runs tighter than the rest of the site: the hero photo is tall,
    and this buys back the vertical space that keeps Research in view on open.
    Scoped to .home so no other page moves. */
-.home { --col-w: 75%; padding-top: calc(3 * var(--u)); }
+.home {
+  --col-w: 90%;
+  max-width: 980px;   /* the homepage is a list, not running text, so it can run wider than an article */
+  padding-top: calc(3 * var(--u));
+}
 .home .topnav { margin-bottom: calc(3.5 * var(--u)); }
 .home .index {
   width: var(--col-w);
@@ -237,7 +241,7 @@ a:focus-visible {
    so the whole frame is visible, sized as a share of the column. */
 .headshot {
   display: block;
-  width: calc(var(--col-w) * 0.6);   /* 40% smaller than the text column it sits above */
+  width: calc(var(--col-w) * 0.45);   /* under half the text column it sits above */
   height: auto;
   margin-inline: auto;
   margin-bottom: calc(3 * var(--u));   /* breathing room before the lead paragraph */
@@ -373,9 +377,17 @@ a:focus-visible {
 /* Link to a paper's PDF, sat under the title. Outlined in --hot at rest and filled
    with it on highlight; --bg for the label there, which clears 4.8:1 on the light
    ground and 7.1:1 on the dark one. */
-.paperlink { text-align: center; margin-top: calc(3 * var(--u)); }
+.paperlink {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: calc(1.5 * var(--u));
+  margin-top: calc(3 * var(--u));
+}
 .paperlink a {
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: calc(1 * var(--u));
   font-family: var(--mono);
   font-size: var(--t-small);
   letter-spacing: 0.08em;
@@ -391,6 +403,7 @@ a:focus-visible {
 .paperlink a:hover,
 .paperlink a:focus-visible { background: var(--hot); color: var(--bg); }
 .paperlink a:focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
+.paperlink .ghmark { width: 1.15em; height: 1.15em; flex: none; }
 
 .meta {
   display: grid;
@@ -428,9 +441,9 @@ a:focus-visible {
 }
 
 /* Links inside running text, and only there. Colour alone cannot carry a link
-   mid-sentence, so the hairline does it; on hover both move to --hot together. */
-.report p a, .report li a, .hero p a { border-bottom: 1px solid var(--hair); }
-.report p a:hover, .report li a:hover, .hero p a:hover { border-bottom-color: var(--hot); }
+   mid-sentence, so the rule does it, in --hot so it reads as a link and not as
+   an artefact of the type; on hover the word joins it. */
+.report p a, .report li a, .hero p a { border-bottom: 1px solid var(--hot); }
 
 
 .prevnext {
@@ -574,7 +587,7 @@ table.data .hl { color: var(--ink); font-weight: 600; }
 @media (max-width: 640px) {
   .container { padding: calc(3 * var(--u)) calc(2.5 * var(--u)) calc(6 * var(--u)); }
   .labelline { grid-template-columns: 1fr; }
-  .home { --col-w: 80%; }   /* 60% of a phone column is too small to read as a portrait */
+  .home { --col-w: 100%; }   /* half a phone column is already a small portrait */
   .fig-two { grid-template-columns: 1fr; }
 }
 
