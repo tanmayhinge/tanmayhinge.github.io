@@ -34,12 +34,206 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..600&family=Girassol&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="/styles.css?v=45" />
+  <link rel="stylesheet" href="/styles.css?v=46" />
 
   <!-- stamp the stored theme before first paint; blocking on purpose -->
   <script>(function(){try{var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
   <script src="/theme.js" defer></script>
   <!-- head:end -->
+
+  <!-- The stack lives only on this page, so its CSS does too, the way the research
+       pages carry their figure styling. Keeping it out of styles.css also keeps the
+       sitewide ?v= stamp where it is. Every colour here is a site token except the
+       two per-book custom properties, --spine and --spine-ink, which are sampled
+       from each book's real cover and set inline on the <li>. -->
+  <style>
+    .shelf { margin-top: calc(3 * var(--u)); }
+
+    /* Label in the rail, books to the right: the same two-column grid the section
+       labels use on the homepage and the article pages, so the reading list lines
+       up with the rest of the site instead of inventing its own measure. */
+    .group {
+      display: grid;
+      grid-template-columns: var(--rail) 1fr;
+      column-gap: calc(5 * var(--u));
+    }
+    .group + .group { margin-top: calc(4 * var(--u)); }
+    .group > .idx-label { padding-top: calc(1 * var(--u)); }
+
+    /* The bracket marking how far a section reaches. A left rule plus a tick at
+       each end, rather than a box: the site has one hairline between sections and
+       nothing boxed anywhere, so a full border would read as foreign. */
+    .covers {
+      position: relative;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: flex-start;
+      gap: calc(2 * var(--u)) calc(1.5 * var(--u));
+      margin: 0;
+      padding: 0 0 0 calc(2 * var(--u));
+      list-style: none;
+      border-left: 1px solid var(--hair);
+    }
+    .covers::before,
+    .covers::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      width: calc(0.75 * var(--u));
+      height: 1px;
+      background: var(--hair);
+    }
+    .covers::before { top: 0; }
+    .covers::after { bottom: 0; }
+
+    /* The book IS its cover here, so there is no drawn spine to colour and no
+       --spine token left on the markup. The button is sized by the image and the
+       caption wraps inside that width. */
+    .cover {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: calc(1 * var(--u));
+      width: max-content;
+      max-width: 112px;
+      padding: 0;
+      background: none;
+      border: 0;
+      text-align: left;
+      cursor: pointer;
+      --lift: 0px;
+      transform: translateY(var(--lift));
+      transition: transform .15s ease;
+    }
+    .cover:hover, .cover:focus-visible { --lift: -4px; }
+    .cover:focus-visible { outline: 2px solid var(--ink); outline-offset: 4px; border-radius: 3px; }
+
+    /* One height, natural widths. Covers are not all the same shape, and forcing a
+       common width would leave the row's bottom edge ragged and the captions out of
+       line; a common height stands them on one baseline the way a shelf would. */
+    .cover img {
+      height: 150px;
+      width: auto;
+      display: block;
+      border-radius: 2px;
+      border: 1px solid var(--hair);
+    }
+    .cover-title {
+      font-family: var(--display);
+      font-optical-sizing: auto;
+      font-size: var(--t-small);
+      font-weight: 600;
+      line-height: 1.2;
+      color: var(--ink);
+      transition: color .15s ease;
+    }
+    .cover:hover .cover-title,
+    .cover:focus-visible .cover-title { color: var(--hot); }
+    .cover-by {
+      font-family: var(--mono);
+      font-size: var(--t-micro);
+      letter-spacing: 0.02em;
+      color: var(--muted);
+      margin-top: calc(-0.5 * var(--u));
+    }
+
+    /* The popup is the native popover: the browser gives us the top layer, Escape,
+       light-dismiss and focus return, so this page still ships no JavaScript. */
+    .thoughts {
+      /* display:none is load-bearing. The UA sheet hides a closed popover, but any
+         author display value outranks a UA one whatever the specificity, so styling
+         this as a flex row unconditionally would leave all eight panels on screen,
+         stacked. The open state re-declares it below. It doubles as the fallback:
+         a browser without popover drops the :popover-open rule as invalid and the
+         panels stay hidden rather than dumping inline under the stack. */
+      display: none;
+      position: fixed;
+      inset: 0;
+      margin: auto;
+      width: min(760px, calc(100vw - 6 * var(--u)));
+      height: max-content;
+      max-height: calc(100vh - 6 * var(--u));
+      overflow-y: auto;
+      gap: calc(4 * var(--u));
+      padding: calc(5 * var(--u));
+      background: var(--bg);
+      color: var(--ink);
+      border: 1px solid var(--hair);
+      border-radius: 3px;
+    }
+    .thoughts:popover-open { display: flex; }
+    /* The stack goes out of focus behind the panel rather than just dark: the blur
+       is what separates the two planes, so the dim can come down and the books stay
+       recognisable underneath. */
+    .thoughts::backdrop {
+      background: color-mix(in srgb, #000 32%, transparent);
+      backdrop-filter: blur(7px);
+      -webkit-backdrop-filter: blur(7px);
+    }
+    .thoughts img {
+      flex: none;
+      width: 190px;
+      height: auto;
+      align-self: flex-start;
+      border-radius: 2px;
+      border: 1px solid var(--hair);
+    }
+    .thoughts h3 {
+      font-family: var(--display);
+      font-size: var(--t-body);
+      font-weight: 600;
+      line-height: 1.2;
+      margin: 0 0 calc(0.5 * var(--u));
+    }
+    .thoughts h3 span {
+      display: block;
+      font-family: var(--mono);
+      font-size: var(--t-micro);
+      font-weight: 400;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--muted);
+      margin-top: calc(0.75 * var(--u));
+    }
+    /* At this width --t-small would leave the panel looking like a caption with
+       room around it, so the thoughts run at reading size. The heading keeps that
+       size too and separates on weight, the way the index labels do. */
+    .thoughts p { font-size: var(--t-body); line-height: 1.6; margin: 0; }
+    .thoughts .todo { color: var(--muted); font-style: italic; }
+
+    /* the close control reads as the nav's theme button does: a glyph, not a chrome button */
+    .thoughts-close {
+      position: absolute;
+      top: calc(1 * var(--u));
+      right: calc(1.5 * var(--u));
+      background: none;
+      border: 0;
+      padding: calc(0.5 * var(--u));
+      font-family: var(--mono);
+      font-size: var(--t-small);
+      line-height: 1;
+      color: var(--muted);
+      cursor: pointer;
+    }
+    .thoughts-close:hover { color: var(--hot); }
+    .thoughts-close:focus-visible { outline: 2px solid var(--ink); outline-offset: 2px; border-radius: 2px; }
+
+    @media (max-width: 640px) {
+      /* The rail collapses the same way styles.css collapses .labelline here: the
+         label sits above its own books and the pile runs the full width. Nothing
+         scrolls sideways at any width, which is the whole point of a stack. */
+      .group { grid-template-columns: 1fr; }
+      .group > .idx-label { padding-top: 0; margin-bottom: calc(1 * var(--u)); }
+
+      .thoughts { flex-direction: column; gap: calc(2.5 * var(--u)); padding: calc(3 * var(--u)); }
+      .thoughts img { width: 144px; }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .cover { transition: none; }
+      .cover:hover, .cover:focus-visible { --lift: 0px; }
+    }
+  </style>
 
   <script type="application/ld+json">
   {
@@ -60,7 +254,27 @@
         },
         "isPartOf": {
           "@id": "https://tanmayhinge.com/#website"
+        },
+        "mainEntity": {
+          "@id": "https://tanmayhinge.com/reading/#books"
         }
+      },
+      {
+        "@type": "ItemList",
+        "@id": "https://tanmayhinge.com/reading/#books",
+        "name": "Books",
+        "itemListOrder": "https://schema.org/ItemListUnordered",
+        "numberOfItems": 8,
+        "itemListElement": [
+          { "@type": "ListItem", "position": 1, "item": { "@type": "Book", "name": "The Royal Game", "author": { "@type": "Person", "name": "Stefan Zweig" }, "readBy": { "@id": "https://tanmayhinge.com/#person" } } },
+          { "@type": "ListItem", "position": 2, "item": { "@type": "Book", "name": "Sapiens: A Brief History of Humankind", "author": { "@type": "Person", "name": "Yuval Noah Harari" } } },
+          { "@type": "ListItem", "position": 3, "item": { "@type": "BookSeries", "name": "Diary of a Wimpy Kid", "author": { "@type": "Person", "name": "Jeff Kinney" } } },
+          { "@type": "ListItem", "position": 4, "item": { "@type": "Book", "name": "Assorted Enid Blyton", "author": { "@type": "Person", "name": "Enid Blyton" } } },
+          { "@type": "ListItem", "position": 5, "item": { "@type": "Book", "name": "The Alchemist", "author": { "@type": "Person", "name": "Paulo Coelho" } } },
+          { "@type": "ListItem", "position": 6, "item": { "@type": "Book", "name": "The Stranger", "author": { "@type": "Person", "name": "Albert Camus" } } },
+          { "@type": "ListItem", "position": 7, "item": { "@type": "Book", "name": "Nineteen Eighty-Four", "author": { "@type": "Person", "name": "George Orwell" } } },
+          { "@type": "ListItem", "position": 8, "item": { "@type": "Book", "name": "The Republic", "author": { "@type": "Person", "name": "Plato" } } }
+        ]
       },
       {
         "@type": "BreadcrumbList",
@@ -94,58 +308,201 @@
       <span class="navlinks">
         <a href="/#research">Research</a>
         <a href="/photowall/">Photowall</a>
-        <a href="/reading/">Reading</a>
+        <a href="/reading/" aria-current="page">Reading</a>
         <a href="https://github.com/tanmayhinge" target="_blank" rel="noopener noreferrer">GitHub</a>
         <a href="https://www.youtube.com/@tanmayhinge" target="_blank" rel="noopener noreferrer">YouTube</a>
       </span>
     </nav>
     <!-- nav:end -->
 
-    <h1 class="ptitle" id="content" tabindex="-1">Reading</h1>
+    <!-- The nav's highlighted item names the page now, so the h1 carries the
+         document outline without spending a line on saying it twice. Hidden the
+         same way the homepage hides its own. The skip link needs a target that
+         is actually on screen, so #content moves down to the shelf. -->
+    <h1 class="visually-hidden">Reading</h1>
 
-    <div class="index">
+    <!-- The books are their own covers: real artwork rather than a drawn stand-in
+         for it, which is also why no colour tokens are set per book any more. Each
+         section is bracketed in the rail. Publisher cover art, served from this
+         domain, used at thumbnail size. -->
+    <div class="shelf" id="content" tabindex="-1">
 
-      <section class="sec">
-        <div class="labelline"><h2 class="idx-label">Currently reading</h2></div>
-        <div class="row minimal static">
-          <h3 class="row-title">The Royal Game</h3>
-          <span class="row-by">Stefan Zweig</span>
-        </div>
+      <section class="group">
+        <h2 class="idx-label">Currently reading</h2>
+        <ul class="covers">
+        <li class="book">
+          <button class="cover" type="button" popovertarget="bk-royal-game"
+                  aria-label="The Royal Game by Stefan Zweig &mdash; read my thoughts">
+            <img src="/reading/covers/royal-game.jpg" width="180" height="267"
+                 alt="Cover of The Royal Game" loading="lazy" decoding="async" />
+            <span class="cover-title">The Royal Game</span>
+            <span class="cover-by">Stefan Zweig</span>
+          </button>
+          <div class="thoughts" id="bk-royal-game" popover role="dialog" aria-labelledby="bk-royal-game-t">
+            <img src="/reading/covers/royal-game.jpg" width="180" height="267"
+                 alt="" aria-hidden="true" loading="lazy" decoding="async" />
+            <div>
+              <h3 id="bk-royal-game-t">The Royal Game <span>Stefan Zweig</span></h3>
+              <!-- TODO(tanmay): your thoughts on this one -->
+              <p class="todo">Thoughts to come.</p>
+            </div>
+            <button class="thoughts-close" type="button" popovertarget="bk-royal-game"
+                    popovertargetaction="hide" aria-label="Close">&times;</button>
+          </div>
+        </li>
+        </ul>
       </section>
 
-      <section class="sec">
-        <div class="labelline"><h2 class="idx-label">What I&rsquo;ve read</h2></div>
-        <div class="row minimal static">
-          <h3 class="row-title">Sapiens</h3>
-          <span class="row-by">Yuval Noah Harari</span>
-        </div>
-        <div class="row minimal static">
-          <h3 class="row-title">Diary of a Wimpy Kid (series)</h3>
-          <span class="row-by">Jeff Kinney</span>
-        </div>
-        <div class="row minimal static">
-          <h3 class="row-title">Assorted Enid Blyton</h3>
-        </div>
-        <div class="row minimal static">
-          <h3 class="row-title">The Alchemist</h3>
-          <span class="row-by">Paulo Coelho</span>
-        </div>
-        <div class="row minimal static">
-          <h3 class="row-title">The Stranger</h3>
-          <span class="row-by">Albert Camus</span>
-        </div>
+      <section class="group">
+        <h2 class="idx-label">What I&rsquo;ve read</h2>
+        <ul class="covers">
+        <li class="book">
+          <button class="cover" type="button" popovertarget="bk-sapiens"
+                  aria-label="Sapiens by Yuval Noah Harari &mdash; read my thoughts">
+            <img src="/reading/covers/sapiens.jpg" width="180" height="284"
+                 alt="Cover of Sapiens" loading="lazy" decoding="async" />
+            <span class="cover-title">Sapiens</span>
+            <span class="cover-by">Yuval Noah Harari</span>
+          </button>
+          <div class="thoughts" id="bk-sapiens" popover role="dialog" aria-labelledby="bk-sapiens-t">
+            <img src="/reading/covers/sapiens.jpg" width="180" height="284"
+                 alt="" aria-hidden="true" loading="lazy" decoding="async" />
+            <div>
+              <h3 id="bk-sapiens-t">Sapiens <span>Yuval Noah Harari</span></h3>
+              <!-- TODO(tanmay): your thoughts on this one -->
+              <p class="todo">Thoughts to come.</p>
+            </div>
+            <button class="thoughts-close" type="button" popovertarget="bk-sapiens"
+                    popovertargetaction="hide" aria-label="Close">&times;</button>
+          </div>
+        </li>
+        <li class="book">
+          <button class="cover" type="button" popovertarget="bk-wimpy-kid"
+                  aria-label="Diary of a Wimpy Kid, the series, by Jeff Kinney &mdash; read my thoughts">
+            <img src="/reading/covers/wimpy-kid.jpg" width="180" height="263"
+                 alt="Cover of Diary of a Wimpy Kid" loading="lazy" decoding="async" />
+            <span class="cover-title">Diary of a Wimpy Kid (series)</span>
+            <span class="cover-by">Jeff Kinney</span>
+          </button>
+          <div class="thoughts" id="bk-wimpy-kid" popover role="dialog" aria-labelledby="bk-wimpy-kid-t">
+            <img src="/reading/covers/wimpy-kid.jpg" width="180" height="263"
+                 alt="" aria-hidden="true" loading="lazy" decoding="async" />
+            <div>
+              <h3 id="bk-wimpy-kid-t">Diary of a Wimpy Kid (series) <span>Jeff Kinney</span></h3>
+              <!-- TODO(tanmay): your thoughts on this one -->
+              <p class="todo">Thoughts to come.</p>
+            </div>
+            <button class="thoughts-close" type="button" popovertarget="bk-wimpy-kid"
+                    popovertargetaction="hide" aria-label="Close">&times;</button>
+          </div>
+        </li>
+        <li class="book">
+          <button class="cover" type="button" popovertarget="bk-blyton"
+                  aria-label="Assorted Enid Blyton &mdash; read my thoughts">
+            <img src="/reading/covers/blyton.jpg" width="180" height="289"
+                 alt="Cover of Five on a Treasure Island by Enid Blyton" loading="lazy" decoding="async" />
+            <span class="cover-title">Assorted Enid Blyton</span>
+            <span class="cover-by">Enid Blyton</span>
+          </button>
+          <div class="thoughts" id="bk-blyton" popover role="dialog" aria-labelledby="bk-blyton-t">
+            <img src="/reading/covers/blyton.jpg" width="180" height="289"
+                 alt="" aria-hidden="true" loading="lazy" decoding="async" />
+            <div>
+              <h3 id="bk-blyton-t">Assorted Enid Blyton <span>Enid Blyton</span></h3>
+              <!-- TODO(tanmay): your thoughts on this one -->
+              <p class="todo">Thoughts to come.</p>
+            </div>
+            <button class="thoughts-close" type="button" popovertarget="bk-blyton"
+                    popovertargetaction="hide" aria-label="Close">&times;</button>
+          </div>
+        </li>
+        <li class="book">
+          <button class="cover" type="button" popovertarget="bk-alchemist"
+                  aria-label="The Alchemist by Paulo Coelho &mdash; read my thoughts">
+            <img src="/reading/covers/alchemist.jpg" width="180" height="272"
+                 alt="Cover of The Alchemist" loading="lazy" decoding="async" />
+            <span class="cover-title">The Alchemist</span>
+            <span class="cover-by">Paulo Coelho</span>
+          </button>
+          <div class="thoughts" id="bk-alchemist" popover role="dialog" aria-labelledby="bk-alchemist-t">
+            <img src="/reading/covers/alchemist.jpg" width="180" height="272"
+                 alt="" aria-hidden="true" loading="lazy" decoding="async" />
+            <div>
+              <h3 id="bk-alchemist-t">The Alchemist <span>Paulo Coelho</span></h3>
+              <!-- TODO(tanmay): your thoughts on this one -->
+              <p class="todo">Thoughts to come.</p>
+            </div>
+            <button class="thoughts-close" type="button" popovertarget="bk-alchemist"
+                    popovertargetaction="hide" aria-label="Close">&times;</button>
+          </div>
+        </li>
+        <li class="book">
+          <button class="cover" type="button" popovertarget="bk-stranger"
+                  aria-label="The Stranger by Albert Camus &mdash; read my thoughts">
+            <img src="/reading/covers/stranger.jpg" width="180" height="284"
+                 alt="Cover of The Stranger" loading="lazy" decoding="async" />
+            <span class="cover-title">The Stranger</span>
+            <span class="cover-by">Albert Camus</span>
+          </button>
+          <div class="thoughts" id="bk-stranger" popover role="dialog" aria-labelledby="bk-stranger-t">
+            <img src="/reading/covers/stranger.jpg" width="180" height="284"
+                 alt="" aria-hidden="true" loading="lazy" decoding="async" />
+            <div>
+              <h3 id="bk-stranger-t">The Stranger <span>Albert Camus</span></h3>
+              <!-- TODO(tanmay): your thoughts on this one -->
+              <p class="todo">Thoughts to come.</p>
+            </div>
+            <button class="thoughts-close" type="button" popovertarget="bk-stranger"
+                    popovertargetaction="hide" aria-label="Close">&times;</button>
+          </div>
+        </li>
+        </ul>
       </section>
 
-      <section class="sec">
-        <div class="labelline"><h2 class="idx-label">On my reading list</h2></div>
-        <div class="row minimal static">
-          <h3 class="row-title">1984</h3>
-          <span class="row-by">George Orwell</span>
-        </div>
-        <div class="row minimal static">
-          <h3 class="row-title">The Republic</h3>
-          <span class="row-by">Plato</span>
-        </div>
+      <section class="group">
+        <h2 class="idx-label">On my reading list</h2>
+        <ul class="covers">
+        <li class="book">
+          <button class="cover" type="button" popovertarget="bk-republic"
+                  aria-label="The Republic by Plato &mdash; read my thoughts">
+            <img src="/reading/covers/republic.jpg" width="180" height="277"
+                 alt="Cover of The Republic" loading="lazy" decoding="async" />
+            <span class="cover-title">The Republic</span>
+            <span class="cover-by">Plato</span>
+          </button>
+          <div class="thoughts" id="bk-republic" popover role="dialog" aria-labelledby="bk-republic-t">
+            <img src="/reading/covers/republic.jpg" width="180" height="277"
+                 alt="" aria-hidden="true" loading="lazy" decoding="async" />
+            <div>
+              <h3 id="bk-republic-t">The Republic <span>Plato</span></h3>
+              <!-- TODO(tanmay): your thoughts on this one -->
+              <p class="todo">Thoughts to come.</p>
+            </div>
+            <button class="thoughts-close" type="button" popovertarget="bk-republic"
+                    popovertargetaction="hide" aria-label="Close">&times;</button>
+          </div>
+        </li>
+        <li class="book">
+          <button class="cover" type="button" popovertarget="bk-1984"
+                  aria-label="Nineteen Eighty-Four by George Orwell &mdash; read my thoughts">
+            <img src="/reading/covers/nineteen84.jpg" width="180" height="290"
+                 alt="Cover of Nineteen Eighty-Four" loading="lazy" decoding="async" />
+            <span class="cover-title">1984</span>
+            <span class="cover-by">George Orwell</span>
+          </button>
+          <div class="thoughts" id="bk-1984" popover role="dialog" aria-labelledby="bk-1984-t">
+            <img src="/reading/covers/nineteen84.jpg" width="180" height="290"
+                 alt="" aria-hidden="true" loading="lazy" decoding="async" />
+            <div>
+              <h3 id="bk-1984-t">1984 <span>George Orwell</span></h3>
+              <!-- TODO(tanmay): your thoughts on this one -->
+              <p class="todo">Thoughts to come.</p>
+            </div>
+            <button class="thoughts-close" type="button" popovertarget="bk-1984"
+                    popovertargetaction="hide" aria-label="Close">&times;</button>
+          </div>
+        </li>
+        </ul>
       </section>
 
     </div>
@@ -159,7 +516,7 @@
         <a href="mailto:hingetanmay@gmail.com">Email</a>
       </span>
       <!-- foot:end -->
-      <span>Last updated <time datetime="2026-08-11">11 August 2026</time></span>
+      <span>Last updated <time datetime="2026-08-19">19 August 2026</time></span>
     </footer>
   </main>
 </body>
