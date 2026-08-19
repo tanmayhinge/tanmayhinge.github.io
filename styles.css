@@ -178,6 +178,10 @@ a:focus-visible {
 }
 .topnav a { text-decoration: none; color: var(--muted); }
 .topnav a:hover { color: var(--hot); }
+/* The page you are on. build.py stamps aria-current on the matching link, so the
+   state lives in the markup and this is only its colour. It reads as the hover
+   colour held down, which is the point: you are already there. */
+.topnav a[aria-current="page"] { color: var(--hot); }
 /* Girassol ships one weight (400), so size and tracking do the work
    of making the name hold the bar. */
 .topnav .brand {

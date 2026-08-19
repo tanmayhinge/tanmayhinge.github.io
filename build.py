@@ -45,6 +45,40 @@ def pattern(name):
     )
 
 
+SECTIONS = (
+    ("reading/", "/reading/"),
+    ("photowall/", "/photowall/"),
+    ("research/", "/#research"),
+)
+
+
+def current_href(path):
+    """Which nav link, if any, points at the section this page belongs to.
+
+    The homepage and 404 return None: the homepage has no nav item of its own
+    (the brand is the link home) and 404 is not anywhere.
+    """
+    for prefix, href in SECTIONS:
+        if path.startswith(prefix):
+            return href
+    return None
+
+
+def mark_current(nav, href):
+    """Stamp aria-current on the one nav link matching href.
+
+    The nav is written once in partials/nav.html, so the current-page state
+    cannot live there. It is added per page on the way in, which keeps every
+    page's copy honest without a hand-edited class on each one.
+    """
+    if href is None:
+        return nav
+    needle = f'<a href="{href}">'
+    if needle not in nav:
+        sys.exit(f"error: nav has no link to {href}; SECTIONS is out of date")
+    return nav.replace(needle, f'<a href="{href}" aria-current="page">', 1)
+
+
 def inject(text, name, body):
     """Replace whatever sits between the markers, re-indented to match them."""
     pat = pattern(name)
@@ -80,6 +114,8 @@ def main():
     for path in paths:
         text = original = sources[path]
         for name, body in bodies.items():
+            if name == "nav":
+                body = mark_current(body, current_href(path))
             text = inject(text, name, body)
         if text != original:
             open(path, "w", encoding="utf-8").write(text)
