@@ -264,16 +264,17 @@
         "@id": "https://tanmayhinge.com/reading/#books",
         "name": "Books",
         "itemListOrder": "https://schema.org/ItemListUnordered",
-        "numberOfItems": 8,
+        "numberOfItems": 9,
         "itemListElement": [
-          { "@type": "ListItem", "position": 1, "item": { "@type": "Book", "name": "The Royal Game", "author": { "@type": "Person", "name": "Stefan Zweig" }, "readBy": { "@id": "https://tanmayhinge.com/#person" } } },
-          { "@type": "ListItem", "position": 2, "item": { "@type": "Book", "name": "Sapiens: A Brief History of Humankind", "author": { "@type": "Person", "name": "Yuval Noah Harari" } } },
-          { "@type": "ListItem", "position": 3, "item": { "@type": "BookSeries", "name": "Diary of a Wimpy Kid", "author": { "@type": "Person", "name": "Jeff Kinney" } } },
-          { "@type": "ListItem", "position": 4, "item": { "@type": "Book", "name": "Assorted Enid Blyton", "author": { "@type": "Person", "name": "Enid Blyton" } } },
-          { "@type": "ListItem", "position": 5, "item": { "@type": "Book", "name": "The Alchemist", "author": { "@type": "Person", "name": "Paulo Coelho" } } },
-          { "@type": "ListItem", "position": 6, "item": { "@type": "Book", "name": "The Stranger", "author": { "@type": "Person", "name": "Albert Camus" } } },
-          { "@type": "ListItem", "position": 7, "item": { "@type": "Book", "name": "Nineteen Eighty-Four", "author": { "@type": "Person", "name": "George Orwell" } } },
-          { "@type": "ListItem", "position": 8, "item": { "@type": "Book", "name": "The Republic", "author": { "@type": "Person", "name": "Plato" } } }
+          { "@type": "ListItem", "position": 1, "item": { "@type": "Book", "name": "Prisoners of Geography", "author": { "@type": "Person", "name": "Tim Marshall" }, "readBy": { "@id": "https://tanmayhinge.com/#person" } } },
+          { "@type": "ListItem", "position": 2, "item": { "@type": "Book", "name": "The Royal Game", "author": { "@type": "Person", "name": "Stefan Zweig" } } },
+          { "@type": "ListItem", "position": 3, "item": { "@type": "Book", "name": "Sapiens: A Brief History of Humankind", "author": { "@type": "Person", "name": "Yuval Noah Harari" } } },
+          { "@type": "ListItem", "position": 4, "item": { "@type": "BookSeries", "name": "Diary of a Wimpy Kid", "author": { "@type": "Person", "name": "Jeff Kinney" } } },
+          { "@type": "ListItem", "position": 5, "item": { "@type": "Book", "name": "Assorted Enid Blyton", "author": { "@type": "Person", "name": "Enid Blyton" } } },
+          { "@type": "ListItem", "position": 6, "item": { "@type": "Book", "name": "The Alchemist", "author": { "@type": "Person", "name": "Paulo Coelho" } } },
+          { "@type": "ListItem", "position": 7, "item": { "@type": "Book", "name": "The Stranger", "author": { "@type": "Person", "name": "Albert Camus" } } },
+          { "@type": "ListItem", "position": 8, "item": { "@type": "Book", "name": "Nineteen Eighty-Four", "author": { "@type": "Person", "name": "George Orwell" } } },
+          { "@type": "ListItem", "position": 9, "item": { "@type": "Book", "name": "The Republic", "author": { "@type": "Person", "name": "Plato" } } }
         ]
       },
       {
@@ -331,6 +332,33 @@
         <h2 class="idx-label">Currently reading</h2>
         <ul class="covers">
         <li class="book">
+          <button class="cover" type="button" popovertarget="bk-prisoners-geography"
+                  aria-label="Prisoners of Geography by Tim Marshall &mdash; read my thoughts">
+            <img src="/reading/covers/prisoners-of-geography.jpg" width="180" height="276"
+                 alt="Cover of Prisoners of Geography" loading="lazy" decoding="async" />
+            <span class="cover-title">Prisoners of Geography</span>
+            <span class="cover-by">Tim Marshall</span>
+          </button>
+          <div class="thoughts" id="bk-prisoners-geography" popover role="dialog"
+               aria-labelledby="bk-prisoners-geography-t">
+            <img src="/reading/covers/prisoners-of-geography.jpg" width="180" height="276"
+                 alt="" aria-hidden="true" loading="lazy" decoding="async" />
+            <div>
+              <h3 id="bk-prisoners-geography-t">Prisoners of Geography <span>Tim Marshall</span></h3>
+              <!-- TODO(tanmay): your thoughts on this one -->
+              <p class="todo">Thoughts to come.</p>
+            </div>
+            <button class="thoughts-close" type="button" popovertarget="bk-prisoners-geography"
+                    popovertargetaction="hide" aria-label="Close">&times;</button>
+          </div>
+        </li>
+        </ul>
+      </section>
+
+      <section class="group">
+        <h2 class="idx-label">What I&rsquo;ve read</h2>
+        <ul class="covers">
+        <li class="book">
           <button class="cover" type="button" popovertarget="bk-royal-game"
                   aria-label="The Royal Game by Stefan Zweig &mdash; read my thoughts">
             <img src="/reading/covers/royal-game.jpg" width="180" height="267"
@@ -350,12 +378,6 @@
                     popovertargetaction="hide" aria-label="Close">&times;</button>
           </div>
         </li>
-        </ul>
-      </section>
-
-      <section class="group">
-        <h2 class="idx-label">What I&rsquo;ve read</h2>
-        <ul class="covers">
         <li class="book">
           <button class="cover" type="button" popovertarget="bk-sapiens"
                   aria-label="Sapiens by Yuval Noah Harari &mdash; read my thoughts">
