@@ -29,24 +29,42 @@
 
   var big = dialog.querySelector('.lightbox-img');
 
-  // Most of these photos are small originals — a 360px-wide frame stretched to
-  // fill a desktop viewport is mush. Each one is allowed to double, and no more;
-  // the viewport caps it from there. The cap and the aspect ratio ride along as
-  // custom properties so the sizing itself stays in the stylesheet.
+  // Two files back every photo: the wall loads a 480px thumbnail, and opening one
+  // wants the original. Rather than open onto a blank frame while a half-megabyte
+  // download runs, the thumbnail goes up first — it is already decoded and on
+  // screen, so it appears instantly — and the full file replaces it once it has
+  // arrived. The swap is invisible apart from the detail arriving.
+  //
+  // The size is settled before either lands, from the full file's width in
+  // data-full-w and the ratio the wall img already declares, so the frame never
+  // jumps when the real photo takes over. Each photo may double and no more:
+  // ten of these are 360x480 and there is no detail to reveal past that.
+  var token = 0;
+
   function show(i) {
     index = (i + shots.length) % shots.length;
     var src = shots[index];
-    big.src = src.currentSrc || src.src;
-    big.alt = src.alt;
-    var w = src.naturalWidth || src.width;
-    var h = src.naturalHeight || src.height;
-    big.style.setProperty('--nat-w', w * 2 + 'px');
-    big.style.setProperty('--ar', w / h);
+    var full = src.getAttribute('data-full');
+    var mine = ++token;   // a later step must not be overtaken by an earlier load
 
-    // Warm the neighbours so stepping through does not flash empty.
+    big.alt = src.alt;
+    big.style.setProperty('--ar', (src.width || 1) / (src.height || 1));
+    big.style.setProperty('--nat-w',
+      (parseInt(src.getAttribute('data-full-w'), 10) || src.naturalWidth) * 2 + 'px');
+    big.src = src.currentSrc || src.src;
+
+    if (full) {
+      var hires = new Image();
+      hires.onload = function () {
+        if (mine === token) big.src = full;   // still the photo on screen
+      };
+      hires.src = full;
+    }
+
+    // Warm the neighbours so stepping through does not stall on the download.
     [index - 1, index + 1].forEach(function (n) {
       var near = shots[(n + shots.length) % shots.length];
-      new Image().src = near.currentSrc || near.src;
+      new Image().src = near.getAttribute('data-full') || near.src;
     });
   }
 
