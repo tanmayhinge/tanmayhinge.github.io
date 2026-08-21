@@ -107,7 +107,13 @@
 
   // Dropping the src on close stops a closed viewer from holding the full-size
   // decode of whichever photo was last open.
+  //
+  // The close event is queued rather than dispatched inline, so it can arrive
+  // after the viewer has already been reopened on another photo — closing and
+  // opening again inside one task is enough. Clearing blind there would strip
+  // the src off the photo now on screen, so this only fires when the dialog is
+  // still shut by the time the event lands.
   dialog.addEventListener('close', function () {
-    big.removeAttribute('src');
+    if (!dialog.open) big.removeAttribute('src');
   });
 })();
