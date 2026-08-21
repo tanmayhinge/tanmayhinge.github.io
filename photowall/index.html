@@ -26,20 +26,23 @@
   <link rel="icon" type="image/png" sizes="192x192" href="/circle_favicon.png">
   <link rel="apple-touch-icon" sizes="192x192" href="/circle_favicon.png">
 
-  <!-- matches --bg in each mode, so the browser chrome does not fight the page -->
-  <meta name="theme-color" content="#EAEDF2" media="(prefers-color-scheme: light)" />
-  <meta name="theme-color" content="#10141A" media="(prefers-color-scheme: dark)" />
+  <!-- matches --bg. Light is the default for everyone, so that is what ships in
+       the markup; theme.js repoints it at the dark --bg when dark is chosen. -->
+  <meta name="theme-color" content="#EAEDF2" />
 
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400..600&family=Girassol&family=IBM+Plex+Mono:wght@400;500&family=Source+Serif+4:ital,wght@0,400;0,600;1,400&display=swap" rel="stylesheet" />
 
-  <link rel="stylesheet" href="/styles.css?v=46" />
+  <link rel="stylesheet" href="/styles.css?v=50" />
 
-  <!-- stamp the stored theme before first paint; blocking on purpose -->
+  <!-- stamp a previously chosen theme before first paint; blocking on purpose.
+       Nothing stored means light: the stylesheet already defaults there. -->
   <script>(function(){try{var t=localStorage.getItem('theme');if(t)document.documentElement.setAttribute('data-theme',t);}catch(e){}})();</script>
-  <script src="/theme.js" defer></script>
+  <script src="/theme.js?v=3" defer></script>
   <!-- head:end -->
+
+  <script src="/photowall.js?v=2" defer></script>
 
   <script type="application/ld+json">
   {
@@ -90,7 +93,7 @@
     <!-- nav:start -->
     <a class="skip" href="#content">Skip to content</a>
     <nav class="topnav" aria-label="Main">
-      <button class="theme-toggle" type="button" aria-label="Switch to dark theme">◐</button>
+      <button class="theme-toggle" type="button" aria-label="Switch to dark theme"><svg class="glyph" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="M20.5 14.3A8.5 8.5 0 1 1 9.7 3.5a6.8 6.8 0 0 0 10.8 10.8Z"/></svg></button>
       <a class="brand" href="/">Tanmay Hinge</a>
       <span class="navlinks">
         <a href="/#research">Research</a>
@@ -118,6 +121,21 @@
       <img src="/photos/13-red-rocks.jpeg" alt="Tanmay in front of the Red Rocks formation in Colorado" width="768" height="1024" loading="lazy" decoding="async" />
       <img src="/photos/8.jpeg" alt="Halloween 2023 Breaking Bad costume" width="553" height="1200" loading="lazy" decoding="async" />
       <img src="/photos/6.jpeg" alt="Halloween 2025 Red Dead Redemption costumes" width="800" height="1067" loading="lazy" decoding="async" />
+      <img src="/photos/15-office-nameplate.jpeg" alt="An office door nameplate reading LA123, Tanmay Hinge" width="768" height="1024" loading="lazy" decoding="async" />
+      <img src="/photos/21-big-sur.jpeg" alt="Tanmay at an overlook on the Big Sur coast" width="360" height="480" loading="lazy" decoding="async" />
+      <img src="/photos/17-griffith-observatory.jpeg" alt="Tanmay and a friend outside Griffith Observatory" width="360" height="480" loading="lazy" decoding="async" />
+      <img src="/photos/23-new-mexico.jpeg" alt="A selfie at the Welcome to New Mexico state line sign" width="360" height="480" loading="lazy" decoding="async" />
+      <img src="/photos/20-road-trip-selfie.jpeg" alt="A car selfie on a road trip" width="360" height="480" loading="lazy" decoding="async" />
+      <img src="/photos/27-coffee-run.jpeg" alt="A car selfie on a coffee run" width="480" height="360" loading="lazy" decoding="async" />
+      <img src="/photos/24-kfc-window.jpeg" alt="Tanmay mirroring a Colonel Sanders figure in a restaurant window" width="360" height="480" loading="lazy" decoding="async" />
+      <img src="/photos/14-grocery-aisle.jpeg" alt="Tanmay in the aisle of an Indian grocery store" width="360" height="480" loading="lazy" decoding="async" />
+      <img src="/photos/26-uffda-mug.jpeg" alt="An Uff Da mug on a diner counter" width="768" height="1024" loading="lazy" decoding="async" />
+      <img src="/photos/22-christmas-market.jpeg" alt="Tanmay at a Christmas market in the snow" width="360" height="480" loading="lazy" decoding="async" />
+      <img src="/photos/19-festival-dusk.jpeg" alt="Tanmay with friends at an outdoor festival at dusk" width="768" height="1024" loading="lazy" decoding="async" />
+      <img src="/photos/16-pickleball.jpeg" alt="Tanmay and a friend with paddles on a pickleball court in Mumbai" width="360" height="480" loading="lazy" decoding="async" />
+      <img src="/photos/25-campsite-firepit.jpeg" alt="Tanmay beside a stone fire pit at a wooded campsite" width="360" height="480" loading="lazy" decoding="async" />
+      <img src="/photos/18-gator-costumes.jpeg" alt="In costume, holding toy alligators" width="768" height="1024" loading="lazy" decoding="async" />
+      <img src="/photos/28-firepit-sunset.jpeg" alt="Standing at a lit fire pit as the sun sets over the hills" width="800" height="1417" loading="lazy" decoding="async" />
     </div>
 
     <footer class="foot" role="contentinfo">
@@ -129,7 +147,7 @@
         <a href="mailto:hingetanmay@gmail.com">Email</a>
       </span>
       <!-- foot:end -->
-      <span>Last updated <time datetime="2026-08-10">10 August 2026</time></span>
+      <span>Last updated <time datetime="2026-08-21">21 August 2026</time></span>
     </footer>
   </main>
 </body>

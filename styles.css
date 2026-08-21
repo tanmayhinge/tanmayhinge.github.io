@@ -39,17 +39,10 @@
    dark ground, and --hot returns to the brighter orange that only works
    against night. --hair, --tint, the chart marks and the spectrum mask are all
    derived from these, so they follow without further work.
-   The two blocks must stay in sync; a selector list cannot cross a media query. */
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    color-scheme: dark;
-    --bg:     #10141A;
-    --ink:    #E6E9EF;
-    --muted:  #8A94A2;
-    --accent: #7F8FFF;
-    --hot:    #ff7936;
-  }
-}
+
+   Dark is reached only by asking for it. The OS preference is deliberately not
+   consulted: every visitor starts on paper, and the moon in the corner is the
+   one way across. That is why there is no prefers-color-scheme block here. */
 :root[data-theme="dark"] {
   color-scheme: dark;
   --bg:     #10141A;
@@ -210,14 +203,19 @@ a:focus-visible {
   top: calc(2 * var(--u));
   right: calc(3 * var(--u));
   z-index: 60;
-  font: inherit;
-  font-size: var(--t-body);   /* a step up the scale from the nav links */
-  line-height: 1;
+  display: block;
+  line-height: 0;          /* the button is the icon; no text box around it */
   color: var(--muted);
   background: none;
   border: 0;
-  padding: 0;
+  padding: var(--u);       /* invisible, but gives the tap target room */
+  margin: calc(-1 * var(--u));   /* ...without moving the icon off the corner */
   cursor: pointer;
+}
+.theme-toggle .glyph {
+  display: block;
+  width: 26px;
+  height: 26px;
 }
 .theme-toggle:hover { color: var(--hot); }
 .theme-toggle:focus-visible {
@@ -582,6 +580,111 @@ table.data .hl { color: var(--ink); font-weight: 600; }
   height: auto;            /* cancels the HTML height attribute; nothing is cropped */
   margin: 0;
   break-inside: avoid;
+}
+
+/* The enlarge affordance is added by photowall.js, so it is scoped to .shot:
+   with the script blocked the wall is inert and shows no pointer or tab stop. */
+.photowall img.shot {
+  cursor: zoom-in;
+  transition: opacity 120ms ease;
+}
+.photowall img.shot:hover { opacity: 0.82; }
+.photowall img.shot:focus-visible {
+  outline: 2px solid var(--hot);
+  outline-offset: -2px;
+}
+
+/* ---- lightbox ----
+   Photographs read against a dark ground in either mode, so the scrim does not
+   follow the theme; it stays night in both. Everything else does follow. */
+.lightbox {
+  width: 100vw;
+  max-width: 100vw;
+  height: 100dvh;
+  max-height: 100dvh;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  overflow: hidden;
+}
+.lightbox::backdrop { background: rgba(9, 12, 17, 0.94); }
+
+.lightbox-figure {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: calc(2 * var(--u));
+  padding: calc(7 * var(--u)) calc(8 * var(--u));
+}
+.lightbox-img {
+  display: block;
+  /* max-width alone only ever shrinks a photo, so the width is driven directly
+     and the three limits race: the viewport, the viewport height reworked into
+     a width through the photo's own aspect ratio, and --nat-w. That last one is
+     twice the file's real width — most of these are small originals, and blowing
+     one up to fill a desktop only adds blur. Both properties come from
+     photowall.js. Height follows, so the aspect ratio is never touched. */
+  width: min(92vw, calc(78dvh * var(--ar, 1)), var(--nat-w, 92vw));
+  height: auto;
+  cursor: zoom-out;
+}
+.lightbox-cap {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: calc(0.5 * var(--u)) calc(2 * var(--u));
+  align-items: baseline;
+  font-family: var(--mono);
+  font-size: var(--t-small);
+  color: #C9CFD9;
+  text-align: center;
+  max-width: 62ch;
+}
+/* The count is two numbers and a slash; it never breaks across lines, and it
+   never shrinks to make room for a long caption — the caption wraps instead. */
+.lightbox-count {
+  flex: none;
+  white-space: nowrap;
+  color: #7C8593;
+  font-variant-numeric: tabular-nums;
+}
+
+.lightbox-close,
+.lightbox-nav {
+  position: fixed;
+  background: none;
+  border: 0;
+  color: #C9CFD9;
+  font-family: var(--mono);
+  cursor: pointer;
+  line-height: 1;
+  padding: var(--u);
+}
+.lightbox-close:hover,
+.lightbox-nav:hover { color: var(--hot); }
+.lightbox-close:focus-visible,
+.lightbox-nav:focus-visible {
+  outline: 2px solid var(--hot);
+  outline-offset: 2px;
+}
+.lightbox-close {
+  top: calc(2 * var(--u));
+  right: calc(2 * var(--u));
+  font-size: 1.5rem;
+}
+.lightbox-nav {
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 3rem;
+}
+.lightbox-nav.prev { left: calc(1 * var(--u)); }
+.lightbox-nav.next { right: calc(1 * var(--u)); }
+
+@media (max-width: 640px) {
+  .lightbox-figure { padding: calc(7 * var(--u)) calc(2 * var(--u)); }
+  .lightbox-nav { font-size: 2.25rem; }
 }
 
 
