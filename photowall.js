@@ -21,19 +21,13 @@
   dialog.className = 'lightbox';
   dialog.setAttribute('aria-label', 'Photo viewer');
   dialog.innerHTML =
-    '<figure class="lightbox-figure">' +
-      '<img class="lightbox-img" alt="" />' +
-      '<figcaption class="lightbox-cap"><span class="lightbox-text"></span>' +
-        '<span class="lightbox-count"></span></figcaption>' +
-    '</figure>' +
+    '<div class="lightbox-frame"><img class="lightbox-img" alt="" /></div>' +
     '<button class="lightbox-close" type="button" aria-label="Close">✕</button>' +
     '<button class="lightbox-nav prev" type="button" aria-label="Previous photo">‹</button>' +
     '<button class="lightbox-nav next" type="button" aria-label="Next photo">›</button>';
   document.body.appendChild(dialog);
 
   var big = dialog.querySelector('.lightbox-img');
-  var text = dialog.querySelector('.lightbox-text');
-  var count = dialog.querySelector('.lightbox-count');
 
   // Most of these photos are small originals — a 360px-wide frame stretched to
   // fill a desktop viewport is mush. Each one is allowed to double, and no more;
@@ -48,8 +42,6 @@
     var h = src.naturalHeight || src.height;
     big.style.setProperty('--nat-w', w * 2 + 'px');
     big.style.setProperty('--ar', w / h);
-    text.textContent = src.alt;
-    count.textContent = (index + 1) + ' / ' + shots.length;
 
     // Warm the neighbours so stepping through does not flash empty.
     [index - 1, index + 1].forEach(function (n) {

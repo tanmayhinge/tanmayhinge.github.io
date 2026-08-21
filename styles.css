@@ -609,13 +609,12 @@ table.data .hl { color: var(--ink); font-weight: 600; }
 }
 .lightbox::backdrop { background: rgba(9, 12, 17, 0.94); }
 
-.lightbox-figure {
+.lightbox-frame {
   height: 100%;
   display: flex;
-  flex-direction: column;
   align-items: center;
   justify-content: center;
-  gap: calc(2 * var(--u));
+  /* room for the close button above and the chevrons either side */
   padding: calc(7 * var(--u)) calc(8 * var(--u));
 }
 .lightbox-img {
@@ -626,31 +625,10 @@ table.data .hl { color: var(--ink); font-weight: 600; }
      twice the file's real width — most of these are small originals, and blowing
      one up to fill a desktop only adds blur. Both properties come from
      photowall.js. Height follows, so the aspect ratio is never touched. */
-  width: min(92vw, calc(78dvh * var(--ar, 1)), var(--nat-w, 92vw));
+  width: min(92vw, calc(86dvh * var(--ar, 1)), var(--nat-w, 92vw));
   height: auto;
   cursor: zoom-out;
 }
-.lightbox-cap {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: calc(0.5 * var(--u)) calc(2 * var(--u));
-  align-items: baseline;
-  font-family: var(--mono);
-  font-size: var(--t-small);
-  color: #C9CFD9;
-  text-align: center;
-  max-width: 62ch;
-}
-/* The count is two numbers and a slash; it never breaks across lines, and it
-   never shrinks to make room for a long caption — the caption wraps instead. */
-.lightbox-count {
-  flex: none;
-  white-space: nowrap;
-  color: #7C8593;
-  font-variant-numeric: tabular-nums;
-}
-
 .lightbox-close,
 .lightbox-nav {
   position: fixed;
@@ -683,7 +661,7 @@ table.data .hl { color: var(--ink); font-weight: 600; }
 .lightbox-nav.next { right: calc(1 * var(--u)); }
 
 @media (max-width: 640px) {
-  .lightbox-figure { padding: calc(7 * var(--u)) calc(2 * var(--u)); }
+  .lightbox-frame { padding: calc(7 * var(--u)) calc(2 * var(--u)); }
   .lightbox-nav { font-size: 2.25rem; }
 }
 
