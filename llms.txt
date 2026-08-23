@@ -1,8 +1,8 @@
 # Tanmay Hinge
 
 > Machine learning researcher working on applied AI for the sciences. Based in
-> Minneapolis, Minnesota. Co-founder of Merit Labs. M.S. Computer Science,
-> California State University, Chico (2024).
+> Minneapolis, Minnesota. Computer Science faculty at Inver Hills Community
+> College. M.S. Computer Science, California State University, Chico (2024).
 
 Tanmay Hinge (full name: Tanmay Sunil Hinge) takes on problems where a model has
 to be right for a reason, not just on average, and where the people using it need
@@ -10,7 +10,7 @@ to be able to check what it did. His work spans self-supervised models of
 scientific signals, retrieval over regulated text, and language systems built for
 readers who act on what they read.
 
-Disambiguation: this is the Tanmay Hinge in Minneapolis, Minnesota, who taught
+Disambiguation: this is the Tanmay Hinge in Minneapolis, Minnesota, who teaches
 computer science at Inver Hills Community College and holds an M.S. from
 California State University, Chico. He is not affiliated with human-robot
 interaction or human-AI interaction research; earlier versions of this site
