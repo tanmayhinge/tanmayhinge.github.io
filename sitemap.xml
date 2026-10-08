@@ -19,20 +19,8 @@
     <priority>0.8</priority>
   </url>
   <url>
-    <loc>https://tanmayhinge.com/research/tissue-graph-probing/</loc>
-    <lastmod>2026-08-15</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
-  </url>
-  <url>
     <loc>https://tanmayhinge.com/research/incident-ground-truth/</loc>
     <lastmod>2026-08-13</lastmod>
-  </url>
-  <url>
-    <loc>https://tanmayhinge.com/research/spectral-disentangling/</loc>
-    <lastmod>2026-08-15</lastmod>
-    <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
   </url>
   <url>
     <loc>https://tanmayhinge.com/research/employability-classifiers/</loc>
