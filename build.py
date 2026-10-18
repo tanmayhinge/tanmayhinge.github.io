@@ -23,7 +23,7 @@ PARTIALS = {
     "nav": "partials/nav.html",
     "foot": "partials/foot.html",
 }
-SKIP = ("partials/",)
+SKIP = ("partials/", "cv/")
 
 
 def pages():
