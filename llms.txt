@@ -1,6 +1,6 @@
 # Tanmay Hinge
 
-> Machine learning researcher working on applied AI for the sciences. Based in
+> Computing researcher working on applied AI for the sciences. Based in
 > Minneapolis, Minnesota. Computer Science faculty at Inver Hills Community
 > College. M.S. Computer Science, California State University, Chico (2024).
 
