@@ -23,7 +23,7 @@ PARTIALS = {
     "nav": "partials/nav.html",
     "foot": "partials/foot.html",
 }
-SKIP = ("partials/", "cv/")
+SKIP = ("partials/",)
 
 
 def pages():
@@ -48,7 +48,6 @@ def pattern(name):
 SECTIONS = (
     ("reading/", "/reading/"),
     ("photowall/", "/photowall/"),
-    ("research/", "/#research"),
 )
 
 
